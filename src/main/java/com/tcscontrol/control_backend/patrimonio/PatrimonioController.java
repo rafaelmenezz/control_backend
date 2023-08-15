@@ -10,6 +10,6 @@ public class PatrimonioController {
     
     @GetMapping
     public String hello(){
-        return "Patrimonio";
+        return "Patrimonio alcione";
     }
 }
