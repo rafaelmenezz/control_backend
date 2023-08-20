@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.contato;
+package com.tcscontrol.control_backend.contacts;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/contato")
-public class ContatoController {
+public class ContactsController {
 
     @GetMapping
     public String hello(){
