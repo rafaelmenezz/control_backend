@@ -49,7 +49,6 @@ public class User implements Serializable {
     @Column(name="nr_matricula",nullable = true)
     private Integer nrMatricula;
 
-    @NotBlank
     @Length(min = 6, max = 20)
     @Column(name = "nm_senha", nullable = true, length = 20 )
     private String nmSenha;
