@@ -52,6 +52,7 @@ public class UserImpl implements UserNegocio {
             recordFound.setNmUsuario(userDto.nmUsuario());
             recordFound.setFtFoto(userDto.ftFoto());
             recordFound.setTypeUser(userMapper.convertTypeUserValue(userDto.typeUser()));
+            recordFound.setFlStatus(userMapper.convertStatusValue(userDto.flStatus()));
             recordFound.getContacts().clear();
             user.getContacts().forEach(recordFound.getContacts()::add);
             return userMapper.toDto(userRepository.save(recordFound));

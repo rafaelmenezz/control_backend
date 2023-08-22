@@ -9,6 +9,7 @@ import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
 import com.tcscontrol.control_backend.user.model.User;
 import com.tcscontrol.control_backend.user.model.UserDTO;
+import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.TypeUser;
 
@@ -30,10 +31,10 @@ public class UserMapper {
         return new UserDTO(user.getIdUser(),
          user.getNmUsuario(),
          user.getNrMatricula(), 
-         user.getNmSenha(), 
          user.getNrCpf(), 
          user.getFtFoto(),
          contacts, 
+         user.getFlStatus().getValue(),
          user.getTypeUser().getValue());
     }
 
@@ -46,11 +47,11 @@ public class UserMapper {
             user.setIdUser(userDTO.id());
         }
         user.setNmUsuario(userDTO.nmUsuario());
-        user.setNmSenha(userDTO.nmSenha());
         user.setNrMatricula(userDTO.nrMatricula());
         user.setNrCpf(userDTO.nrCpf());
         user.setFtFoto(userDTO.ftFoto());
         user.setTypeUser(convertTypeUserValue(userDTO.typeUser()));
+        user.setFlStatus(convertStatusValue(userDTO.flStatus()));
 
         List<Contacts> contacts = userDTO.contacts().stream()
         .map(contactsDTO -> {
@@ -88,6 +89,16 @@ public class UserMapper {
             case "Whatsapp" -> TypeContacts.WHATSAPP;
             case "Instagran" -> TypeContacts.INSTAGRAN;
             default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
+        };
+    }
+        public Status convertStatusValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Ativo" -> Status.ACTIVE;
+            case "Inativo" -> Status.INACTIVE;
+            default -> throw new IllegalArgumentException("Status do usuário inválido.");
         };
     }
 }

@@ -33,7 +33,6 @@ import lombok.Data;
 @Data
 @Entity
 @SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where idUser = ?")
-@Where(clause = "fl_status = 'Ativo'")
 @Table(name = "USUARIO")
 public class User implements Serializable {
     
