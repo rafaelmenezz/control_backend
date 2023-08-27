@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.user.model.UserDTO;
+import com.tcscontrol.control_backend.user.model.dto.UserDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

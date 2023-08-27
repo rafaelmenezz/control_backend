@@ -1,8 +1,12 @@
 package com.tcscontrol.control_backend.user;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.PathVariable;
-import com.tcscontrol.control_backend.user.model.UserDTO;
+
+import com.tcscontrol.control_backend.user.model.dto.UserDTO;
+import com.tcscontrol.control_backend.user.model.entity.User;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -19,5 +23,7 @@ public interface UserService {
     public UserDTO update(Long id, @Valid UserDTO user);
 
     public void delete(@PathVariable @NotNull @Positive Long id);
+
+    Optional<User> login(String login);
 
 }

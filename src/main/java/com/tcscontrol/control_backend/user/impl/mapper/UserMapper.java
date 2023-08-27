@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
-import com.tcscontrol.control_backend.user.model.User;
-import com.tcscontrol.control_backend.user.model.UserDTO;
+import com.tcscontrol.control_backend.user.model.dto.UserDTO;
+import com.tcscontrol.control_backend.user.model.dto.UserSenhaDTO;
+import com.tcscontrol.control_backend.user.model.entity.User;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.TypeUser;
@@ -66,6 +67,38 @@ public class UserMapper {
         
         return user;
     }
+
+    public User toRegisterEntity(UserSenhaDTO userDTO){
+        if(userDTO == null){
+            return null;
+        }
+        User user = new User();
+        if (userDTO.id() != null) {
+            user.setIdUser(userDTO.id());
+        }
+        user.setNmUsuario(userDTO.nmUsuario());
+        user.setNrMatricula(userDTO.nrMatricula());
+        user.setNmSenha(userDTO.nmSenha());
+        user.setNrCpf(userDTO.nrCpf());
+        user.setFtFoto(userDTO.ftFoto());
+        user.setTypeUser(convertTypeUserValue(userDTO.typeUser()));
+        user.setFlStatus(convertStatusValue(userDTO.flStatus()));
+
+        List<Contacts> contacts = userDTO.contacts().stream()
+        .map(contactsDTO -> {
+            var contact = new Contacts();
+            contact.setIdContacts(contactsDTO.idContacts());
+            contact.setDsContato(contactsDTO.dsContato());
+            contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
+            contact.setUser(user);
+            return contact;
+        }).collect(Collectors.toList());
+        user.setContacts(contacts);
+        
+        return user;
+    }
+
+
 
     public TypeUser convertTypeUserValue(String value) {
         if (value == null) {

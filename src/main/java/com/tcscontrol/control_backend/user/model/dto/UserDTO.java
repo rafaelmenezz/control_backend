@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.user.model;
+package com.tcscontrol.control_backend.user.model.dto;
 
 import java.util.List;
 
