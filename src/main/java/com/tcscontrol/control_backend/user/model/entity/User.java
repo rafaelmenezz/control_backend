@@ -1,11 +1,10 @@
-package com.tcscontrol.control_backend.user.model;
+package com.tcscontrol.control_backend.user.model.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
@@ -32,8 +31,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where idUser = ?")
-@Where(clause = "fl_status = 'Ativo'")
+//@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where idUser = ?")
 @Table(name = "USUARIO")
 public class User implements Serializable {
     
@@ -51,15 +49,14 @@ public class User implements Serializable {
     @Column(name="nr_matricula",nullable = true)
     private Integer nrMatricula;
 
-    @NotBlank
-    @Length(min = 6, max = 20)
-    @Column(name = "nm_senha", nullable = true, length = 20 )
+    // @Length(min = 6, max = 20)
+    @Column(name = "nm_senha", nullable = true, length = 100 )
     private String nmSenha;
 
     @NotNull
     @NotBlank
     @Length(min=14, max = 20)
-    @Column(name = "nr_cpf", nullable = false, unique = true,  length = 20)
+    @Column(name = "nr_cpf", nullable = false,  length = 20)
     private String nrCpf;
 
     @Column(length = 15, nullable = false)
