@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,27 +30,34 @@ public class UserController {
     
     private final UserService userService;
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping
+
     public List<UserDTO> list(){
         return userService.list();
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
     public UserDTO findById(@PathVariable @NotNull @Positive Long id){
         return userService.findById(id);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserDTO create(@RequestBody @Valid UserDTO userDto){
         return userService.create(userDto);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PatchMapping("/{id}")
     public UserDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userDto){
         return userService.update(id, userDto);
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable @NotNull @Positive Long id){

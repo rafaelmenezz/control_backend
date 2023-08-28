@@ -31,7 +31,7 @@ public class AuthController {
 
     private final UserService userService;
 
-
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public JwtResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(authRequest.login(), authRequest.password());
@@ -44,6 +44,7 @@ public class AuthController {
         }
     }
     
+    @CrossOrigin(origins = "*")
     @PostMapping("/refreshToken")
     public AccessTokenResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return refreshTokenService.findByToken(refreshTokenRequest.getRefreshToken())
