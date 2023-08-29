@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
 import com.tcscontrol.control_backend.auth.repository.RefreshTokenRepository;
 import com.tcscontrol.control_backend.contacts.ContactsRepository;
@@ -17,6 +18,8 @@ import com.tcscontrol.control_backend.user.model.UserRepository;
 import com.tcscontrol.control_backend.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.user.model.dto.UserSenhaDTO;
 import com.tcscontrol.control_backend.user.model.entity.User;
+import com.tcscontrol.control_backend.utilitarios.EmailService;
+import com.tcscontrol.control_backend.utilitarios.UtilControl;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +34,7 @@ public class UserImpl implements UserNegocio {
     private final RefreshTokenRepository refreshTokenRepository;
     private final ContactsRepository contactsRepository;
     private final UserMapper userMapper;
+    private final EmailService emailService;
 
     public List<UserDTO> list() {
         return userRepository.findAll()
@@ -48,6 +52,10 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public UserDTO create(@Valid @NotNull UserDTO userDto) {
+        UserDTO userD = userDto;      
+        String email = userD.contacts().get(0).dsContato();
+        String emailText = "Sua senha de cadastro: " + UtilControl.gerarSenha(8);
+        emailService.sendRegistrationEmail(email, "Bem-vindo!", emailText);
         return userMapper.toDto(userRepository.save(userMapper.toEntity(userDto)));
     }
 
