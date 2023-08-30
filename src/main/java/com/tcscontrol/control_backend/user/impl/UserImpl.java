@@ -52,10 +52,6 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public UserDTO create(@Valid @NotNull UserDTO userDto) {
-        UserDTO userD = userDto;      
-        String email = userD.contacts().get(0).dsContato();
-        String emailText = "Sua senha de cadastro: " + UtilControl.gerarSenha(8);
-        emailService.sendRegistrationEmail(email, "Bem-vindo!", emailText);
         return userMapper.toDto(userRepository.save(userMapper.toEntity(userDto)));
     }
 
@@ -115,6 +111,10 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public void register(UserSenhaDTO user) {
+        UserSenhaDTO userD = user;      
+        String email = userD.contacts().get(0).dsContato();
+        String emailText = "Sua senha de cadastro: " + UtilControl.gerarSenha(8);
+        emailService.sendRegistrationEmail(email, "Bem-vindo!", emailText);
         userMapper.toDto(userRepository.save(userMapper.toRegisterEntity(user)));
     }
 

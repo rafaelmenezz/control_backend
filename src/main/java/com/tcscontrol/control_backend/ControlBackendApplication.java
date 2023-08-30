@@ -34,7 +34,7 @@ public class ControlBackendApplication {
 			ContactsDTO contacts = new ContactsDTO(
 				null,
 				TypeContacts.EMAIL.getValue(),
-				"teste@teste.com"
+				"joseedston@gmail.com"
 			);
 			ContactsDTO contacts2 = new ContactsDTO(
 				null,
