@@ -24,13 +24,13 @@ public class RefreshTokenService {
     private UserNegocio userNegocio;
 
     public RefreshToken createRefreshToken(String login) {
-        User user = userNegocio.login(login).get();
+        User user = userNegocio.login(login);
         RefreshToken rt = refreshTokenRepository.findByUser(user);
         RefreshToken refreshToken = RefreshToken.builder()
                 .id(rt != null ? rt.getId() : null)
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000))// 10
+                .expiryDate(Instant.now().plusMillis(7200000))// 10
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
