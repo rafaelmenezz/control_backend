@@ -2,7 +2,7 @@ package com.tcscontrol.control_backend.auth.model;
 
 import java.time.Instant;
 
-import com.tcscontrol.control_backend.user.model.entity.User;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

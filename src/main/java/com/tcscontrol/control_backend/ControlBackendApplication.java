@@ -3,18 +3,10 @@ package com.tcscontrol.control_backend;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
-import com.tcscontrol.control_backend.enuns.Status;
-import com.tcscontrol.control_backend.enuns.TypeContacts;
-import com.tcscontrol.control_backend.enuns.TypeUser;
-import com.tcscontrol.control_backend.user.UserNegocio;
-import com.tcscontrol.control_backend.user.model.dto.UserSenhaDTO;
 
 
 

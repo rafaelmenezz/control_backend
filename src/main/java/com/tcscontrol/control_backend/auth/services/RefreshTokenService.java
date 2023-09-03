@@ -4,13 +4,13 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
 import com.tcscontrol.control_backend.auth.repository.RefreshTokenRepository;
-import com.tcscontrol.control_backend.user.UserNegocio;
-import com.tcscontrol.control_backend.user.model.entity.User;
 
 import lombok.AllArgsConstructor;
 

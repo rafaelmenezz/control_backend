@@ -3,11 +3,9 @@ package com.tcscontrol.control_backend.contacts.model;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tcscontrol.control_backend.abstracts.Pessoa;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.converters.TypeContactsConverter;
-import com.tcscontrol.control_backend.user.model.entity.User;
-
+import com.tcscontrol.control_backend.pessoa.Pessoa;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;

@@ -2,13 +2,13 @@ package com.tcscontrol.control_backend.auth.services;
 
 import java.util.Optional;
 
+import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.user.UserNegocio;
-import com.tcscontrol.control_backend.user.model.entity.User;
 
 import lombok.AllArgsConstructor;
 

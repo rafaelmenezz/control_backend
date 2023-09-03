@@ -1,5 +1,6 @@
 package com.tcscontrol.control_backend.config;
 
+import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.tcscontrol.control_backend.auth.services.UserInfoUserDetailsService;
 import com.tcscontrol.control_backend.filter.JwtAuthFilter;
-import com.tcscontrol.control_backend.user.UserNegocio;
 
 import lombok.AllArgsConstructor;
 

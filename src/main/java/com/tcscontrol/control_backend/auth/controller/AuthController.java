@@ -1,5 +1,7 @@
 package com.tcscontrol.control_backend.auth.controller;
 
+import com.tcscontrol.control_backend.pessoa.user.UserService;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +11,8 @@ import com.tcscontrol.control_backend.auth.dto.AuthRequest;
 import com.tcscontrol.control_backend.auth.dto.JwtResponse;
 import com.tcscontrol.control_backend.auth.dto.RefreshTokenRequest;
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
-import com.tcscontrol.control_backend.auth.services.JwtService;
 import com.tcscontrol.control_backend.auth.services.RefreshTokenService;
 import com.tcscontrol.control_backend.auth.services.TokenService;
-import com.tcscontrol.control_backend.user.UserService;
-import com.tcscontrol.control_backend.user.model.entity.User;
 
 import lombok.AllArgsConstructor;
 
