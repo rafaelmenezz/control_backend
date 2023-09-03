@@ -18,8 +18,6 @@ import com.tcscontrol.control_backend.enuns.TypeUser;
 @Component
 @AllArgsConstructor
 public class UserMapper {
-
-    PasswordEncoder passwordEncoder;
     
     public UserCreateDTO toCreateDto(User user){
         if (user == null) {
@@ -34,13 +32,13 @@ public class UserMapper {
         .collect(Collectors.toList());
 
         return new UserCreateDTO(
-                user.getIdUser(),
-                user.getNmUsuario(),
+                user.getId(),
+                user.getNmName(),
                 user.getNrMatricula(),
                 user.getNrCpf(),
                 user.getFtFoto(),
                 contacts,
-                user.getStatus().getValue(),
+                user.getTpStatus().getValue(),
                 user.getTypeUser().getValue());
     }
 
@@ -50,14 +48,14 @@ public class UserMapper {
         }
         User user = new User();
         if (userCreateDTO.id() != null) {
-            user.setIdUser(userCreateDTO.id());
+            user.setId(userCreateDTO.id());
         }
-        user.setNmUsuario(userCreateDTO.nmUsuario());
+        user.setNmName(userCreateDTO.nmUsuario());
         user.setNrMatricula(userCreateDTO.nrMatricula());
         user.setNrCpf(userCreateDTO.nrCpf());
         user.setFtFoto(userCreateDTO.ftFoto());
         user.setTypeUser(convertTypeUserValue(userCreateDTO.typeUser()));
-        user.setStatus(convertStatusValue(userCreateDTO.flStatus()));
+        user.setTpStatus(convertStatusValue(userCreateDTO.flStatus()));
 
         List<Contacts> contacts = userCreateDTO.contacts().stream()
         .map(contactsDTO -> {
@@ -65,7 +63,7 @@ public class UserMapper {
             contact.setIdContacts(contactsDTO.idContacts());
             contact.setDsContato(contactsDTO.dsContato());
             contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
-            contact.setPessoa(user);
+            contact.setUser(user);
             return contact;
         }).collect(Collectors.toList());
         user.setContacts(contacts);
@@ -79,15 +77,15 @@ public class UserMapper {
         }
         User user = new User();
         if (userDTO.id() != null) {
-            user.setIdUser(userDTO.id());
+            user.setId(userDTO.id());
         }
-        user.setNmUsuario(userDTO.nmUsuario());
+        user.setNmName(userDTO.nmUsuario());
         user.setNrMatricula(userDTO.nrMatricula());
         user.setNmSenha(userDTO.nmSenha());
         user.setNrCpf(userDTO.nrCpf());
         user.setFtFoto(userDTO.ftFoto());
         user.setTypeUser(convertTypeUserValue(userDTO.typeUser()));
-        user.setStatus(convertStatusValue(userDTO.flStatus()));
+        user.setTpStatus(convertStatusValue(userDTO.flStatus()));
 
         List<Contacts> contacts = userDTO.contacts().stream()
         .map(contactsDTO -> {
@@ -95,7 +93,7 @@ public class UserMapper {
             contact.setIdContacts(contactsDTO.idContacts());
             contact.setDsContato(contactsDTO.dsContato());
             contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
-            contact.setPessoa(user);
+            contact.setUser(user);
             return contact;
         }).collect(Collectors.toList());
         user.setContacts(contacts);

@@ -63,10 +63,10 @@ public class UserImpl implements UserNegocio {
         return userRepository.findById(id)
                 .map(recordFound -> {
                     User user = userMapper.toCreateEntity(userCreateDto);
-                    recordFound.setNmUsuario(userCreateDto.nmUsuario());
+                    recordFound.setNmName(userCreateDto.nmUsuario());
                     recordFound.setFtFoto(userCreateDto.ftFoto());
                     recordFound.setTypeUser(userMapper.convertTypeUserValue(userCreateDto.typeUser()));
-                    recordFound.setStatus(userMapper.convertStatusValue(userCreateDto.flStatus()));
+                    recordFound.setTpStatus(userMapper.convertStatusValue(userCreateDto.flStatus()));
                     recordFound.getContacts().clear();
                     user.getContacts().forEach(recordFound.getContacts()::add);
                     return userMapper.toCreateDto(userRepository.save(recordFound));
@@ -80,14 +80,14 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public void deleteCascade(Integer nrMatricula) {
-        Optional<User> user = userRepository.findByNrMatricula(nrMatricula);
-        if (user.isPresent()) {
-            RefreshToken rt = refreshTokenRepository.findByUser(user.get());
+        User user = userRepository.findByNrMatricula(nrMatricula);
+        if (!UtilObjeto.isEmpty(user)) {
+            RefreshToken rt = refreshTokenRepository.findByUser(user);
 
             if (rt != null) {
                 refreshTokenRepository.deleteById(rt.getId());
             }
-            userRepository.deleteById(user.get().getIdUser());
+            userRepository.deleteById(user.getId());
         }
     }
 
@@ -100,7 +100,7 @@ public class UserImpl implements UserNegocio {
         userMapper.toCreateDto(userRepository.save(userMapper.toRegisterEntity(user)));
     }
 
-    private Optional<User> pesquisarUserMatricula(String matricula) {
+    private User pesquisarUserMatricula(String matricula) {
         return userRepository.findByNrMatricula(UtilCast.toInteger(matricula));
     }
 
@@ -111,7 +111,7 @@ public class UserImpl implements UserNegocio {
      private Optional<User> pesquisarUserPorContato(String dsContato) {
          Contacts contato = contactsRepository.findByDsContato(dsContato);
          if (contato != null) {
-             return userRepository.findById(contato.getPessoa().getIdPessoa());
+             return userRepository.findById(contato.getUser().getId());
          }
          return null;
      }
@@ -122,7 +122,7 @@ public class UserImpl implements UserNegocio {
          if(UtilObjeto.isEmpty(userLogin)){
              userLogin = pesquisarUserPorContato(login).isPresent() ? pesquisarUserPorContato(login).get() : null ;
              if(UtilObjeto.isEmpty(userLogin)){
-             userLogin = pesquisarUserMatricula(login).get();
+             userLogin = pesquisarUserMatricula(login);
              }
          }
          return userLogin;

@@ -5,7 +5,8 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.converters.TypeContactsConverter;
-import com.tcscontrol.control_backend.pessoa.Pessoa;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -39,9 +40,8 @@ public class Contacts implements Serializable{
     private String dsContato;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pessoa_id", nullable = false)
+    @JoinColumn(name = "id", nullable = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Pessoa pessoa;
-
+    private User user;
 
 }
