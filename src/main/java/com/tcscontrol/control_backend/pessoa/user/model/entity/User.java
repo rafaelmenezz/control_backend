@@ -15,14 +15,19 @@ import jakarta.persistence.Lob;
 
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@Setter
-//@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where idUser = ?")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+//@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
 @Table(name = "USUARIO")
+@EqualsAndHashCode(callSuper = false)
 public class User extends Pessoa {
 
     @Column(name="nr_matricula")
@@ -43,59 +48,16 @@ public class User extends Pessoa {
     @Convert(converter = TypeUserConverter.class)
     private TypeUser typeUser = TypeUser.PEAO;
 
-    public User(){super();}
-
-    public User(Long id, String nmName, Integer nrMatricula, String nmSenha, String nrCPF, Byte[] ftFoto,
-    TypeUser tyUser, List<Contacts> contacts){
-        super();
-        super.setIdPessoa(id);
-        super.setNmName(nmName);
-        super.setTypeDocumento(DocumentoType.CPF);
-        super.setTpStatus(Status.ACTIVE);
-        super.setContacts(contacts);
-        this.nrCpf = nrCPF;
+    @Builder
+    public User(Long id, String nmName, DocumentoType documentoType, Status status, 
+    List<Contacts> contacts, Integer nrMatricula,String nmSenha, String nrCPF, Byte[] ftFoto, TypeUser typeUser) {
+        super(id, nmName, documentoType, status, contacts);
         this.nrMatricula = nrMatricula;
         this.nmSenha = nmSenha;
+        this.nrCpf = nrCPF;
         this.ftFoto = ftFoto;
-        this.typeUser = tyUser;
-    }
+        this.typeUser = typeUser;
 
-    public void setNmUsuario(String name){
-         super.setNmName(name);
-    }
-
-    public String getNmUsuario(){
-        return super.getNmName();
-    }
-
-    public void setIdUser(Long idUser){
-        super.setIdPessoa(idUser);
-    }
-
-    public Long getIdUser(){
-        return super.getIdPessoa();
-    }
-
-    public void setTpDocumento(DocumentoType documentoType){
-        super.setTypeDocumento(documentoType);
-    }
-
-    public DocumentoType getDocumentoType(){
-        return super.getTypeDocumento();
-    }
-
-    public void setContacts(List<Contacts> contacts){
-        super.setContacts(contacts);
-    }
-
-    public List<Contacts> getContacts(){
-        return super.getContacts();
-    }
-    public void setStatus(Status status){
-        super.setTpStatus(status);
-    }
-    public Status getStatus(){
-        return super.getTpStatus();
     }
 
 }
