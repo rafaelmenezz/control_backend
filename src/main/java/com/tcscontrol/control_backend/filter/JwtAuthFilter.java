@@ -1,6 +1,6 @@
 package com.tcscontrol.control_backend.filter;
 
-import jakarta.annotation.Resource;
+import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.tcscontrol.control_backend.auth.services.TokenService;
-import com.tcscontrol.control_backend.user.UserNegocio;
+
 
 
 import java.io.IOException;
