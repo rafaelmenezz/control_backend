@@ -21,7 +21,7 @@ public class UserInfoUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Optional<User> user = userNegocio.login(login);
+        Optional<User> user = Optional.ofNullable(userNegocio.login(login));
         return user.map(InfoUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + login));
 

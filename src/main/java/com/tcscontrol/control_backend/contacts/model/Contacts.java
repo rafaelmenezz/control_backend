@@ -3,6 +3,7 @@ package com.tcscontrol.control_backend.contacts.model;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tcscontrol.control_backend.abstracts.Pessoa;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.converters.TypeContactsConverter;
 import com.tcscontrol.control_backend.user.model.entity.User;
@@ -40,9 +41,9 @@ public class Contacts implements Serializable{
     private String dsContato;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "pessoa_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private User user;
+    private Pessoa pessoa;
 
 
 }

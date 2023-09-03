@@ -11,6 +11,7 @@ import com.tcscontrol.control_backend.auth.dto.RefreshTokenRequest;
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
 import com.tcscontrol.control_backend.auth.services.JwtService;
 import com.tcscontrol.control_backend.auth.services.RefreshTokenService;
+import com.tcscontrol.control_backend.auth.services.TokenService;
 import com.tcscontrol.control_backend.user.UserService;
 import com.tcscontrol.control_backend.user.model.entity.User;
 
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private JwtService jwtService;
+    private TokenService tokenService;
 
     @Autowired
     private RefreshTokenService refreshTokenService;
@@ -36,9 +37,9 @@ public class AuthController {
     public JwtResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(authRequest.login(), authRequest.password());
         if (!usernamePassword.isAuthenticated()) {
-            User user = userService.login(authRequest.login()).get();
+            User user = userService.login(authRequest.login());
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getNrMatricula().toString());
-            return new JwtResponse(jwtService.generateToken(user.getNrMatricula().toString()), refreshToken.getToken(), user);
+            return new JwtResponse(tokenService.generateToken(user), refreshToken.getToken(), user);
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
@@ -50,7 +51,7 @@ public class AuthController {
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
-                    String accessToken = jwtService.generateToken(user.getNrMatricula().toString());
+                    String accessToken = tokenService.generateToken(user);
                     return AccessTokenResponse.builder()
                             .accessToken(accessToken)
                             .build();
