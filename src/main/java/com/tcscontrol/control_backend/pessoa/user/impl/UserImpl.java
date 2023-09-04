@@ -5,10 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
+import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
+import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -38,6 +41,7 @@ public class UserImpl implements UserNegocio {
     ContactsRepository contactsRepository;
     UserMapper userMapper;
     EmailService emailService;
+    
 
     public List<UserCreateDTO> list() {
         return userRepository.findAll()
@@ -54,8 +58,10 @@ public class UserImpl implements UserNegocio {
     }
 
     @Override
-    public UserCreateDTO create(@Valid @NotNull UserCreateDTO userCreateDto) {
-        return userMapper.toCreateDto(userRepository.save(userMapper.toCreateEntity(userCreateDto)));
+    public UserCreateDTO create(@Valid @NotNull UserDTO userDTO, String password) { 
+        String email = obtemEmailDTO(userDTO.contacts());
+        emailService.enviarEmail(email, password);
+        return userMapper.toCreateDto(userRepository.save(userMapper.toCreateEntity(userDTO)));
     }
 
     @Override
@@ -95,12 +101,14 @@ public class UserImpl implements UserNegocio {
     public void register(UserSenhaDTO user) {
         UserSenhaDTO userD = user;      
         String email = userD.contacts().get(0).dsContato();
-        String emailText = "Sua senha de cadastro: " + UtilControl.gerarSenha(8);
-        emailService.sendRegistrationEmail(email, "Bem-vindo!", emailText);
+        emailService.enviarEmail(email, UtilControl.gerarSenha(8));
         userMapper.toCreateDto(userRepository.save(userMapper.toRegisterEntity(user)));
     }
 
     private User pesquisarUserMatricula(String matricula) {
+        if(!UtilObjeto.isNumero(matricula)){
+            return null;
+        }
         return userRepository.findByNrMatricula(UtilCast.toInteger(matricula));
     }
 
@@ -111,7 +119,7 @@ public class UserImpl implements UserNegocio {
      private Optional<User> pesquisarUserPorContato(String dsContato) {
          Contacts contato = contactsRepository.findByDsContato(dsContato);
          if (contato != null) {
-             return userRepository.findById(contato.getUser().getId());
+             return userRepository.findById(contato.getPessoa().getId());
          }
          return null;
      }
@@ -120,9 +128,9 @@ public class UserImpl implements UserNegocio {
      public User login(String login) {
          User userLogin = pesquisarUserDocumento(login);
          if(UtilObjeto.isEmpty(userLogin)){
-             userLogin = pesquisarUserPorContato(login).isPresent() ? pesquisarUserPorContato(login).get() : null ;
-             if(UtilObjeto.isEmpty(userLogin)){
              userLogin = pesquisarUserMatricula(login);
+             if(UtilObjeto.isEmpty(userLogin)){
+             userLogin =  pesquisarUserPorContato(login).get() ;
              }
          }
          return userLogin;
@@ -130,10 +138,24 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public UserDetails userLogin(String login) {
-        return (UserDetails) login(login);
+        return (UserDetails) userRepository.validarLogin(UtilCast.toInteger(login));
     }
 
+    private String obtemEmailDTO (List<ContactsDTO> dto){
+        List<ContactsDTO> contatos = dto;
+        String email = "";
+        for (ContactsDTO obj : contatos) {
+            if(TypeContacts.EMAIL.getValue().equals(obj.typeContacts())){
+                email = obj.dsContato();
+            }
+        }
+        return email;
+    }
 
+    @Override
+    public User obtemUserMatricula(String matricula) {
+        return pesquisarUserMatricula(matricula);
+    }
 
 
 }

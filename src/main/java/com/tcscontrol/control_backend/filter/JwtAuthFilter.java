@@ -1,7 +1,6 @@
 package com.tcscontrol.control_backend.filter;
 
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
-import com.tcscontrol.control_backend.pessoa.user.UserService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,8 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.tcscontrol.control_backend.auth.services.TokenService;
 
-
-
 import java.io.IOException;
 
 @Component
@@ -29,14 +26,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     TokenService tokenService;
 
-    private final UserService userService;
+    private final UserNegocio userNegocio;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
         if(token != null){
             var login = tokenService.validateToken(token);
-            UserDetails user = (UserDetails) userService.login(login);
+            UserDetails user = userNegocio.userLogin(login);
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

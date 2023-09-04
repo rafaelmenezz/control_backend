@@ -3,9 +3,9 @@ package com.tcscontrol.control_backend.pessoa.user.model;
 
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.userdetails.UserDetails;
 
-@Repository
 public interface UserRepository extends JpaRepository<User, Long>{
 
     User findByNrCpf(String nrCpf);
@@ -13,5 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
     void removeByNrMatricula(Integer nrMatricula);
 
     User findByNrMatricula(Integer nrMatricula);
+
+    @Query("From User u Where u.nrMatricula = ?1")
+    UserDetails validarLogin(Integer matricula);
 
 }

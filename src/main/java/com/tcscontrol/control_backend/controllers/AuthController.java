@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.auth.controller;
+package com.tcscontrol.control_backend.controllers;
 
 import com.tcscontrol.control_backend.pessoa.user.UserService;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
