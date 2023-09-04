@@ -1,8 +1,15 @@
-package com.tcscontrol.control_backend.user;
+package com.tcscontrol.control_backend.controllers;
 
 import java.util.List;
 
+import com.tcscontrol.control_backend.enuns.DocumentoType;
+import com.tcscontrol.control_backend.pessoa.user.UserService;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
+import com.tcscontrol.control_backend.utilitarios.UtilControl;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.tcscontrol.control_backend.user.model.UserDTO;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -28,26 +33,38 @@ import lombok.AllArgsConstructor;
 public class UserController {
     
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
-    public List<UserDTO> list(){
+    public List<UserCreateDTO> list(){
         return userService.list();
     }
 
     @GetMapping("/{id}")
-    public UserDTO findById(@PathVariable @NotNull @Positive Long id){
+    public UserCreateDTO findById(@PathVariable @NotNull @Positive Long id){
         return userService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public UserDTO create(@RequestBody @Valid UserDTO userDto){
-        return userService.create(userDto);
+    public UserCreateDTO create(@RequestBody UserCreateDTO userCreateDto){
+        String password = UtilControl.gerarSenha(8);
+        UserDTO userDTO = new UserDTO(userCreateDto.id(),
+        userCreateDto.nmUsuario(), 
+        DocumentoType.CPF.getValue(),
+        userCreateDto.nrMatricula(), 
+        userCreateDto.nrCpf(), 
+        passwordEncoder.encode(password), 
+        userCreateDto.ftFoto(), 
+        userCreateDto.contacts(), 
+        userCreateDto.flStatus(), 
+        userCreateDto.typeUser());
+        return userService.create(userDTO, password);
     }
 
     @PatchMapping("/{id}")
-    public UserDTO update(@PathVariable Long id, @RequestBody @Valid UserDTO userDto){
-        return userService.update(id, userDto);
+    public UserCreateDTO update(@PathVariable Long id, @RequestBody @Valid UserCreateDTO userCreateDto){
+        return userService.update(id, userCreateDto);
     }
 
     @DeleteMapping("/{id}")

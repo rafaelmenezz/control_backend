@@ -1,11 +1,8 @@
-package com.tcscontrol.control_backend.user.model;
+package com.tcscontrol.control_backend.pessoa.user.model.dto;
 
 import java.util.List;
 
-import org.hibernate.validator.constraints.Length;
-
 import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
-
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,13 +10,12 @@ import jakarta.validation.constraints.NotNull;
 public record UserDTO(
     Long id,
     @NotBlank @NotNull String nmUsuario,
+    String documentoType,
     Integer nrMatricula, 
-    @NotBlank @Length(min = 6, max = 20) String nmSenha,
     @NotBlank @NotNull String nrCpf,
+    String nmSenha,
     Byte[] ftFoto, 
     @NotNull List<ContactsDTO> contacts, 
-    @NotNull String typeUser
-
-) {
-
-}
+    String flStatus,
+    String typeUser
+) {}
