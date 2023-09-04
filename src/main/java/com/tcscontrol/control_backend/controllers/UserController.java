@@ -47,7 +47,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public UserCreateDTO create(@RequestBody @Valid UserCreateDTO userCreateDto){
+    public UserCreateDTO create(@RequestBody UserCreateDTO userCreateDto){
         String password = UtilControl.gerarSenha(8);
         UserDTO userDTO = new UserDTO(userCreateDto.id(),
         userCreateDto.nmUsuario(), 
