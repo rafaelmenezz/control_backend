@@ -19,9 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name="PESSOA")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="TYPE")
 @EqualsAndHashCode(of = {"id"})
 public abstract class Pessoa implements Serializable {
 
@@ -41,7 +44,7 @@ public abstract class Pessoa implements Serializable {
 
     @Column(name="tp_status")
     @Convert(converter = StatusConverter.class)
-    private Status tpStatus;
+    private Status tpStatus = Status.ACTIVE;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contacts> contacts = new ArrayList<>();

@@ -1,9 +1,15 @@
-package com.tcscontrol.control_backend.pessoa.user;
+package com.tcscontrol.control_backend.controllers;
 
 import java.util.List;
 
+import com.tcscontrol.control_backend.enuns.DocumentoType;
+import com.tcscontrol.control_backend.pessoa.user.UserService;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
+import com.tcscontrol.control_backend.utilitarios.UtilControl;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +33,7 @@ import lombok.AllArgsConstructor;
 public class UserController {
     
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<UserCreateDTO> list(){
@@ -41,7 +48,18 @@ public class UserController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public UserCreateDTO create(@RequestBody @Valid UserCreateDTO userCreateDto){
-        return userService.create(userCreateDto);
+        String password = UtilControl.gerarSenha(8);
+        UserDTO userDTO = new UserDTO(userCreateDto.id(),
+        userCreateDto.nmUsuario(), 
+        DocumentoType.CPF.getValue(),
+        userCreateDto.nrMatricula(), 
+        userCreateDto.nrCpf(), 
+        passwordEncoder.encode(password), 
+        userCreateDto.ftFoto(), 
+        userCreateDto.contacts(), 
+        userCreateDto.flStatus(), 
+        userCreateDto.typeUser());
+        return userService.create(userDTO, password);
     }
 
     @PatchMapping("/{id}")

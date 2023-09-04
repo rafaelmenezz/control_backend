@@ -1,6 +1,11 @@
 package com.tcscontrol.control_backend.pessoa.user.model.entity;
 
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.enuns.DocumentoType;
@@ -8,6 +13,8 @@ import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeUser;
 import com.tcscontrol.control_backend.enuns.converters.TypeUserConverter;
 import com.tcscontrol.control_backend.pessoa.Pessoa;
+import com.tcscontrol.control_backend.utilitarios.UtilCast;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -28,7 +35,7 @@ import lombok.NoArgsConstructor;
 //@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
 @Table(name = "USUARIO")
 @EqualsAndHashCode(callSuper = false)
-public class User extends Pessoa {
+public class User extends Pessoa implements UserDetails{
 
     @Column(name="nr_matricula")
     private Integer nrMatricula;
@@ -58,6 +65,42 @@ public class User extends Pessoa {
         this.ftFoto = ftFoto;
         this.typeUser = typeUser;
 
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.typeUser == TypeUser.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.nmSenha;
+    }
+
+    @Override
+    public String getUsername() {
+        return UtilCast.toString(this.nrMatricula);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 }

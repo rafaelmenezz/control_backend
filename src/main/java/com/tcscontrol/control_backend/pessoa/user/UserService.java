@@ -3,6 +3,7 @@ package com.tcscontrol.control_backend.pessoa.user;
 import java.util.List;
 
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public interface UserService {
 
     public UserCreateDTO findById(@PathVariable @NotNull @Positive Long id);
 
-    public UserCreateDTO create(@Valid UserCreateDTO user);
+    public UserCreateDTO create(@Valid UserDTO userDTO, String password);
 
     public UserCreateDTO update(Long id, @Valid UserCreateDTO user);
 

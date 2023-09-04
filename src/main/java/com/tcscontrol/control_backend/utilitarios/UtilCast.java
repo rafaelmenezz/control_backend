@@ -29,6 +29,21 @@ public class UtilCast {
          return Integer.parseInt(objeto.toString().trim());
     }
 
+    public static Long toLong(Object objeto) {
+        if (UtilString.isNuloOuBranco(objeto)) {
+            return null;
+        }
+        if (objeto instanceof Long) {
+            return (Long) objeto;
+        }
+        if (objeto instanceof Number) {
+            return ((Number) objeto).longValue();
+        }
+        Long retorno = new Long(objeto.toString().trim());
+        return retorno;
+    }
+
+
 
     
 }

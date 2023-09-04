@@ -24,7 +24,7 @@ public class RefreshTokenService {
     private UserNegocio userNegocio;
 
     public RefreshToken createRefreshToken(String login) {
-        User user = userNegocio.login(login);
+        User user = userNegocio.obtemUserMatricula(login);
         RefreshToken rt = refreshTokenRepository.findByUser(user);
         RefreshToken refreshToken = RefreshToken.builder()
                 .id(rt != null ? rt.getId() : null)
