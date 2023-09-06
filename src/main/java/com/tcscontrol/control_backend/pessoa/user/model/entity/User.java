@@ -1,5 +1,6 @@
 package com.tcscontrol.control_backend.pessoa.user.model.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
+import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeUser;
@@ -19,7 +21,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
-
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,7 +34,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
 @Table(name = "USUARIO")
 @EqualsAndHashCode(callSuper = false)
 public class User extends Pessoa implements UserDetails{
@@ -54,6 +55,9 @@ public class User extends Pessoa implements UserDetails{
     @Column(name= "tp_usuario", length = 15)
     @Convert(converter = TypeUserConverter.class)
     private TypeUser typeUser = TypeUser.PEAO;
+
+    @OneToMany
+    private List<Department> departments = new ArrayList<>();
 
     @Builder
     public User(Long id, String nmName, DocumentoType documentoType, Status status, 

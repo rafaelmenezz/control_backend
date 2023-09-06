@@ -1,13 +1,10 @@
 package com.tcscontrol.control_backend.department.impl.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.department.model.entity.Department;
-import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+
 
 import lombok.AllArgsConstructor;
 
