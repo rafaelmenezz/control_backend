@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
-import com.tcscontrol.control_backend.patrymony.model.Patrimony;
 import com.tcscontrol.control_backend.patrymony.model.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrymony.model.PatrimonyRepository;
 import jakarta.validation.Valid;
@@ -52,7 +51,7 @@ public PatrimonyDTO criarPatrimonio(@Valid @NotNull PatrimonyDTO patrimonioDTO) 
 public PatrimonyDTO update(Long id, @Valid PatrimonyDTO patrimonyDTO) {
 	return patrimonyRepository.findById(id)
 	.map(recordfound -> {
-	Patrimony patrimony = patrimonyMapper.toEntity(patrimonyDTO);
+	patrimonyMapper.toEntity(patrimonyDTO);
 	recordfound.setId_fornecedor(patrimonyDTO.id_fornecedor());
 	recordfound.setNr_ativo(patrimonyDTO.nr_ativo());
 	recordfound.setDt_aquisicao(patrimonyDTO.dt_aquisicao());
