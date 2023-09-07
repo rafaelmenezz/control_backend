@@ -11,7 +11,7 @@ public record UserDTO(
     Long id,
     @NotBlank @NotNull String nmUsuario,
     String documentoType,
-    Integer nrMatricula, 
+    String nrMatricula, 
     @NotBlank @NotNull String nrCpf,
     String nmSenha,
     Byte[] ftFoto, 

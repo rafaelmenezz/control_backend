@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public interface UserNegocio extends UserService {
     
-    void deleteCascade(Integer nrMatricula);
+    void deleteCascade(String nrMatricula);
 
     void register(UserSenhaDTO user);
 

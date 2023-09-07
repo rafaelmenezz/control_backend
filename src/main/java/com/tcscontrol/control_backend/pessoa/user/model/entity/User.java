@@ -38,7 +38,7 @@ import lombok.NoArgsConstructor;
 public class User extends Pessoa implements UserDetails{
 
     @Column(name="nr_matricula")
-    private Integer nrMatricula;
+    private String nrMatricula;
 
     @Column(name = "nm_senha")
     private String nmSenha;
@@ -57,7 +57,7 @@ public class User extends Pessoa implements UserDetails{
 
     @Builder
     public User(Long id, String nmName, DocumentoType documentoType, Status status, 
-    List<Contacts> contacts, Integer nrMatricula,String nmSenha, String nrCPF, Byte[] ftFoto, TypeUser typeUser) {
+    List<Contacts> contacts, String nrMatricula,String nmSenha, String nrCPF, Byte[] ftFoto, TypeUser typeUser) {
         super(id, nmName, documentoType, status, contacts);
         this.nrMatricula = nrMatricula;
         this.nmSenha = nmSenha;

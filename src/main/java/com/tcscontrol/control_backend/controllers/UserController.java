@@ -9,6 +9,7 @@ import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +34,6 @@ import lombok.AllArgsConstructor;
 public class UserController {
     
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<UserCreateDTO> list(){
@@ -54,7 +54,7 @@ public class UserController {
         DocumentoType.CPF.getValue(),
         userCreateDto.nrMatricula(), 
         userCreateDto.nrCpf(), 
-        passwordEncoder.encode(password), 
+        new BCryptPasswordEncoder().encode(password), 
         userCreateDto.ftFoto(), 
         userCreateDto.contacts(), 
         userCreateDto.flStatus(), 

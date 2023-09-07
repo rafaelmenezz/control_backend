@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
@@ -30,7 +31,7 @@ public class ControlBackendApplication {
 	CommandLineRunner initDatabase(UserNegocio userNegocio, PasswordEncoder passwordEncoder) {
 		return args -> {
 
-			userNegocio.deleteCascade(2121);
+			userNegocio.deleteCascade("2121");
 
 			ContactsDTO contacts = new ContactsDTO(
 				null,
@@ -50,8 +51,8 @@ public class ControlBackendApplication {
 			UserSenhaDTO user = new UserSenhaDTO(
 			    0L,
 				"teste",
-				2121,
-				passwordEncoder.encode("teste"),
+				"2121",
+				new BCryptPasswordEncoder().encode("teste"),
 				"111.111.111-11",
 				null,
 				contatos,

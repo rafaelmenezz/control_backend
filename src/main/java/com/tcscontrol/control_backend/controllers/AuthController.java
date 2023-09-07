@@ -2,8 +2,9 @@ package com.tcscontrol.control_backend.controllers;
 
 import com.tcscontrol.control_backend.pessoa.user.UserService;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tcscontrol.control_backend.auth.dto.AccessTokenResponse;
@@ -29,19 +30,21 @@ public class AuthController {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     private final UserService userService;
 
 
     @PostMapping("/login")
     public JwtResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(authRequest.login(), authRequest.password());
-        if (!usernamePassword.isAuthenticated()) {
-            User user = userService.login(authRequest.login());
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getNrMatricula().toString());
-            return new JwtResponse(tokenService.generateToken(user), refreshToken.getToken(), user);
-        } else {
-            throw new UsernameNotFoundException("invalid user request !");
-        }
+        User user = userService.login(authRequest.login());
+        var usernamePassword = new UsernamePasswordAuthenticationToken(user.getNrMatricula(), authRequest.password());
+        var auth = authenticationManager.authenticate(usernamePassword);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getNrMatricula());
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+        return new JwtResponse(token, refreshToken.getToken(), user);
+
     }
     
     @PostMapping("/refreshToken")

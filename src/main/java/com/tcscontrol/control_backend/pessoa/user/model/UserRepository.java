@@ -10,11 +10,11 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     User findByNrCpf(String nrCpf);
 
-    void removeByNrMatricula(Integer nrMatricula);
+    void removeByNrMatricula(String nrMatricula);
 
-    User findByNrMatricula(Integer nrMatricula);
+    User findByNrMatricula(String nrMatricula);
 
     @Query("From User u Where u.nrMatricula = ?1")
-    UserDetails validarLogin(Integer matricula);
+    UserDetails validarLogin(String matricula);
 
 }

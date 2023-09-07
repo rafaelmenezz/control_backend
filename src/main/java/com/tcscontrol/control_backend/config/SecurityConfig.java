@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.tcscontrol.control_backend.auth.services.UserInfoUserDetailsService;
 import com.tcscontrol.control_backend.filter.JwtAuthFilter;
 
 import lombok.AllArgsConstructor;
@@ -31,13 +30,6 @@ import lombok.AllArgsConstructor;
 public class SecurityConfig {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
-
-    private UserNegocio userNegocio;
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserInfoUserDetailsService(userNegocio);
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
