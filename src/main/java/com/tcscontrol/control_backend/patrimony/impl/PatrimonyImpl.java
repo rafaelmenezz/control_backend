@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
-import com.tcscontrol.control_backend.patrymony.model.PatrimonyDTO;
-import com.tcscontrol.control_backend.patrymony.model.PatrimonyRepository;
+import com.tcscontrol.control_backend.patrimony.model.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.PatrimonyRepository;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

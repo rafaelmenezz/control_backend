@@ -2,8 +2,9 @@ package com.tcscontrol.control_backend.patrimony.impl.mapper;
 
 
 
-import com.tcscontrol.control_backend.patrymony.model.Patrimony;
-import com.tcscontrol.control_backend.patrymony.model.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.Patrimony;
+import com.tcscontrol.control_backend.patrimony.model.PatrimonyDTO;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 

@@ -2,7 +2,9 @@ package com.tcscontrol.control_backend.patrimony;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.tcscontrol.control_backend.patrymony.model.PatrimonyDTO;
+
+import com.tcscontrol.control_backend.patrimony.model.PatrimonyDTO;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

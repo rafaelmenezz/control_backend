@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrymony.model;
+package com.tcscontrol.control_backend.patrimony.model;
 
 
 import lombok.Data;
