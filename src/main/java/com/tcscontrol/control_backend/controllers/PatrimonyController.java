@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimony;
+package com.tcscontrol.control_backend.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

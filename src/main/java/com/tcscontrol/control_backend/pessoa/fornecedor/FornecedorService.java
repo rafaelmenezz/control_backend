@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface FornecedorService {
 
-
     List<FornecedorDTO> list();
 
     FornecedorDTO findById(Long id);

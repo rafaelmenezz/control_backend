@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 public record UserCreateDTO(
     Long id,
     @NotBlank @NotNull String nmUsuario,
-    Integer nrMatricula, 
+    String nrMatricula, 
     @NotBlank @NotNull String nrCpf,
     Byte[] ftFoto, 
     @NotNull List<ContactsDTO> contacts, 

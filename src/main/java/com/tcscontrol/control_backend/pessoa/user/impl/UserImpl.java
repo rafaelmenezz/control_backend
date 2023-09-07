@@ -23,7 +23,6 @@ import com.tcscontrol.control_backend.auth.repository.RefreshTokenRepository;
 import com.tcscontrol.control_backend.contacts.ContactsRepository;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.utilitarios.EmailService;
-import com.tcscontrol.control_backend.utilitarios.UtilCast;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 
 import jakarta.validation.Valid;
@@ -85,7 +84,7 @@ public class UserImpl implements UserNegocio {
     }
 
     @Override
-    public void deleteCascade(Integer nrMatricula) {
+    public void deleteCascade(String nrMatricula) {
         User user = userRepository.findByNrMatricula(nrMatricula);
         if (!UtilObjeto.isEmpty(user)) {
             RefreshToken rt = refreshTokenRepository.findByUser(user);
@@ -109,7 +108,7 @@ public class UserImpl implements UserNegocio {
         if(!UtilObjeto.isNumero(matricula)){
             return null;
         }
-        return userRepository.findByNrMatricula(UtilCast.toInteger(matricula));
+        return userRepository.findByNrMatricula(matricula);
     }
 
     private User pesquisarUserDocumento(String documento) {
@@ -138,7 +137,7 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public UserDetails userLogin(String login) {
-        return (UserDetails) userRepository.validarLogin(UtilCast.toInteger(login));
+        return userRepository.validarLogin(login);
     }
 
     private String obtemEmailDTO (List<ContactsDTO> dto){

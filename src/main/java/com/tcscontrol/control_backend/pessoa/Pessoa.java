@@ -1,6 +1,5 @@
 package com.tcscontrol.control_backend.pessoa;
 
-
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.enuns.Status;
