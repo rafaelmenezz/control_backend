@@ -1,13 +1,16 @@
 package com.tcscontrol.control_backend.pessoa.fornecedor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.Pessoa;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +27,9 @@ import lombok.NoArgsConstructor;
 public class Fornecedor extends Pessoa {
 
     private String nrCnpj;
+
+    @OneToMany
+    private List<Patrimony> patrimonies = new ArrayList<>();
 
     @Builder
     public Fornecedor(Long id, String nmName,List<Contacts> contacts, String nrCnpj ){

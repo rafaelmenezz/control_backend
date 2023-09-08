@@ -5,6 +5,7 @@ import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tcscontrol.control_backend.auth.dto.AccessTokenResponse;
@@ -35,18 +36,22 @@ public class AuthController {
 
     private final UserService userService;
 
-
     @PostMapping("/login")
     public JwtResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
         User user = userService.login(authRequest.login());
-        var usernamePassword = new UsernamePasswordAuthenticationToken(user.getNrMatricula(), authRequest.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getNrMatricula());
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        return new JwtResponse(token, refreshToken.getToken(), user);
+        if (user != null) {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(user.getNrMatricula(),
+                    authRequest.password());
+            var auth = authenticationManager.authenticate(usernamePassword);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getNrMatricula());
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            return new JwtResponse(token, refreshToken.getToken(), user);
+        }else{
+            throw new UsernameNotFoundException("Usuário não encontrado !");
+        }
 
     }
-    
+
     @PostMapping("/refreshToken")
     public AccessTokenResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return refreshTokenService.findByToken(refreshTokenRequest.getRefreshToken())

@@ -1,7 +1,6 @@
 package com.tcscontrol.control_backend.department.impl.mapper;
 
 import org.springframework.stereotype.Component;
-
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
@@ -47,4 +46,5 @@ public class DepartmentMapper {
         return department;
 
     }
+
 }
