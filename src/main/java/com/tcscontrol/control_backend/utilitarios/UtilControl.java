@@ -5,6 +5,8 @@
  */
 package com.tcscontrol.control_backend.utilitarios;
 
+import com.tcscontrol.control_backend.enuns.Status;
+
 /**
  *
  * @author silvio.junior
@@ -113,5 +115,16 @@ public class UtilControl {
 
     public static void main(String[] args) {
         System.out.println("Cidade: " + gerarCidade());
+    }
+
+    public static Status convertStatusValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Ativo" -> Status.ACTIVE;
+            case "Inativo" -> Status.INACTIVE;
+            default -> throw new IllegalArgumentException("Status do usuário inválido.");
+        };
     }
 }

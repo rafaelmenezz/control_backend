@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 
 import jakarta.validation.constraints.NotNull;
