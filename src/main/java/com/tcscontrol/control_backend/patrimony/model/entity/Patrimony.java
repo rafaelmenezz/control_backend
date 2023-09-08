@@ -28,24 +28,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "PATRIMONIOS")
-public class Patrimony implements Serializable{
+public class Patrimony implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-    @Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id_patrimonio")
 	private Long id;
 
 	@Column(name = "nr_serie", nullable = true)
 	private Integer nrSerie;
 
-    @Column(name = "nm_patrimonio")
-    private String nmPatrimonio;
-    
+	@Column(name = "nm_patrimonio")
+	private String nmPatrimonio;
+
 	@Column(name = "ds_patrimonio")
 	private String dsPatrimonio;
-    
+
 	@Column(name = "nr_nota_fiscal")
 	private Integer nrNotaFiscal;
 
@@ -54,19 +55,19 @@ public class Patrimony implements Serializable{
 
 	@Column(name = "dt_aquisicao")
 	private Date dtAquisicao;
-    
+
 	@Column(name = "vl_aquisicao")
 	private Double vlAquisicao;
-        
+
 	@Column(name = "fl_fixo")
 	private Boolean flFixo;
 
-    @Column(name="tp_status")
-    @Convert(converter = StatusConverter.class)
-    private Status tpStatus = Status.ACTIVE;
+	@Column(name = "tp_status")
+	@Convert(converter = StatusConverter.class)
+	private Status tpStatus = Status.ACTIVE;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "id_fornecedor", nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "id_fornecedor", nullable = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Fornecedor fornecedor;
 }
