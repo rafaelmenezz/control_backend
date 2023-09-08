@@ -1,6 +1,6 @@
 package com.tcscontrol.control_backend.auth.dto;
 
-import com.tcscontrol.control_backend.user.model.entity.User;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

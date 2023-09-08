@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.converters.TypeContactsConverter;
-import com.tcscontrol.control_backend.user.model.entity.User;
+import com.tcscontrol.control_backend.pessoa.Pessoa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -23,16 +23,16 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "CONTATO")
-public class Contacts implements Serializable{
-    
+public class Contacts implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idContacts;
 
     @NotNull
-    @Column(name="tipo_contato",nullable = false)
+    @Column(name = "tipo_contato", nullable = false)
     @Convert(converter = TypeContactsConverter.class)
     private TypeContacts typeContacts;
 
@@ -40,9 +40,8 @@ public class Contacts implements Serializable{
     private String dsContato;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "id", nullable = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private User user;
-
+    private Pessoa pessoa;
 
 }

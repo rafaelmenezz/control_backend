@@ -4,13 +4,13 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
 import com.tcscontrol.control_backend.auth.repository.RefreshTokenRepository;
-import com.tcscontrol.control_backend.user.UserNegocio;
-import com.tcscontrol.control_backend.user.model.entity.User;
 
 import lombok.AllArgsConstructor;
 
@@ -24,13 +24,13 @@ public class RefreshTokenService {
     private UserNegocio userNegocio;
 
     public RefreshToken createRefreshToken(String login) {
-        User user = userNegocio.login(login).get();
+        User user = userNegocio.obtemUserMatricula(login);
         RefreshToken rt = refreshTokenRepository.findByUser(user);
         RefreshToken refreshToken = RefreshToken.builder()
                 .id(rt != null ? rt.getId() : null)
                 .user(user)
                 .token(UUID.randomUUID().toString())
-                .expiryDate(Instant.now().plusMillis(600000))// 10
+                .expiryDate(Instant.now().plusMillis(7200000))// 10
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }

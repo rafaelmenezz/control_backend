@@ -5,11 +5,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.tcscontrol.control_backend.user.model.entity.User;
 
 public class InfoUserDetails implements UserDetails {
 
@@ -19,7 +18,7 @@ public class InfoUserDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public InfoUserDetails(User user) {
-        name=user.getNmUsuario();
+        name=user.getNmName();
         password=user.getNmSenha();
         authorities= Arrays.stream(user.getTypeUser().getValue().split(","))
                 .map(SimpleGrantedAuthority::new)
