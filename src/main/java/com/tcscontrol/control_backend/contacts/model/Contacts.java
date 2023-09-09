@@ -1,5 +1,6 @@
 package com.tcscontrol.control_backend.contacts.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,6 +26,7 @@ import lombok.Data;
 @Table(name = "CONTATO")
 public class Contacts implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
