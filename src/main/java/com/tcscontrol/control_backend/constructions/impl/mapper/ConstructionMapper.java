@@ -48,7 +48,6 @@ public class ConstructionMapper {
                   construction.setId(constructionDTO.id());
             }
 
-
             User user = userMapper.toCreateEntity(constructionDTO.usuario());
 
             construction.setNmObra(constructionDTO.nmObra());

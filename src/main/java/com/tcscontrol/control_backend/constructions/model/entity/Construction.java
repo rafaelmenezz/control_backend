@@ -33,7 +33,7 @@ public class Construction implements Serializable {
       @Id
       @GeneratedValue(strategy = GenerationType.AUTO)
       @Column(name = "id_obra")
-      private long id;
+      private Long id;
 
       @Column(name = "nm_obra")
       private String nmObra;
