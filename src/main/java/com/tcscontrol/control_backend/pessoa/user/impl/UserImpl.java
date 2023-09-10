@@ -10,6 +10,7 @@ import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.ReqUpdatePassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
 import com.tcscontrol.control_backend.auth.repository.RefreshTokenRepository;
+import com.tcscontrol.control_backend.config.SecurityConfig;
 import com.tcscontrol.control_backend.contacts.ContactsRepository;
+import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.utilitarios.EmailService;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
@@ -40,6 +43,7 @@ public class UserImpl implements UserNegocio {
     ContactsRepository contactsRepository;
     UserMapper userMapper;
     EmailService emailService;
+    SecurityConfig config;
     
 
     public List<UserCreateDTO> list() {
@@ -156,5 +160,18 @@ public class UserImpl implements UserNegocio {
         return pesquisarUserMatricula(matricula);
     }
 
-
+    @Override
+    public void updatePassword(Long id, ReqUpdatePassword reqUpdatePassword) {
+        
+        if(!reqUpdatePassword.newPassword1().equals(reqUpdatePassword.newPassword2())){
+            throw new IllegalRequestException("Nova senha e confirmar senha são diferentes");
+        }
+        User user = userRepository.findById(id).get();
+        boolean senhasIguais = config.passwordEncoder().matches( reqUpdatePassword.currentPassword(), user.getNmSenha());
+        if(senhasIguais){
+            user.setNmSenha(config.passwordEncoder().encode(reqUpdatePassword.newPassword1()));
+        }else{
+            throw new IllegalRequestException("Senha informada inválida!");
+        }
+    }
 }

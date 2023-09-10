@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.pessoa.user.UserService;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.ReqUpdatePassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -70,6 +72,12 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable @NotNull @Positive Long id){
         userService.delete(id);
+    }
+
+    @PutMapping("/{id}/change-password")    
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void updatePassword(@PathVariable Long id, @RequestBody ReqUpdatePassword data){
+        userService.updatePassword(id, data);
     }
 
 }
