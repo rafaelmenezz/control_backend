@@ -1,11 +1,11 @@
-package com.tcscontrol.control_backend.allocation.model.dto;
+package com.tcscontrol.control_backend.patrimonyConstruction.model.dto;
 
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 
-public record AllocationDTO(
+public record PatrimonyContructionDTO(
       Long id,
-      AllocationDTO parent,
+      PatrimonyContructionDTO parent,
       String dtAlocacao,
       String dtDevolucao,
       String nmObservacao,

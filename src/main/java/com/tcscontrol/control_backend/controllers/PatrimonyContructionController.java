@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.allocation.AllocationService;
-import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.patrimonyConstruction.PatrimonyContructionService;
+import com.tcscontrol.control_backend.patrimonyConstruction.model.dto.PatrimonyContructionDTO;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,28 +21,28 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/api/alocacao")
 @AllArgsConstructor
-public class AllocationController {
+public class PatrimonyContructionController {
 
-      private final AllocationService allocationService;
+      private final PatrimonyContructionService allocationService;
 
       @GetMapping
-      public List<AllocationDTO> list() {
+      public List<PatrimonyContructionDTO> list() {
             return allocationService.list();
       }
 
       @GetMapping("/{id}")
-      public AllocationDTO findById(@PathVariable Long id) {
+      public PatrimonyContructionDTO findById(@PathVariable Long id) {
             return allocationService.findById(id);
       }
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public AllocationDTO create(@RequestBody @Valid AllocationDTO allocationDTO) {
+      public PatrimonyContructionDTO create(@RequestBody @Valid PatrimonyContructionDTO allocationDTO) {
             return allocationService.create(allocationDTO);
       }
 
       @PutMapping("/{id}")
-      public AllocationDTO update(@PathVariable Long id, @RequestBody AllocationDTO allocationDTO) {
+      public PatrimonyContructionDTO update(@PathVariable Long id, @RequestBody PatrimonyContructionDTO allocationDTO) {
             return allocationService.update(id, allocationDTO);
       }
 

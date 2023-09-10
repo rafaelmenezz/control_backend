@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.allocation.model.entity;
+package com.tcscontrol.control_backend.patrimonyConstruction.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "ALOCACOES")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Allocation implements Serializable {
+public class PatrimonyContruction implements Serializable {
       
       @Serial
       private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class Allocation implements Serializable {
       private Long id;
 
       @OneToOne
-      private Allocation parent;
+      private PatrimonyContruction parent;
 
       @Column(name = "dt_alocacao")
       private Date  dtAlocacao;
