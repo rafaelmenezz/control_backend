@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyConstruction.impl.mapper;
+package com.tcscontrol.control_backend.patrimonyDepartment.impl.mapper;
 
 import org.springframework.stereotype.Component;
 
@@ -6,24 +6,24 @@ import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonyConstruction.model.dto.PatrimonyContructionDTO;
-import com.tcscontrol.control_backend.patrimonyConstruction.model.entity.PatrimonyContruction;
+import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.patrimonyDepartment.model.entity.PatrimonyDepartment;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
-public class PatrimonyContructionMapper {
+public class PatrimonyDepartmentMapper {
       
       private DepartmentMapper departmentMapper;
       private PatrimonyMapper patrimonyMapper;
 
-      public PatrimonyContructionDTO toDto(PatrimonyContruction allocation){
+      public PatrimonyDepartmentDTO toDto(PatrimonyDepartment allocation){
             if (allocation == null) {
                   return null;
             }
-            return new PatrimonyContructionDTO(
+            return new PatrimonyDepartmentDTO(
                   allocation.getId(),
                   toDto(allocation.getParent()),
                   UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
@@ -33,16 +33,16 @@ public class PatrimonyContructionMapper {
                   departmentMapper.toDTO(allocation.getDepartamento()));
       }
 
-      public PatrimonyContruction toEntity(PatrimonyContructionDTO allocationDTO){
+      public PatrimonyDepartment toEntity(PatrimonyDepartmentDTO allocationDTO){
             if (allocationDTO == null) {
                   return null;
             }
-            PatrimonyContruction allocation = new PatrimonyContruction();
+            PatrimonyDepartment allocation = new PatrimonyDepartment();
             if (allocationDTO.id() != null) {
                   return null;
             }
 
-            PatrimonyContruction allocationParent = toEntity(allocationDTO.parent());
+            PatrimonyDepartment allocationParent = toEntity(allocationDTO.parent());
             Patrimony patrimony = patrimonyMapper.toEntity(allocationDTO.patrimonio());
             Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
 

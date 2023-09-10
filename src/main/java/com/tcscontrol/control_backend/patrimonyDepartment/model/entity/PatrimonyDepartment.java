@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyConstruction.model.entity;
+package com.tcscontrol.control_backend.patrimonyDepartment.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "ALOCACOES")
 @AllArgsConstructor
 @NoArgsConstructor
-public class PatrimonyContruction implements Serializable {
+public class PatrimonyDepartment implements Serializable {
       
       @Serial
       private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class PatrimonyContruction implements Serializable {
       private Long id;
 
       @OneToOne
-      private PatrimonyContruction parent;
+      private PatrimonyDepartment parent;
 
       @Column(name = "dt_alocacao")
       private Date  dtAlocacao;

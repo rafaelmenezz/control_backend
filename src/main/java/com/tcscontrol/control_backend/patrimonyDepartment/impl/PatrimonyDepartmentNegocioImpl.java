@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyConstruction.impl;
+package com.tcscontrol.control_backend.patrimonyDepartment.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,11 +10,11 @@ import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonyConstruction.PatrimonyContructionNegocio;
-import com.tcscontrol.control_backend.patrimonyConstruction.PatrimonyContructionRepository;
-import com.tcscontrol.control_backend.patrimonyConstruction.impl.mapper.PatrimonyContructionMapper;
-import com.tcscontrol.control_backend.patrimonyConstruction.model.dto.PatrimonyContructionDTO;
-import com.tcscontrol.control_backend.patrimonyConstruction.model.entity.PatrimonyContruction;
+import com.tcscontrol.control_backend.patrimonyDepartment.PatrimonyDepartmentNegocio;
+import com.tcscontrol.control_backend.patrimonyDepartment.PatrimonyDepartmentRepository;
+import com.tcscontrol.control_backend.patrimonyDepartment.impl.mapper.PatrimonyDepartmentMapper;
+import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.patrimonyDepartment.model.entity.PatrimonyDepartment;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;
@@ -22,16 +22,16 @@ import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
-public class PatrimonyContructionNegocioImpl implements PatrimonyContructionNegocio{
+public class PatrimonyDepartmentNegocioImpl implements PatrimonyDepartmentNegocio{
       
-      private PatrimonyContructionRepository allocationRepository;
-      private PatrimonyContructionMapper allocationMapper;
+      private PatrimonyDepartmentRepository allocationRepository;
+      private PatrimonyDepartmentMapper allocationMapper;
       private PatrimonyMapper patrimonyMapper;
       private DepartmentMapper departmentMapper;
       
       
       @Override
-      public List<PatrimonyContructionDTO> list() {
+      public List<PatrimonyDepartmentDTO> list() {
             return allocationRepository.findAll()
             .stream()
             .map(allocationMapper::toDto)
@@ -39,22 +39,22 @@ public class PatrimonyContructionNegocioImpl implements PatrimonyContructionNego
       }
 
       @Override
-      public PatrimonyContructionDTO findById(Long id) {
+      public PatrimonyDepartmentDTO findById(Long id) {
             return allocationRepository.findById(id)
             .map(allocationMapper::toDto)
             .orElseThrow(()-> new RecordNotFoundException(id));
       }
 
       @Override
-      public PatrimonyContructionDTO create(PatrimonyContructionDTO allocationDTO) {
+      public PatrimonyDepartmentDTO create(PatrimonyDepartmentDTO allocationDTO) {
             return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));
       }
 
       @Override
-      public PatrimonyContructionDTO update(Long id, PatrimonyContructionDTO allocationDTO) {
+      public PatrimonyDepartmentDTO update(Long id, PatrimonyDepartmentDTO allocationDTO) {
            return allocationRepository.findById(id)
            .map(recordFound -> {
-            PatrimonyContruction allocationParent = allocationMapper.toEntity(allocationDTO.parent());
+            PatrimonyDepartment allocationParent = allocationMapper.toEntity(allocationDTO.parent());
             Patrimony patrimony = patrimonyMapper.toEntity(allocationDTO.patrimonio());
             Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
 

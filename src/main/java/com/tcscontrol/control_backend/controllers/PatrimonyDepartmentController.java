@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.patrimonyConstruction.PatrimonyContructionService;
-import com.tcscontrol.control_backend.patrimonyConstruction.model.dto.PatrimonyContructionDTO;
+import com.tcscontrol.control_backend.patrimonyDepartment.PatrimonyDepartmentService;
+import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,28 +21,28 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/api/alocacao")
 @AllArgsConstructor
-public class PatrimonyContructionController {
+public class PatrimonyDepartmentController {
 
-      private final PatrimonyContructionService allocationService;
+      private final PatrimonyDepartmentService allocationService;
 
       @GetMapping
-      public List<PatrimonyContructionDTO> list() {
+      public List<PatrimonyDepartmentDTO> list() {
             return allocationService.list();
       }
 
       @GetMapping("/{id}")
-      public PatrimonyContructionDTO findById(@PathVariable Long id) {
+      public PatrimonyDepartmentDTO findById(@PathVariable Long id) {
             return allocationService.findById(id);
       }
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public PatrimonyContructionDTO create(@RequestBody @Valid PatrimonyContructionDTO allocationDTO) {
+      public PatrimonyDepartmentDTO create(@RequestBody @Valid PatrimonyDepartmentDTO allocationDTO) {
             return allocationService.create(allocationDTO);
       }
 
       @PutMapping("/{id}")
-      public PatrimonyContructionDTO update(@PathVariable Long id, @RequestBody PatrimonyContructionDTO allocationDTO) {
+      public PatrimonyDepartmentDTO update(@PathVariable Long id, @RequestBody PatrimonyDepartmentDTO allocationDTO) {
             return allocationService.update(id, allocationDTO);
       }
 
