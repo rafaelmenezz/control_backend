@@ -96,7 +96,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Path load(Long id) {
         return rootLocation.resolve(userRepository.findById(id).map(record -> record.getFtFoto())
-                .orElseThrow(() -> new RecordNotFoundException(id)));
+                .orElseThrow(() -> new RecordNotFoundException("Imagem não encontrada")));
     }
 
     private Path load(String fileName) {
@@ -110,7 +110,7 @@ public class FileSystemStorageService implements StorageService {
             if (userRepository.findById(id).isPresent()) {
                 user = userRepository.findById(id).get();
             } else {
-                throw new RecordNotFoundException(id);
+                throw new RecordNotFoundException("Imagem não encontrada");
             }
             String filename = user.getFtFoto();
             Path file = load(filename);
@@ -123,7 +123,7 @@ public class FileSystemStorageService implements StorageService {
 
             }
         } catch (MalformedURLException e) {
-            throw new RecordNotFoundException(id);
+            throw new RecordNotFoundException("Imagem não encontrada");
         }
     }
 

@@ -14,7 +14,8 @@ public record UserCreateDTO(
     String ftFoto, 
     @NotNull List<ContactsDTO> contacts, 
     String flStatus,
-    String typeUser
+    String typeUser,
+    Boolean primeiroAcesso
 ) {
 
 }

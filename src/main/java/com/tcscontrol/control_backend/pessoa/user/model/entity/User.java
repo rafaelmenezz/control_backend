@@ -48,6 +48,9 @@ public class User extends Pessoa implements UserDetails{
     @Column(name = "ft_foto")
     private String ftFoto;
 
+    @Column(name = "primeiro_acesso")
+    private Boolean primeiroAcesso = Boolean.TRUE;
+
     @NotNull
     @Column(name= "tp_usuario", length = 15)
     @Convert(converter = TypeUserConverter.class)

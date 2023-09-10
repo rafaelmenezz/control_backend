@@ -170,6 +170,8 @@ public class UserImpl implements UserNegocio {
         boolean senhasIguais = config.passwordEncoder().matches( reqUpdatePassword.currentPassword(), user.getNmSenha());
         if(senhasIguais){
             user.setNmSenha(config.passwordEncoder().encode(reqUpdatePassword.newPassword1()));
+            user.setPrimeiroAcesso(Boolean.FALSE);
+            userRepository.saveAndFlush(user);
         }else{
             throw new IllegalRequestException("Senha informada inválida!");
         }

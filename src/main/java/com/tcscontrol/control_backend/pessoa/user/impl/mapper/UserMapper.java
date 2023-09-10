@@ -39,7 +39,8 @@ public class UserMapper {
                 user.getFtFoto(),
                 contacts,
                 user.getTpStatus().getValue(),
-                user.getTypeUser().getValue());
+                user.getTypeUser().getValue(),
+                user.getPrimeiroAcesso());
     }
 
     public User toCreateEntity(UserDTO userDTO) {
