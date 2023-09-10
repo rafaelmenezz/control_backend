@@ -3,9 +3,15 @@ package com.tcscontrol.control_backend.department.model.entity;
 import java.io.Serial;
 import java.io.Serializable;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +27,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Table(name = "DEPARTAMENTOS")
+@SQLDelete(sql = "UPDATE departamentos SET status = 'Inativo' WHERE id_departamento = ?")
+@Where(clause = "status = 'Ativo'")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Department implements Serializable {
@@ -39,4 +47,10 @@ public class Department implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario", nullable = true)
     private User user;
+
+    @Column(name="status")
+    @Convert(converter = StatusConverter.class)
+    private Status tpStatus = Status.ACTIVE;
+
+
 }
