@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyDepartment;
+package com.tcscontrol.control_backend.patrimonydepartment;
 
 import org.springframework.stereotype.Component;
 

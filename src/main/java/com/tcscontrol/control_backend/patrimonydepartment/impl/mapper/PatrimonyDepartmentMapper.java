@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyDepartment.impl.mapper;
+package com.tcscontrol.control_backend.patrimonydepartment.impl.mapper;
 
 import org.springframework.stereotype.Component;
 
@@ -6,8 +6,8 @@ import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
-import com.tcscontrol.control_backend.patrimonyDepartment.model.entity.PatrimonyDepartment;
+import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.patrimonydepartment.model.entity.PatrimonyDepartment;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;

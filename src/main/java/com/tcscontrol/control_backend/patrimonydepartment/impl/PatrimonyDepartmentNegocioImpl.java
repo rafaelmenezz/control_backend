@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyDepartment.impl;
+package com.tcscontrol.control_backend.patrimonydepartment.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,11 +10,11 @@ import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonyDepartment.PatrimonyDepartmentNegocio;
-import com.tcscontrol.control_backend.patrimonyDepartment.PatrimonyDepartmentRepository;
-import com.tcscontrol.control_backend.patrimonyDepartment.impl.mapper.PatrimonyDepartmentMapper;
-import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
-import com.tcscontrol.control_backend.patrimonyDepartment.model.entity.PatrimonyDepartment;
+import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentNegocio;
+import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentRepository;
+import com.tcscontrol.control_backend.patrimonydepartment.impl.mapper.PatrimonyDepartmentMapper;
+import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.patrimonydepartment.model.entity.PatrimonyDepartment;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;

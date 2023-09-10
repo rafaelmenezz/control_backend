@@ -1,10 +1,10 @@
-package com.tcscontrol.control_backend.patrimonyDepartment;
+package com.tcscontrol.control_backend.patrimonydepartment;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
 
 @Service
 public interface PatrimonyDepartmentService {

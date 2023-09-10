@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.patrimonyDepartment.PatrimonyDepartmentService;
-import com.tcscontrol.control_backend.patrimonyDepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentService;
+import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

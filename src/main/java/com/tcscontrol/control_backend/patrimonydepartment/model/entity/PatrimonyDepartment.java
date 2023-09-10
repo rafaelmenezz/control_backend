@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyDepartment.model.entity;
+package com.tcscontrol.control_backend.patrimonydepartment.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
