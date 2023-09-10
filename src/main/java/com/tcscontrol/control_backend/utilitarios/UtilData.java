@@ -6,6 +6,7 @@ import java.util.Date;
 public class UtilData {
 
     public static final String FORMATO_DDMMAA = "dd/MM/yyyy";
+    public static final String FORMATO_DATAHORA_SEM_CARACTERE = "ddMMyyyyHHmm";
 
     public static String toString(Date data, String formato){
         Date dt = data;

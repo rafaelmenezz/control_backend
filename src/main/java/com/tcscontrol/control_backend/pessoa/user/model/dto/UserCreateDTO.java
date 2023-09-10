@@ -11,7 +11,7 @@ public record UserCreateDTO(
     @NotBlank @NotNull String nmUsuario,
     String nrMatricula, 
     @NotBlank @NotNull String nrCpf,
-    Byte[] ftFoto, 
+    String ftFoto, 
     @NotNull List<ContactsDTO> contacts, 
     String flStatus,
     String typeUser

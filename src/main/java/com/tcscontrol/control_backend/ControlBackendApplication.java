@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,8 @@ import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.TypeUser;
+import com.tcscontrol.control_backend.file.StorageService;
+import com.tcscontrol.control_backend.file.model.entity.StorageProperties;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
 
@@ -21,10 +24,19 @@ import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
 
 
 @SpringBootApplication
+@EnableConfigurationProperties(StorageProperties.class)
 public class ControlBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ControlBackendApplication.class, args);
+	}
+
+	@Bean
+	CommandLineRunner init(StorageService storageService) {
+		return (args) -> {
+			storageService.deleteAll();
+			storageService.init();
+		};
 	}
 
 	@Bean
