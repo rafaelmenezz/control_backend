@@ -20,9 +20,6 @@ import com.tcscontrol.control_backend.file.model.entity.StorageProperties;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
 
-
-
-
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
 public class ControlBackendApplication {
