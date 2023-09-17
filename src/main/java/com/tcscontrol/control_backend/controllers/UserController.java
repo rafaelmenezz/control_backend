@@ -14,6 +14,8 @@ import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -43,6 +45,7 @@ import lombok.AllArgsConstructor;
 
 @Validated
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {

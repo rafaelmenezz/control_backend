@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.constructions.ConstructionService;
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @Validated
 @RestController
 @AllArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/obra")
 public class ConstructionController {
 

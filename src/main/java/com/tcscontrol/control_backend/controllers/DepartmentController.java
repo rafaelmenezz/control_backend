@@ -18,12 +18,14 @@ import com.tcscontrol.control_backend.department.DepartmentService;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentCreateDTO;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @Validated
 @RestController
 @AllArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/departamento")
 public class DepartmentController {
     

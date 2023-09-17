@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.maintenance.MaintenanceService;
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenanceDTO;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/manutencao")
 @AllArgsConstructor
 public class MaintenanceController {

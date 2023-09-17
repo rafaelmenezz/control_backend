@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.warranty.WarrantyService;
 import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/garantia")
 @AllArgsConstructor
 public class WarrantyController {

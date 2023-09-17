@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorDTO;
 import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -24,6 +25,7 @@ import lombok.AllArgsConstructor;
 
 @Validated
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/fornecedor")
 @AllArgsConstructor
 public class FornecedorController {

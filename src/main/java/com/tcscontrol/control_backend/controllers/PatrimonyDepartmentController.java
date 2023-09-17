@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentService;
 import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/alocacao")
 @AllArgsConstructor
 public class PatrimonyDepartmentController {

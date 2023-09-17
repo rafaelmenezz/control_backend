@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.inventory.InventoryService;
 import com.tcscontrol.control_backend.inventory.model.dto.InventoryDTO;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/inventario")
 public class InventoryController {
     
