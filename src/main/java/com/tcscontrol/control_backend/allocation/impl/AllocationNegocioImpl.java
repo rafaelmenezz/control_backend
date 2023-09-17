@@ -1,20 +1,20 @@
-package com.tcscontrol.control_backend.patrimonydepartment.impl;
+package com.tcscontrol.control_backend.allocation.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.tcscontrol.control_backend.allocation.AllocationNegocio;
+import com.tcscontrol.control_backend.allocation.AllocationRepository;
+import com.tcscontrol.control_backend.allocation.impl.mapper.AllocationMapper;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentNegocio;
-import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentRepository;
-import com.tcscontrol.control_backend.patrimonydepartment.impl.mapper.PatrimonyDepartmentMapper;
-import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
-import com.tcscontrol.control_backend.patrimonydepartment.model.entity.PatrimonyDepartment;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;
@@ -22,16 +22,16 @@ import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
-public class PatrimonyDepartmentNegocioImpl implements PatrimonyDepartmentNegocio{
+public class AllocationNegocioImpl implements AllocationNegocio{
       
-      private PatrimonyDepartmentRepository allocationRepository;
-      private PatrimonyDepartmentMapper allocationMapper;
+      private AllocationRepository allocationRepository;
+      private AllocationMapper allocationMapper;
       private PatrimonyMapper patrimonyMapper;
       private DepartmentMapper departmentMapper;
       
       
       @Override
-      public List<PatrimonyDepartmentDTO> list() {
+      public List<AllocationDTO> list() {
             return allocationRepository.findAll()
             .stream()
             .map(allocationMapper::toDto)
@@ -39,30 +39,30 @@ public class PatrimonyDepartmentNegocioImpl implements PatrimonyDepartmentNegoci
       }
 
       @Override
-      public PatrimonyDepartmentDTO findById(Long id) {
+      public AllocationDTO findById(Long id) {
             return allocationRepository.findById(id)
             .map(allocationMapper::toDto)
             .orElseThrow(()-> new RecordNotFoundException(id));
       }
 
       @Override
-      public PatrimonyDepartmentDTO create(PatrimonyDepartmentDTO allocationDTO) {
+      public AllocationDTO create(AllocationDTO allocationDTO) {
             return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));
       }
 
       @Override
-      public PatrimonyDepartmentDTO update(Long id, PatrimonyDepartmentDTO allocationDTO) {
+      public AllocationDTO update(Long id, AllocationDTO allocationDTO) {
            return allocationRepository.findById(id)
            .map(recordFound -> {
-            PatrimonyDepartment allocationParent = allocationMapper.toEntity(allocationDTO.parent());
-            Patrimony patrimony = patrimonyMapper.toEntity(allocationDTO.patrimonio());
+            Allocation allocationParent = allocationMapper.toEntity(allocationDTO.parent());
+            List<Patrimony> patrimonys = allocationDTO.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
             Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
 
             recordFound.setParent(allocationParent);
             recordFound.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             recordFound.setDtDevolucao(UtilData.toDate(allocationDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             recordFound.setNmObservacao(allocationDTO.nmObservacao());
-            recordFound.setPatrimonio(patrimony);
+            recordFound.setPatrimonios(patrimonys);
             recordFound.setDepartamento(department);
 
             return allocationMapper.toDto(allocationRepository.save(recordFound));

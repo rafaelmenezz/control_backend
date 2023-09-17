@@ -5,9 +5,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tcscontrol.control_backend.enuns.TypeWarranty;
+import com.tcscontrol.control_backend.enuns.converters.TypeWarrantyConverter;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +20,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -37,7 +42,12 @@ public class Warranty implements Serializable {
       @Column(name = "dt_validade")
       private Date dtValidade;
 
-      @ManyToOne(fetch = FetchType.LAZY, optional = false)
+      @NotNull
+      @Column(name = "tp_garantia", nullable = false)
+      @Convert(converter = TypeWarrantyConverter.class)
+       private TypeWarranty typewWarranty;
+
+      @ManyToOne(fetch = FetchType.LAZY, optional = true)
       @JoinColumn(name = "id_patrimonio", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
       private Patrimony patrimony;

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.patrimonydepartment.PatrimonyDepartmentService;
-import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
+import com.tcscontrol.control_backend.allocation.AllocationService;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -25,26 +25,26 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PatrimonyDepartmentController {
 
-      private final PatrimonyDepartmentService allocationService;
+      private final AllocationService allocationService;
 
       @GetMapping
-      public List<PatrimonyDepartmentDTO> list() {
+      public List<AllocationDTO> list() {
             return allocationService.list();
       }
 
       @GetMapping("/{id}")
-      public PatrimonyDepartmentDTO findById(@PathVariable Long id) {
+      public AllocationDTO findById(@PathVariable Long id) {
             return allocationService.findById(id);
       }
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public PatrimonyDepartmentDTO create(@RequestBody @Valid PatrimonyDepartmentDTO allocationDTO) {
+      public AllocationDTO create(@RequestBody @Valid AllocationDTO allocationDTO) {
             return allocationService.create(allocationDTO);
       }
 
       @PutMapping("/{id}")
-      public PatrimonyDepartmentDTO update(@PathVariable Long id, @RequestBody PatrimonyDepartmentDTO allocationDTO) {
+      public AllocationDTO update(@PathVariable Long id, @RequestBody AllocationDTO allocationDTO) {
             return allocationService.update(id, allocationDTO);
       }
 

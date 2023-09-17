@@ -1,56 +1,59 @@
-package com.tcscontrol.control_backend.patrimonydepartment.impl.mapper;
+package com.tcscontrol.control_backend.allocation.impl.mapper;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonydepartment.model.dto.PatrimonyDepartmentDTO;
-import com.tcscontrol.control_backend.patrimonydepartment.model.entity.PatrimonyDepartment;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
-public class PatrimonyDepartmentMapper {
+public class AllocationMapper {
       
       private DepartmentMapper departmentMapper;
       private PatrimonyMapper patrimonyMapper;
 
-      public PatrimonyDepartmentDTO toDto(PatrimonyDepartment allocation){
+      public AllocationDTO toDto(Allocation allocation){
             if (allocation == null) {
                   return null;
             }
-            return new PatrimonyDepartmentDTO(
+            return new AllocationDTO(
                   allocation.getId(),
                   toDto(allocation.getParent()),
                   UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
                   UtilData.toString(allocation.getDtDevolucao(), UtilData.FORMATO_DDMMAA),
                   allocation.getNmObservacao(),
-                  patrimonyMapper.toDto(allocation.getPatrimonio()),
+                  allocation.getPatrimonios().stream().map(patrimonyMapper::toDto).collect(Collectors.toList()),
                   departmentMapper.toDTO(allocation.getDepartamento()));
       }
 
-      public PatrimonyDepartment toEntity(PatrimonyDepartmentDTO allocationDTO){
+      public Allocation toEntity(AllocationDTO allocationDTO){
             if (allocationDTO == null) {
                   return null;
             }
-            PatrimonyDepartment allocation = new PatrimonyDepartment();
+            Allocation allocation = new Allocation();
             if (allocationDTO.id() != null) {
                   return null;
             }
 
-            PatrimonyDepartment allocationParent = toEntity(allocationDTO.parent());
-            Patrimony patrimony = patrimonyMapper.toEntity(allocationDTO.patrimonio());
+            Allocation allocationParent = toEntity(allocationDTO.parent());
+            List<Patrimony> patrimonys = allocationDTO.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
             Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
 
             allocation.setParent(allocationParent);
             allocation.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             allocation.setDtDevolucao(UtilData.toDate(allocationDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             allocation.setNmObservacao(allocationDTO.nmObservacao());
-            allocation.setPatrimonio(patrimony);
+            allocation.setPatrimonios(patrimonys);
             allocation.setDepartamento(department);
 
             return allocation;

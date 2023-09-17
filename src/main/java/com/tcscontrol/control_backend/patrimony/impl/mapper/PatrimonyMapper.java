@@ -28,12 +28,12 @@ public class PatrimonyMapper {
         return new PatrimonyDTO(patrimony.getId(),
          patrimony.getNrSerie(), 
          patrimony.getNmPatrimonio(), 
-         patrimony.getDsPatrimonio(), 
+         patrimony.getNmDescricao(), 
          patrimony.getNrNotaFiscal(), 
          UtilData.toString( patrimony.getDtNotaFiscal(), UtilData.FORMATO_DDMMAA), 
          UtilData.toString( patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA), 
          patrimony.getVlAquisicao(), 
-         patrimony.getFlFixo(),
+         patrimony.getFixo(),
          patrimony.getTpStatus().getValue(), 
          fornecedorDTO);
 
@@ -53,12 +53,12 @@ public class PatrimonyMapper {
 
         patrimony.setNrSerie(patrimonyDTO.nrSerie());
         patrimony.setNmPatrimonio(patrimonyDTO.nmPatrimonio());
-        patrimony.setDsPatrimonio(patrimonyDTO.dsPatrimonio());
+        patrimony.setNmDescricao(patrimonyDTO.nmDescricao());
         patrimony.setNrNotaFiscal(patrimonyDTO.nrNotaFiscal());
         patrimony.setDtNotaFiscal(UtilData.toDate(patrimonyDTO.dtNotaFiscal(), UtilData.FORMATO_DDMMAA));
         patrimony.setDtAquisicao(UtilData.toDate(patrimonyDTO.dtAquisicao(), UtilData.FORMATO_DDMMAA));
         patrimony.setVlAquisicao(patrimonyDTO.vlAquisicao());
-        patrimony.setFlFixo(patrimonyDTO.fixo());
+        patrimony.setFixo(patrimonyDTO.fixo());
         patrimony.setTpStatus(UtilControl.convertStatusValue(patrimonyDTO.status()));
         patrimony.setFornecedor(fornecedor);
 

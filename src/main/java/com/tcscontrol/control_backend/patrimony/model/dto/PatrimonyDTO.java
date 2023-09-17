@@ -6,7 +6,7 @@ public record PatrimonyDTO (
     Long id, 
     Integer nrSerie,
     String nmPatrimonio,
-    String dsPatrimonio,
+    String nmDescricao,
     Integer nrNotaFiscal,
     String  dtNotaFiscal,
     String dtAquisicao,

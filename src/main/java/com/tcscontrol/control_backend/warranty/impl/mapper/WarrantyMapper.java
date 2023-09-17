@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
+import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
@@ -26,6 +27,7 @@ public class WarrantyMapper {
             return new WarrantyDTO(
                   warranty.getId(),
                   warranty.getDsGarantia(),
+                  warranty.getTypewWarranty().getValue(),
                   UtilData.toString(warranty.getDtValidade(), UtilData.FORMATO_DDMMAA),
                   patrimonyDTO
             );
@@ -45,6 +47,7 @@ public class WarrantyMapper {
             Patrimony patrimony = patrimonyMapper.toEntity(warrantyDTO.patrimonio());
 
             warranty.setDsGarantia(warrantyDTO.dsGarantia());
+            warranty.setTypewWarranty(UtilControl.convertTypeWarrantyValue(warrantyDTO.tipoGarantia()));
             warranty.setDtValidade(UtilData.toDate(warrantyDTO.dtValidade(), UtilData.FORMATO_DDMMAA));
             warranty.setPatrimony(patrimony);
             

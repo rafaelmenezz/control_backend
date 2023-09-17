@@ -57,12 +57,12 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
                     Fornecedor fornecedor = fornecedorMapper.toEntity(patrimonyDTO.fornecedor());
                     recordFound.setNrSerie(patrimonyDTO.nrSerie());
                     recordFound.setNmPatrimonio(patrimonyDTO.nmPatrimonio());
-                    recordFound.setDsPatrimonio(patrimonyDTO.dsPatrimonio());
+                    recordFound.setNmDescricao(patrimonyDTO.nmDescricao());
                     recordFound.setNrNotaFiscal(patrimonyDTO.nrNotaFiscal());
                     recordFound.setDtNotaFiscal(UtilData.toDate(patrimonyDTO.dtNotaFiscal(), UtilData.FORMATO_DDMMAA));
                     recordFound.setDtAquisicao(UtilData.toDate(patrimonyDTO.dtAquisicao(), UtilData.FORMATO_DDMMAA));
                     recordFound.setVlAquisicao(patrimonyDTO.vlAquisicao());
-                    recordFound.setFlFixo(patrimonyDTO.fixo());
+                    recordFound.setFixo(patrimonyDTO.fixo());
                     recordFound.setTpStatus(UtilControl.convertStatusValue(patrimonyDTO.status()));
                     recordFound.setFornecedor(fornecedor);
                     return patrimonyMapper.toDto(patrimonyRepository.save(recordFound));
@@ -86,7 +86,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
             dt = UtilData.toDate(dtAquisicao, UtilData.FORMATO_DDMMAA);
         }
         
-        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieContainingOrDsPatrimonioContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
+        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
                 .stream()
                 .map(patrimonyMapper::toDto)
                 .collect(Collectors.toList());

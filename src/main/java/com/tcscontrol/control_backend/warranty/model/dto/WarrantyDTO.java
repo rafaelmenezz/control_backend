@@ -6,5 +6,6 @@ public record WarrantyDTO(
       Long id,
       String dsGarantia,
       String dtValidade,
+      String tipoGarantia,
       PatrimonyDTO patrimonio
 ) {}

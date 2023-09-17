@@ -12,10 +12,10 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
     
     List<Patrimony> findAll(Specification<Patrimony> specification);
 
-    List<Patrimony> findByNmPatrimonioContainingOrNrSerieContainingOrDsPatrimonioContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(
+    List<Patrimony> findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(
         String nmPatrimonio,
         Integer nrSerie,
-        String dsPatrimonio,
+        String nmDescricao,
         String nrCnpj,
         String nmFornecedor,
         Date dtAquisicao
