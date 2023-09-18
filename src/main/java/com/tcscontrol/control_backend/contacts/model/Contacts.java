@@ -38,7 +38,7 @@ public class Contacts implements Serializable {
     @Convert(converter = TypeContactsConverter.class)
     private TypeContacts typeContacts;
 
-    @Column(name = "ds_contato", unique = true, nullable = false, length = 20)
+    @Column(name = "ds_contato", unique = true, nullable = false, length = 100)
     private String dsContato;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

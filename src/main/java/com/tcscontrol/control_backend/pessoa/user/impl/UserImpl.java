@@ -145,6 +145,11 @@ public class UserImpl implements UserNegocio {
     }
 
     private String obtemEmailDTO (List<ContactsDTO> dto){
+
+        if (dto.isEmpty()) {
+            return null;
+        }
+
         List<ContactsDTO> contatos = dto;
         String email = "";
         for (ContactsDTO obj : contatos) {
