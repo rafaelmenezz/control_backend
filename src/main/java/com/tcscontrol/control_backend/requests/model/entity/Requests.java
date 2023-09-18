@@ -2,10 +2,8 @@ package com.tcscontrol.control_backend.requests.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +20,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,7 +27,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "Equipamento")
+@Table(name = "REQUISICOES")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Requests implements Serializable{

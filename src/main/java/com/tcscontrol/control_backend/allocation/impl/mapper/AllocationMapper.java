@@ -1,6 +1,5 @@
 package com.tcscontrol.control_backend.allocation.impl.mapper;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,12 +13,8 @@ import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
-import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
-import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
-import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
 import lombok.AllArgsConstructor;
 
@@ -68,16 +63,6 @@ public class AllocationMapper {
 
             return allocation;
 
-      }
-
-      private List<WarrantyDTO> tWarrantyDTOs(List<Warranty> lista){
-            if(lista.isEmpty()){
-                  return new ArrayList<>();
-            }
-            return lista.stream().map(w -> new WarrantyDTO(w.getId(), 
-            w.getDsGarantia(), 
-            UtilData.toString(w.getDtValidade(), UtilData.FORMATO_DDMMAA), 
-            w.getTypewWarranty().getValue())).collect(Collectors.toList());
       }
 
 }

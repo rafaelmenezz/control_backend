@@ -96,8 +96,20 @@ public class Patrimony implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Objects.hashCode(getId()); // Substitua getId() pelo campo relevante
-		// Outros campos relevantes
+		result = prime * result + Objects.hashCode(getId());
 		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		  if (this == o) {
+				return true;
+		  }
+		  if (o == null || getClass() != o.getClass()) {
+				return false;
+		  }
+
+		  Patrimony otherPatrimony = (Patrimony) o; 
+		  return id != null && id.equals(otherPatrimony.id);
 	}
 }

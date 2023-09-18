@@ -5,12 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.allocation.AllocationNegocio;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
-import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
