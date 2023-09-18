@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyconstruction.model.dto;
+package com.tcscontrol.control_backend.requests.model.dto;
 
 import java.util.List;
 

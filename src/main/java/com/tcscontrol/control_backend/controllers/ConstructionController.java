@@ -25,7 +25,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/obra")
+@RequestMapping("/api/construction")
 public class ConstructionController {
 
       private final ConstructionService constructionService;

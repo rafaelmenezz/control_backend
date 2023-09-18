@@ -9,7 +9,6 @@ import com.tcscontrol.control_backend.allocation.AllocationNegocio;
 import com.tcscontrol.control_backend.allocation.AllocationRepository;
 import com.tcscontrol.control_backend.allocation.impl.mapper.AllocationMapper;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
-import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
@@ -54,11 +53,9 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       public AllocationDTO update(Long id, AllocationDTO allocationDTO) {
            return allocationRepository.findById(id)
            .map(recordFound -> {
-            Allocation allocationParent = allocationMapper.toEntity(allocationDTO.parent());
             List<Patrimony> patrimonys = allocationDTO.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
             Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
 
-            recordFound.setParent(allocationParent);
             recordFound.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             recordFound.setDtDevolucao(UtilData.toDate(allocationDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             recordFound.setNmObservacao(allocationDTO.nmObservacao());

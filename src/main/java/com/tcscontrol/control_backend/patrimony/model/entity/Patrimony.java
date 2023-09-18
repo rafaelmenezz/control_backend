@@ -10,8 +10,10 @@ import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -70,11 +72,16 @@ public class Patrimony implements Serializable {
 	@Convert(converter = StatusConverter.class)
 	private Status tpStatus = Status.ACTIVE;
 
-	@OneToMany(orphanRemoval = false)
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = false)
 	private List<Warranty> warrantys;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "id_departamento", nullable = true)
+    @JoinColumn(name = "id_request", nullable = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Requests actualConstruction;
+
+	@ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "id_alocacao", nullable = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Allocation actualDepartment;
 

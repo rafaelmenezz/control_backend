@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/inventario")
+@RequestMapping("/api/inventory")
 public class InventoryController {
     
     private final InventoryService inventoryService;

@@ -28,7 +28,6 @@ public class AllocationMapper {
             }
             return new AllocationDTO(
                   allocation.getId(),
-                  toDto(allocation.getParent()),
                   UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
                   UtilData.toString(allocation.getDtDevolucao(), UtilData.FORMATO_DDMMAA),
                   allocation.getNmObservacao(),
@@ -45,11 +44,9 @@ public class AllocationMapper {
                   return null;
             }
 
-            Allocation allocationParent = toEntity(allocationDTO.parent());
             List<Patrimony> patrimonys = allocationDTO.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
             Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
 
-            allocation.setParent(allocationParent);
             allocation.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             allocation.setDtDevolucao(UtilData.toDate(allocationDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             allocation.setNmObservacao(allocationDTO.nmObservacao());

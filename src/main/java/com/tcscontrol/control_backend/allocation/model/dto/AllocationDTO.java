@@ -7,7 +7,6 @@ import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 
 public record AllocationDTO(
       Long id,
-      AllocationDTO parent,
       String dtAlocacao,
       String dtDevolucao,
       String nmObservacao,

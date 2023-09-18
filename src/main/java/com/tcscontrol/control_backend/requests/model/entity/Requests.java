@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyconstruction.model.entity;
+package com.tcscontrol.control_backend.requests.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;

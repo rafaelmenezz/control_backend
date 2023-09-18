@@ -1,8 +1,8 @@
-package com.tcscontrol.control_backend.patrimonyconstruction;
+package com.tcscontrol.control_backend.requests;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.tcscontrol.control_backend.patrimonyconstruction.model.entity.Requests;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 
 public interface RequestsRepository extends JpaRepository<Requests, Long> {
       

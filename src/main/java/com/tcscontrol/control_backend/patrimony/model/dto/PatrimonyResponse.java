@@ -4,20 +4,21 @@ import java.util.List;
 
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
-import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
+import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 
 public record PatrimonyResponse(
+    Long id,
     String nmPatrimonio,
-    String nmSerie,
+    Integer nrSerie,
     String nmDescricao,
-    String nmCnpj,
+    String nrCnpj,
     String nmFornecedor,
-    String nmNF,
+    Integer nrNF,
     String dtNF,
     String dtAquisicao,
-    Double vlDescricao,
+    Double vlAquisicao,
     Boolean fixo,
-    List<Warranty> warranties,
+    List<WarrantyDTO> warranties,
     DepartmentDTO actualDepartment,
     ConstructionDTO actualConstructionDTO
 ){}

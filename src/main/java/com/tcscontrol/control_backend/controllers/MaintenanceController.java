@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/manutencao")
+@RequestMapping("/api/maintenance")
 @AllArgsConstructor
 public class MaintenanceController {
 

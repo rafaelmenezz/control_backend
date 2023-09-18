@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.patrimonyconstruction.impl.mapper;
+package com.tcscontrol.control_backend.requests.impl.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +9,8 @@ import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapp
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.patrimonyconstruction.model.dto.RequestsDTO;
-import com.tcscontrol.control_backend.patrimonyconstruction.model.entity.Requests;
+import com.tcscontrol.control_backend.requests.model.dto.RequestsDTO;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;

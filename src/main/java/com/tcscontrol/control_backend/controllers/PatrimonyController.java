@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tcscontrol.control_backend.patrimony.PatrimonyService;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -23,31 +24,31 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/patrimonio")
+@RequestMapping("/api/patrimony")
 @AllArgsConstructor
 public class PatrimonyController {
 
     private final PatrimonyService patrimonyService;
 
     @GetMapping
-    public List<PatrimonyDTO> list() {
+    public List<PatrimonyResponse> list() {
         return patrimonyService.list();
     }
 
     @GetMapping("/{id}")
-    public PatrimonyDTO findById(@PathVariable Long id) {
+    public PatrimonyResponse findById(@PathVariable Long id) {
         return patrimonyService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public PatrimonyDTO create(@RequestBody @Valid PatrimonyDTO patrimonyDTO) {
-        return patrimonyService.create(patrimonyDTO);
+    public PatrimonyResponse create(@RequestBody @Valid PatrimonyDTO data) {
+        return patrimonyService.create(data);
     }
 
     @PutMapping("/{id}")
-    public PatrimonyDTO update(@PathVariable Long id, @RequestBody PatrimonyDTO patrimonyDTO) {
-        return patrimonyService.update(id, patrimonyDTO);
+    public PatrimonyResponse update(@PathVariable Long id, @RequestBody PatrimonyDTO data) {
+        return patrimonyService.update(id, data);
     }
 
     @DeleteMapping("/{id}")
@@ -57,7 +58,7 @@ public class PatrimonyController {
     }
 
     @GetMapping("search")
-    public List<PatrimonyDTO> search(
+    public List<PatrimonyResponse> search(
         @RequestParam(name = "nmPatrimonio", required = false) String nmPatrimonio,
         @RequestParam(name = "nrSerie", required = false) String nrSerie,
         @RequestParam(name = "dsPatrimonio", required = false) String dsPatrimonio,

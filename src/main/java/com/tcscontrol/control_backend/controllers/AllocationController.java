@@ -12,42 +12,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.warranty.WarrantyService;
-import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
+import com.tcscontrol.control_backend.allocation.AllocationService;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/garantia")
+@RequestMapping("/api/allocation")
 @AllArgsConstructor
-public class WarrantyController {
-      
-      private final WarrantyService warrantyService;
+public class AllocationController {
 
+      private final AllocationService allocationService;
 
       @GetMapping
-      public List<WarrantyDTO> list(){
-            return warrantyService.list();
+      public List<AllocationDTO> list() {
+            return allocationService.list();
       }
 
-      @GetMapping("{id}")
-      public WarrantyDTO findById(@PathVariable Long id){
-            return warrantyService.findById(id);
+      @GetMapping("/{id}")
+      public AllocationDTO findById(@PathVariable Long id) {
+            return allocationService.findById(id);
       }
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public WarrantyDTO create(@RequestBody WarrantyDTO warrantyDTO){
-            return warrantyService.create(warrantyDTO);
+      public AllocationDTO create(@RequestBody @Valid AllocationDTO allocationDTO) {
+            return allocationService.create(allocationDTO);
       }
 
-      @PutMapping("{id}")
-      @ResponseStatus(code = HttpStatus.NO_CONTENT)
-      public WarrantyDTO update(@PathVariable Long id, @RequestBody WarrantyDTO warrantyDTO){
-            return warrantyService.update(id, warrantyDTO);
+      @PutMapping("/{id}")
+      public AllocationDTO update(@PathVariable Long id, @RequestBody AllocationDTO allocationDTO) {
+            return allocationService.update(id, allocationDTO);
       }
-
 
 }

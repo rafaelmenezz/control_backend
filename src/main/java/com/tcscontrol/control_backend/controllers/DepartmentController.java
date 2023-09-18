@@ -26,7 +26,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @AllArgsConstructor
 @SecurityRequirement(name = "Bearer Authentication")
-@RequestMapping("/api/departamento")
+@RequestMapping("/api/department")
 public class DepartmentController {
     
     private final DepartmentService departmentService;
