@@ -15,6 +15,8 @@ import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
+import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
 import lombok.AllArgsConstructor;
 
@@ -30,15 +32,29 @@ public class AllocationMapper {
                   return null;
             }
 
-            List<PatrimonyDTO> patrimonyResponses = allocation.getPatrimonios()
+            List<PatrimonyDTO> patrimonyDTO = allocation.getPatrimonios()
                   .stream()
-                  .map(patrimonyMapper::toDto).collect(Collectors.toList());
+                  .map(
+                  patrimony-> new PatrimonyDTO(
+                  patrimony.getId(),
+                patrimony.getNrSerie(),
+                patrimony.getNmPatrimonio(),
+                patrimony.getNmDescricao(),
+                patrimony.getFornecedor().getNrCnpj(),
+                patrimony.getFornecedor().getNmName(),
+                patrimony.getNrNotaFiscal(),
+                UtilData.toString(patrimony.getDtNotaFiscal(), UtilData.FORMATO_DDMMAA),
+                UtilData.toString(patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA),
+                patrimony.getVlAquisicao(),
+                patrimony.getFixo(),
+                listWarrantyDTOs(patrimony.getWarrantys()),
+                departmentMapper.toDTO(allocation.getDepartamento()))).collect(Collectors.toList());
 
             return new AllocationDTO(
                   allocation.getId(),
                   UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
                   allocation.getNmObservacao(),
-                  patrimonyResponses,
+                  patrimonyDTO,
                   departmentMapper.toDTO(allocation.getDepartamento()));
       }
 
@@ -63,6 +79,16 @@ public class AllocationMapper {
 
             return allocation;
 
+      }
+
+      private List<WarrantyDTO> listWarrantyDTOs(List<Warranty> list){
+            return list.stream()
+            .map(warranty -> new WarrantyDTO(
+                    warranty.getId(),
+                    warranty.getDsGarantia(),
+                    UtilData.toString(warranty.getDtValidade(), UtilData.FORMATO_DDMMAA),
+                    warranty.getTypewWarranty().getValue()))
+            .collect(Collectors.toList());
       }
 
 }

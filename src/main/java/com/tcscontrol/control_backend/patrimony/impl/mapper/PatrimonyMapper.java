@@ -34,13 +34,11 @@ public class PatrimonyMapper {
             return null;
         }
 
-
         DepartmentDTO departmentDTO = departmentMapper.toDTO(patrimony.getAllocations()
-        .stream()
-        .filter(c -> c.getDtDevolucao() == null)
-        .findFirst()
-        .orElse(new Allocation()).getDepartamento());
-    
+                .stream()
+                .filter(c -> c.getDtDevolucao() == null)
+                .findFirst()
+                .orElse(new Allocation()).getDepartamento());
 
         List<WarrantyDTO> warrantys = patrimony.getWarrantys()
                 .stream()
@@ -81,6 +79,12 @@ public class PatrimonyMapper {
                         UtilData.toString(warranty.getDtValidade(), UtilData.FORMATO_DDMMAA),
                         warranty.getTypewWarranty().getValue()))
                 .collect(Collectors.toList());
+                
+        DepartmentDTO departmentDTO = departmentMapper.toDTO(patrimony.getAllocations()
+                .stream()
+                .filter(c -> c.getDtDevolucao() == null)
+                .findFirst()
+                .orElse(new Allocation()).getDepartamento());
 
         return new PatrimonyDTO(
                 patrimony.getId(),
@@ -94,10 +98,9 @@ public class PatrimonyMapper {
                 UtilData.toString(patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA),
                 patrimony.getVlAquisicao(),
                 patrimony.getFixo(),
-                warrantys);
+                warrantys,
+                departmentDTO);
     }
-
-    
 
     public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {
 
@@ -128,7 +131,7 @@ public class PatrimonyMapper {
         patrimony.setVlAquisicao(patrimonyDTO.vlAquisicao());
         patrimony.setFixo(patrimonyDTO.fixo());
         patrimony.setFornecedor(fornecedor);
-                List<Warranty> warrantys = patrimonyDTO.warranties()
+        List<Warranty> warrantys = patrimonyDTO.warranties()
                 .stream()
                 .map(warranty -> {
                     var garantia = new Warranty();
@@ -146,7 +149,7 @@ public class PatrimonyMapper {
 
     }
 
-     public Patrimony toEntity(PatrimonyResponse patrimonyResponse) {
+    public Patrimony toEntity(PatrimonyResponse patrimonyResponse) {
 
         if (patrimonyResponse == null) {
             return null;
@@ -175,7 +178,7 @@ public class PatrimonyMapper {
         patrimony.setVlAquisicao(patrimonyResponse.vlAquisicao());
         patrimony.setFixo(patrimonyResponse.fixo());
         patrimony.setFornecedor(fornecedor);
-                List<Warranty> warrantys = patrimonyResponse.warranties()
+        List<Warranty> warrantys = patrimonyResponse.warranties()
                 .stream()
                 .map(warranty -> {
                     var garantia = new Warranty();
