@@ -5,10 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.tcscontrol.control_backend.allocation.AllocationNegocio;
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
-import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
+import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -34,10 +36,13 @@ public class PatrimonyMapper {
             return null;
         }
 
-        DepartmentDTO departmentDTO = departmentMapper
-        .toDTO( patrimony.getActualDepartment() != null ? patrimony.getActualDepartment().getDepartamento() : null);
-        ConstructionDTO constructionDTO = constructionMapper
-        .toDto( patrimony.getActualConstruction() != null ? patrimony.getActualConstruction().getConstruction() : null);
+
+        DepartmentDTO departmentDTO = departmentMapper.toDTO(patrimony.getAllocations()
+        .stream()
+        .filter(c -> c.getDtDevolucao() == null)
+        .findFirst()
+        .orElse(new Allocation()).getDepartamento());
+    
 
         List<WarrantyDTO> warrantys = patrimony.getWarrantys()
                 .stream()
@@ -61,8 +66,7 @@ public class PatrimonyMapper {
                 patrimony.getVlAquisicao(),
                 patrimony.getFixo(),
                 warrantys,
-                departmentDTO,
-                constructionDTO);
+                departmentDTO != null ? departmentDTO : null);
 
     }
 
@@ -95,6 +99,8 @@ public class PatrimonyMapper {
                 warrantys);
     }
 
+    
+
     public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {
 
         if (patrimonyDTO == null) {
@@ -125,6 +131,53 @@ public class PatrimonyMapper {
         patrimony.setFixo(patrimonyDTO.fixo());
         patrimony.setFornecedor(fornecedor);
                 List<Warranty> warrantys = patrimonyDTO.warranties()
+                .stream()
+                .map(warranty -> {
+                    var garantia = new Warranty();
+                    garantia.setId(warranty.id());
+                    garantia.setDsGarantia(warranty.dsGarantia());
+                    garantia.setDtValidade(UtilData.toDate(warranty.dtValidade(), UtilData.FORMATO_DDMMAA));
+                    garantia.setTypewWarranty(UtilControl.convertTypeWarrantyValue(warranty.tipoGarantia()));
+                    garantia.setPatrimony(patrimony);
+                    return garantia;
+                })
+                .collect(Collectors.toList());
+        patrimony.setWarrantys(warrantys);
+
+        return patrimony;
+
+    }
+
+     public Patrimony toEntity(PatrimonyResponse patrimonyResponse) {
+
+        if (patrimonyResponse == null) {
+            return null;
+        }
+        Patrimony patrimony = new Patrimony();
+        if (patrimonyResponse.id() != null) {
+            patrimony.setId(patrimonyResponse.id());
+        }
+
+        Fornecedor fornecedor = fornecedorNegocio.pesquisaFornecedorCnpj(patrimonyResponse.nrCnpj());
+
+        if (fornecedor == null) {
+            fornecedor = new Fornecedor();
+            fornecedor.setNmName(patrimonyResponse.nmFornecedor());
+            fornecedor.setNrCnpj(patrimonyResponse.nrCnpj());
+            fornecedor = fornecedorNegocio.cadastrarFornecedor(fornecedor);
+
+        }
+
+        patrimony.setNrSerie(patrimonyResponse.nrSerie());
+        patrimony.setNmPatrimonio(patrimonyResponse.nmPatrimonio());
+        patrimony.setNmDescricao(patrimonyResponse.nmDescricao());
+        patrimony.setNrNotaFiscal(patrimonyResponse.nrNF());
+        patrimony.setDtNotaFiscal(UtilData.toDate(patrimonyResponse.dtNF(), UtilData.FORMATO_DDMMAA));
+        patrimony.setDtAquisicao(UtilData.toDate(patrimonyResponse.dtAquisicao(), UtilData.FORMATO_DDMMAA));
+        patrimony.setVlAquisicao(patrimonyResponse.vlAquisicao());
+        patrimony.setFixo(patrimonyResponse.fixo());
+        patrimony.setFornecedor(fornecedor);
+                List<Warranty> warrantys = patrimonyResponse.warranties()
                 .stream()
                 .map(warranty -> {
                     var garantia = new Warranty();

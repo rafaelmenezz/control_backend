@@ -3,12 +3,12 @@ package com.tcscontrol.control_backend.warranty.model.entity;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.enuns.TypeWarranty;
 import com.tcscontrol.control_backend.enuns.converters.TypeWarrantyConverter;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -49,10 +49,19 @@ public class Warranty implements Serializable {
       @NotNull
       @Column(name = "tp_garantia", nullable = false)
       @Convert(converter = TypeWarrantyConverter.class)
-       private TypeWarranty typewWarranty;
+      private TypeWarranty typewWarranty;
 
-      @ManyToOne(fetch = FetchType.LAZY, optional = true)
+      @ManyToOne(fetch = FetchType.EAGER, optional = true)
       @JoinColumn(name = "id_patrimonio", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
       private Patrimony patrimony;
+
+      @Override
+      public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Objects.hashCode(getId()); // Substitua getId() pelo campo relevante
+            // Outros campos relevantes
+            return result;
+      }
 }

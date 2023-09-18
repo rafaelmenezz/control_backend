@@ -1,11 +1,14 @@
 package com.tcscontrol.control_backend.patrimony.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.tcscontrol.control_backend.allocation.AllocationNegocio;
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.PatrimonyRepository;
@@ -32,6 +35,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     private PatrimonyRepository patrimonyRepository;
     private PatrimonyMapper patrimonyMapper;
     private FornecedorNegocio fornecedorNegocio;
+    private AllocationNegocio allocationNegocio;
 
     @Override
     public List<PatrimonyResponse> list() {
@@ -107,6 +111,17 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Patrimony> obtemPatrimonies(Long[] ids) {
+    return patrimonyRepository.findAllById( Arrays.asList(ids));
+
+    }
+
+    @Override
+    public Allocation actualAlocation(Long id) {
+       return allocationNegocio.obtemLocalizacaoPatrimonio(id);
     }
 
 }

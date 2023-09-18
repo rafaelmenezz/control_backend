@@ -1,6 +1,9 @@
 package com.tcscontrol.control_backend.allocation.impl.mapper;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -10,8 +13,13 @@ import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
+import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
+import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
 import lombok.AllArgsConstructor;
 
@@ -26,12 +34,16 @@ public class AllocationMapper {
             if (allocation == null) {
                   return null;
             }
+
+            List<PatrimonyDTO> patrimonyResponses = allocation.getPatrimonios()
+                  .stream()
+                  .map(patrimonyMapper::toDto).collect(Collectors.toList());
+
             return new AllocationDTO(
                   allocation.getId(),
                   UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
-                  UtilData.toString(allocation.getDtDevolucao(), UtilData.FORMATO_DDMMAA),
                   allocation.getNmObservacao(),
-                  allocation.getPatrimonios().stream().map(patrimonyMapper::toDto).collect(Collectors.toList()),
+                  patrimonyResponses,
                   departmentMapper.toDTO(allocation.getDepartamento()));
       }
 
@@ -43,13 +55,14 @@ public class AllocationMapper {
             if (allocationDTO.id() != null) {
                   return null;
             }
+            Set<Patrimony> patrimonys =  new HashSet<>(allocationDTO.patrimonies()
+                  .stream()
+                  .map(patrimonyMapper::toEntity).collect(Collectors.toList()));
 
-            List<Patrimony> patrimonys = allocationDTO.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
-            Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
+            Department department = departmentMapper.toEntity(allocationDTO.departament()); 
 
             allocation.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-            allocation.setDtDevolucao(UtilData.toDate(allocationDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
-            allocation.setNmObservacao(allocationDTO.nmObservacao());
+            allocation.setNmObservacao(allocationDTO.observation());
             allocation.setPatrimonios(patrimonys);
             allocation.setDepartamento(department);
 
@@ -57,5 +70,14 @@ public class AllocationMapper {
 
       }
 
+      private List<WarrantyDTO> tWarrantyDTOs(List<Warranty> lista){
+            if(lista.isEmpty()){
+                  return new ArrayList<>();
+            }
+            return lista.stream().map(w -> new WarrantyDTO(w.getId(), 
+            w.getDsGarantia(), 
+            UtilData.toString(w.getDtValidade(), UtilData.FORMATO_DDMMAA), 
+            w.getTypewWarranty().getValue())).collect(Collectors.toList());
+      }
 
 }

@@ -9,11 +9,10 @@ import com.tcscontrol.control_backend.allocation.AllocationNegocio;
 import com.tcscontrol.control_backend.allocation.AllocationRepository;
 import com.tcscontrol.control_backend.allocation.impl.mapper.AllocationMapper;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
-import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
-import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +24,6 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       
       private AllocationRepository allocationRepository;
       private AllocationMapper allocationMapper;
-      private PatrimonyMapper patrimonyMapper;
       private DepartmentMapper departmentMapper;
       
       
@@ -53,17 +51,21 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       public AllocationDTO update(Long id, AllocationDTO allocationDTO) {
            return allocationRepository.findById(id)
            .map(recordFound -> {
-            List<Patrimony> patrimonys = allocationDTO.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
-            Department department = departmentMapper.toEntity(allocationDTO.departamento()); 
+            Allocation allocation = allocationMapper.toEntity(allocationDTO);
+            Department department = departmentMapper.toEntity(allocationDTO.departament()); 
 
             recordFound.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-            recordFound.setDtDevolucao(UtilData.toDate(allocationDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
-            recordFound.setNmObservacao(allocationDTO.nmObservacao());
-            recordFound.setPatrimonios(patrimonys);
+            recordFound.setNmObservacao(allocationDTO.observation());
+            recordFound.getPatrimonios().clear();
+            allocation.getPatrimonios().forEach(recordFound.getPatrimonios()::add);
             recordFound.setDepartamento(department);
-
             return allocationMapper.toDto(allocationRepository.save(recordFound));
            }).orElseThrow(()-> new RecordNotFoundException(id));
+      }
+
+      @Override
+      public Allocation obtemLocalizacaoPatrimonio(Long id) {
+            return allocationRepository.findByPatrimoniosIdAndDtDevolucaoIsNotNull(id);            
       }
       
 }

@@ -8,8 +8,8 @@ import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 public record AllocationDTO(
       Long id,
       String dtAlocacao,
-      String dtDevolucao,
-      String nmObservacao,
-      List<PatrimonyDTO> patrimonios,
-      DepartmentDTO departamento
+      String observation,
+      List<PatrimonyDTO> patrimonies,
+      DepartmentDTO departament
+      
 ) {}

@@ -1,6 +1,8 @@
 package com.tcscontrol.control_backend.requests.impl.mapper;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -44,7 +46,7 @@ public class RequestMapper {
                   requests.setId(requestDto.id());
             }
 
-            List<Patrimony> patrimonys = requestDto.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
+            Set<Patrimony> patrimonys = new HashSet<>(requestDto.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList())) ;
             Construction construction = constructionMapper.toEntity(requestDto.obra());
 
             requests.setDtSolicitacao(UtilData.toDate(requestDto.dtSolicitacao(), UtilData.FORMATO_DDMMAA));

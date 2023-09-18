@@ -2,8 +2,12 @@ package com.tcscontrol.control_backend.patrimony.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
@@ -22,6 +26,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -72,21 +78,26 @@ public class Patrimony implements Serializable {
 	@Convert(converter = StatusConverter.class)
 	private Status tpStatus = Status.ACTIVE;
 
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = false)
-	private List<Warranty> warrantys;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
+	private List<Warranty> warrantys = new ArrayList<>();
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "id_request", nullable = true)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Requests actualConstruction;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
+	private Set<Requests> requests = new HashSet<>();
 
-	@ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @JoinColumn(name = "id_alocacao", nullable = true)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Allocation actualDepartment;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
+	private Set<Allocation> allocations = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "id_fornecedor", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Fornecedor fornecedor;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Objects.hashCode(getId()); // Substitua getId() pelo campo relevante
+		// Outros campos relevantes
+		return result;
+	}
 }
