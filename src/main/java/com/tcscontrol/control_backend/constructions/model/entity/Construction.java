@@ -50,8 +50,14 @@ public class Construction implements Serializable {
       @Column(name = "nm_logradouro")
       private String nmLogradouro;
 
+      @Column(name = "nm_bairro")
+      private String nmBairro;
+
       @Column(name = "nr_numero")
       private Integer nrNumero;
+
+      @Column(name = "nm_complemento")
+      private String nmComplemento;
 
       @Column(name = "nm_cidade")
       private String nmCidade;
