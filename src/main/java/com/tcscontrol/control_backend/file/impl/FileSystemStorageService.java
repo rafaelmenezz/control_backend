@@ -110,6 +110,9 @@ public class FileSystemStorageService implements StorageService {
             if (userRepository.findById(id).isPresent()) {
                 user = userRepository.findById(id).get();
             } else {
+                throw new RecordNotFoundException("Usuário não encontrado");
+            }
+            if (user.getFtFoto() == null) {
                 throw new RecordNotFoundException("Imagem não encontrada");
             }
             String filename = user.getFtFoto();

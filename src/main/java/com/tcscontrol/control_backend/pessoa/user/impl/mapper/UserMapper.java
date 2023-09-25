@@ -118,6 +118,7 @@ public class UserMapper {
         user.setFtFoto(userDTO.ftFoto());
         user.setTypeUser(convertTypeUserValue(userDTO.typeUser()));
         user.setTpStatus(convertStatusValue(userDTO.flStatus()));
+        user.setPrimeiroAcesso(false);
 
         List<Contacts> contacts = userDTO.contacts().stream()
                 .map(contactsDTO -> {
@@ -153,7 +154,7 @@ public class UserMapper {
             case "Telefone" -> TypeContacts.TELEFONE;
             case "Celular" -> TypeContacts.CELULAR;
             case "E-mail" -> TypeContacts.EMAIL;
-            case "Whatsapp" -> TypeContacts.WHATSAPP;
+            case "WhatsApp" -> TypeContacts.WHATSAPP;
             case "Instagran" -> TypeContacts.INSTAGRAN;
             default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
         };

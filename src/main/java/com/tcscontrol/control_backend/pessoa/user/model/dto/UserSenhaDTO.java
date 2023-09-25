@@ -15,7 +15,8 @@ public record UserSenhaDTO(
     String ftFoto, 
     @NotNull List<ContactsDTO> contacts, 
     String flStatus,
-    @NotNull String typeUser
+    @NotNull String typeUser,
+    Boolean primeiroAcesso
 
 ) {
 

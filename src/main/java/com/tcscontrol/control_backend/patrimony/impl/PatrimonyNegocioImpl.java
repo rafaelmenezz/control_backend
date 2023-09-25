@@ -107,7 +107,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
             dt = UtilData.toDate(dtAquisicao, UtilData.FORMATO_DDMMAA);
         }
         
-        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
+        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
@@ -122,6 +122,14 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     @Override
     public Allocation actualAlocation(Long id) {
        return allocationNegocio.obtemLocalizacaoPatrimonio(id);
+    }
+
+    @Override
+    public List<PatrimonyResponse> listPatrimoniosParaAlocacao() {
+         return patrimonyRepository.findPatrimoniesToAllocation()
+                .stream()
+                .map(patrimonyMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
 }

@@ -3,6 +3,7 @@ package com.tcscontrol.control_backend.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,7 +59,7 @@ public class PatrimonyController {
     }
 
     @GetMapping("search")
-    public List<PatrimonyResponse> search(
+    public ResponseEntity<List<PatrimonyResponse>>  search(
         @RequestParam(name = "nmPatrimonio", required = false) String nmPatrimonio,
         @RequestParam(name = "nrSerie", required = false) String nrSerie,
         @RequestParam(name = "dsPatrimonio", required = false) String dsPatrimonio,
@@ -66,6 +67,22 @@ public class PatrimonyController {
         @RequestParam(name = "nmFornecedor", required = false) String nmFornecedor,
         @RequestParam(name = "dtAquisicao", required = false) String dtAquisicao
     ){
-        return patrimonyService.search(nmPatrimonio, nrSerie, dsPatrimonio, nrCnpj, nmFornecedor, dtAquisicao);
+        List<PatrimonyResponse> list = patrimonyService.search(nmPatrimonio, nrSerie, dsPatrimonio, nrCnpj, nmFornecedor, dtAquisicao);
+        if (list.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(list);
+        }
+    }
+
+    @GetMapping("/free")
+    public ResponseEntity<List<PatrimonyResponse>> findPatrimoniesToAllocation(){ 
+        List<PatrimonyResponse> list = patrimonyService.listPatrimoniosParaAlocacao();
+        if (list.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.ok().body(list);
+        }
+        
     }
 }

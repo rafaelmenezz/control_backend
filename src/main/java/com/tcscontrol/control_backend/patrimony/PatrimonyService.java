@@ -26,4 +26,6 @@ public interface PatrimonyService {
 
     public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCpf, String nmFornecedor, String dtAquisicao);
 
+    public List<PatrimonyResponse> listPatrimoniosParaAlocacao();
+
 }

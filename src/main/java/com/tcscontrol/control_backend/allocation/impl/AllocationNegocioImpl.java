@@ -13,7 +13,10 @@ import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
+
 
 import lombok.AllArgsConstructor;
 
@@ -44,7 +47,12 @@ public class AllocationNegocioImpl implements AllocationNegocio{
 
       @Override
       public AllocationDTO create(AllocationDTO allocationDTO) {
-            return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));
+            if (isListaDisponivelParaAlocacao(allocationDTO.patrimonies())) {
+                  return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));      
+            }else{
+                  return null;
+            }
+            
       }
 
       @Override
@@ -65,7 +73,19 @@ public class AllocationNegocioImpl implements AllocationNegocio{
 
       @Override
       public Allocation obtemLocalizacaoPatrimonio(Long id) {
-            return allocationRepository.findByPatrimoniosIdAndDtDevolucaoIsNotNull(id);            
+            return allocationRepository.findByPatrimoniosIdAndDtAlocacaoIsNotNullAndDtDevolucaoIsNull(id);            
       }
-      
+
+      private Boolean isListaDisponivelParaAlocacao(List<PatrimonyDTO> pDTO){
+           if (pDTO == null) {
+            return false;
+           }
+            for (PatrimonyDTO p : pDTO) {
+                  Allocation a = obtemLocalizacaoPatrimonio(p.id());
+                  if (!UtilObjeto.isEmpty(a)) {
+                       return false; 
+                  }
+           }
+      return true;
+      }      
 }
