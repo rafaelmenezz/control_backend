@@ -22,6 +22,6 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
         Date dtAquisicao
     );
 
-    @Query("SELECT a FROM Patrimony p JOIN p.allocations a WHERE p.fixo = false AND a.dtDevolucao IS NOT NULL")
-    List<Patrimony> findPatrimoniesToAllocation();
+    @Query("SELECT a FROM Patrimony p JOIN p.allocations a WHERE p.fixo = ?1 AND a.dtDevolucao IS NOT NULL")
+    List<Patrimony> findPatrimoniesToAllocation(Boolean fixo);
 }

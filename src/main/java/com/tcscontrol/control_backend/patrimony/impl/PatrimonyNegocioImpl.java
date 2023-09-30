@@ -125,8 +125,12 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     }
 
     @Override
-    public List<PatrimonyResponse> listPatrimoniosParaAlocacao() {
-         return patrimonyRepository.findPatrimoniesToAllocation()
+    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(Boolean fixo) {
+         return obtemPatrimoniosPorTipo(fixo);
+    }
+
+    private List<PatrimonyResponse>  obtemPatrimoniosPorTipo(Boolean fixo){
+        return patrimonyRepository.findPatrimoniesToAllocation(fixo)
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
