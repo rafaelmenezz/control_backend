@@ -58,4 +58,23 @@ public class FornecedorNegocioImpl implements FornecedorNegocio {
         fornecedorRepository
                 .delete(fornecedorRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id)));
     }
+
+    @Override
+    public Fornecedor pesquisaFornecedorCnpj(String nrCnpj) {
+       if (nrCnpj == null) {
+        return null;
+       }
+       List<Fornecedor> fornecedores = fornecedorRepository.findByNrCnpj(nrCnpj);
+
+       if(fornecedores.size() == 1){
+        return fornecedores.get(0);
+       }else{
+        return null;
+       }
+    }
+
+    @Override
+    public Fornecedor cadastrarFornecedor(Fornecedor fornecedor) {
+        return fornecedorRepository.saveAndFlush(fornecedor);
+    }
 }

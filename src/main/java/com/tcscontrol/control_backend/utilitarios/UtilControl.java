@@ -6,6 +6,8 @@
 package com.tcscontrol.control_backend.utilitarios;
 
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.TypeMaintenance;
+import com.tcscontrol.control_backend.enuns.TypeWarranty;
 
 /**
  *
@@ -125,6 +127,29 @@ public class UtilControl {
             case "Ativo" -> Status.ACTIVE;
             case "Inativo" -> Status.INACTIVE;
             default -> throw new IllegalArgumentException("Status do usuário inválido.");
+        };
+    }
+
+    public static TypeMaintenance convertTypeMaintenanceValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Preventiva" -> TypeMaintenance.PREVENTIVA;
+            case "Corretiva" -> TypeMaintenance.CORRETIVA;
+            default -> throw new IllegalArgumentException("Tipo de manutenção inválido!");
+        };
+    }
+
+    public static TypeWarranty convertTypeWarrantyValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Legal" -> TypeWarranty.LEGAL;
+            case "Contratual" -> TypeWarranty.CONTRATUAL;
+            case "Estendida" -> TypeWarranty.ESTENDIDA;
+            default -> throw new IllegalArgumentException("Tipo de garantia inválida!");
         };
     }
 }

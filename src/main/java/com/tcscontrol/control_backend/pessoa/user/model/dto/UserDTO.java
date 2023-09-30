@@ -14,7 +14,7 @@ public record UserDTO(
     String nrMatricula, 
     @NotBlank @NotNull String nrCpf,
     String nmSenha,
-    Byte[] ftFoto, 
+    String ftFoto, 
     @NotNull List<ContactsDTO> contacts, 
     String flStatus,
     String typeUser

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,15 +14,18 @@ import jakarta.validation.constraints.Positive;
 @Service
 public interface PatrimonyService {
  
-    List<PatrimonyDTO> list();
+    List<PatrimonyResponse> list();
 
-    public PatrimonyDTO findById(Long id);
+    public PatrimonyResponse findById(Long id);
 
-    public PatrimonyDTO create(PatrimonyDTO patrimonyDTO);
+    public PatrimonyResponse create(PatrimonyDTO patrimonyDTO);
 
-    public PatrimonyDTO update(Long id, PatrimonyDTO patrimonyDTO);
+    public PatrimonyResponse update(Long id, PatrimonyDTO patrimonyDTO);
 
     public void delete(@PathVariable @NotNull @Positive Long id);
 
-    public List<PatrimonyDTO> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCpf, String nmFornecedor, String dtAquisicao);
+    public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCpf, String nmFornecedor, String dtAquisicao);
+
+    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(Boolean fixo);
+
 }

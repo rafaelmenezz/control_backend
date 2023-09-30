@@ -1,22 +1,28 @@
 package com.tcscontrol.control_backend.patrimony.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.tcscontrol.control_backend.allocation.AllocationNegocio;
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.PatrimonyRepository;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
+import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
-import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorMapper;
+import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilCast;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
+import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -28,44 +34,59 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
 
     private PatrimonyRepository patrimonyRepository;
     private PatrimonyMapper patrimonyMapper;
-    private FornecedorMapper fornecedorMapper;
+    private FornecedorNegocio fornecedorNegocio;
+    private AllocationNegocio allocationNegocio;
 
     @Override
-    public List<PatrimonyDTO> list() {
+    public List<PatrimonyResponse> list() {
         return patrimonyRepository.findAll()
                 .stream()
-                .map(patrimonyMapper::toDto)
+                .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PatrimonyDTO findById(Long id) {
+    public PatrimonyResponse findById(Long id) {
         return patrimonyRepository.findById(id)
-                .map(patrimonyMapper::toDto)
+                .map(patrimonyMapper::toResponse)
                 .orElseThrow(() -> new RecordNotFoundException(id));
     }
 
     @Override
-    public PatrimonyDTO create(PatrimonyDTO patrimonyDTO) {
-        return patrimonyMapper.toDto(patrimonyRepository.save(patrimonyMapper.toEntity(patrimonyDTO)));
+    public PatrimonyResponse create(PatrimonyDTO patrimonyDTO) {    
+        return patrimonyMapper.toResponse(patrimonyRepository.save(patrimonyMapper.toEntity(patrimonyDTO)));
     }
 
     @Override
-    public PatrimonyDTO update(Long id, PatrimonyDTO patrimonyDTO) {
+    public PatrimonyResponse update(Long id, PatrimonyDTO patrimonyDto) {
         return patrimonyRepository.findById(id)
                 .map(recordFound -> {
-                    Fornecedor fornecedor = fornecedorMapper.toEntity(patrimonyDTO.fornecedor());
-                    recordFound.setNrSerie(patrimonyDTO.nrSerie());
-                    recordFound.setNmPatrimonio(patrimonyDTO.nmPatrimonio());
-                    recordFound.setDsPatrimonio(patrimonyDTO.dsPatrimonio());
-                    recordFound.setNrNotaFiscal(patrimonyDTO.nrNotaFiscal());
-                    recordFound.setDtNotaFiscal(UtilData.toDate(patrimonyDTO.dtNotaFiscal(), UtilData.FORMATO_DDMMAA));
-                    recordFound.setDtAquisicao(UtilData.toDate(patrimonyDTO.dtAquisicao(), UtilData.FORMATO_DDMMAA));
-                    recordFound.setVlAquisicao(patrimonyDTO.vlAquisicao());
-                    recordFound.setFlFixo(patrimonyDTO.fixo());
-                    recordFound.setTpStatus(UtilControl.convertStatusValue(patrimonyDTO.status()));
+                    Patrimony patrimony = patrimonyMapper.toEntity(patrimonyDto);
+                    Fornecedor fornecedor = fornecedorNegocio.pesquisaFornecedorCnpj(patrimonyDto.nrCnpj());
+                    if(fornecedor == null){
+                        throw new IllegalArgumentException("Fonecedor não encontrado!");
+                    }
+                    List<Warranty> warranties = patrimonyDto.warranties()
+                    .stream()
+                    .map(warranty -> new Warranty(
+                            warranty.id(), 
+                            warranty.dsGarantia(), 
+                            UtilData.toDate(warranty.dtValidade(), UtilData.FORMATO_DDMMAA), 
+                            UtilControl.convertTypeWarrantyValue(warranty.tipoGarantia()), 
+                            recordFound))
+                    .collect(Collectors.toList());
+                    recordFound.setNrSerie(patrimonyDto.nrSerie());
+                    recordFound.setNmPatrimonio(patrimonyDto.nmDescricao());
+                    recordFound.setNrNotaFiscal(patrimonyDto.nrNF());
+                    recordFound.setDtNotaFiscal(UtilData.toDate(patrimonyDto.dtNF(), UtilData.FORMATO_DDMMAA));
+                    recordFound.setDtAquisicao(UtilData.toDate(patrimonyDto.dtAquisicao(), UtilData.FORMATO_DDMMAA));
+                    recordFound.setVlAquisicao(patrimonyDto.vlAquisicao());
+                    recordFound.setFixo(patrimonyDto.fixo());
                     recordFound.setFornecedor(fornecedor);
-                    return patrimonyMapper.toDto(patrimonyRepository.save(recordFound));
+                    recordFound.getWarrantys().clear();
+                    patrimony.getWarrantys().forEach(recordFound.getWarrantys()::add);
+                    recordFound.setWarrantys(warranties);
+                    return patrimonyMapper.toResponse(patrimonyRepository.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
@@ -75,7 +96,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     }
 
     @Override
-    public List<PatrimonyDTO> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCnpj, String nmFornecedor, String dtAquisicao){ 
+    public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCnpj, String nmFornecedor, String dtAquisicao){ 
                         
         Integer numeroSerie = null;
         if(!UtilObjeto.isEmpty(nrSerie)){
@@ -86,9 +107,32 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
             dt = UtilData.toDate(dtAquisicao, UtilData.FORMATO_DDMMAA);
         }
         
-        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieContainingOrDsPatrimonioContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
+        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
                 .stream()
-                .map(patrimonyMapper::toDto)
+                .map(patrimonyMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Patrimony> obtemPatrimonies(Long[] ids) {
+    return patrimonyRepository.findAllById( Arrays.asList(ids));
+
+    }
+
+    @Override
+    public Allocation actualAlocation(Long id) {
+       return allocationNegocio.obtemLocalizacaoPatrimonio(id);
+    }
+
+    @Override
+    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(Boolean fixo) {
+         return obtemPatrimoniosPorTipo(fixo);
+    }
+
+    private List<PatrimonyResponse>  obtemPatrimoniosPorTipo(Boolean fixo){
+        return patrimonyRepository.findPatrimoniesToAllocation(fixo)
+                .stream()
+                .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
