@@ -27,7 +27,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -57,7 +57,8 @@ public class Patrimony implements Serializable {
 	@Column(name = "nm_patrimonio")
 	private String nmPatrimonio;
 
-	@Column(name = "ds_patrimonio")
+	@Lob
+	@Column(name = "ds_patrimonio", length = 3000)
 	private String nmDescricao;
 
 	@Column(name = "nr_nota_fiscal")

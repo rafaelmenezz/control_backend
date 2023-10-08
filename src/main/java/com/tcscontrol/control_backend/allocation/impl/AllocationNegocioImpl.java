@@ -15,6 +15,7 @@ import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyRe
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
+import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -53,7 +54,7 @@ public class AllocationNegocioImpl implements AllocationNegocio{
             if (isListaDisponivelParaAlocacao(allocationDTO.patrimonies())) {
                   return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));      
             }else{
-                  return null;
+                  throw new IllegalRequestException("Patrimonios não disponivel para alocação!");
             }
             
       }
@@ -76,7 +77,8 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       @Override
       public Allocation obtemLocalizacaoPatrimonio(Long id) {
             AllocationPatrimony ap = pesquisAllocationPatrimonyPorId(id); 
-            if (allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
+
+            if (!UtilObjeto.isEmpty(ap) &&  allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
                   return allocationRepository.findById(ap.getAllocation().getId()).get();
             } else {
                   return new Allocation();      
@@ -85,12 +87,13 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       }
 
       private Boolean isListaDisponivelParaAlocacao(List<PatrimonyDTO> pDTO){
+            
            if (pDTO == null) {
             return false;
            }
             for (PatrimonyDTO p : pDTO) {
                   Allocation a = obtemLocalizacaoPatrimonio(p.id());
-                  if (!UtilObjeto.isEmpty(a)) {
+                  if (!UtilObjeto.isEmpty(a.getDepartamento())) {
                        return false; 
                   }
            }
@@ -98,6 +101,6 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       } 
       
       private AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id){
-            return allocationPatrimonyRepository.findByPatrimonyIdAndDtAlocacaoIsNotNullAndDtDevolucaoIsNull(id);
+            return allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
       }
 }

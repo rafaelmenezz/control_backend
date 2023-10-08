@@ -75,7 +75,7 @@ public class PatrimonyController {
         }
     }
 
-    @GetMapping("/Allocation")
+    @GetMapping("/allocation")
     public ResponseEntity<List<PatrimonyResponse>> findPatrimoniesToAllocation(){ 
         List<PatrimonyResponse> list = patrimonyService.listPatrimoniesFixOrNotFix(Boolean.TRUE);
         if (list.isEmpty()) {

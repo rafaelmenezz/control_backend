@@ -3,6 +3,7 @@ package com.tcscontrol.control_backend.department.model.entity;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.Where;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
+import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import jakarta.persistence.Column;
@@ -58,5 +60,25 @@ public class Department implements Serializable {
     @Convert(converter = StatusConverter.class)
     private Status tpStatus = Status.ACTIVE;
 
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Objects.hashCode(getId());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		  if (this == o) {
+				return true;
+		  }
+		  if (o == null || getClass() != o.getClass()) {
+				return false;
+		  }
+
+		  Department otherDepartment = (Department) o; 
+		  return id != null && id.equals(otherDepartment.id);
+	}
 
 }
