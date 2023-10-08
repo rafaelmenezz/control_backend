@@ -5,16 +5,17 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 
 @Service
 public interface AllocationService {
       
-      List<AllocationDTO> list();
+      List<AllocationResponse> list();
 
-      AllocationDTO findById(Long id);
+      AllocationResponse findById(Long id);
 
-      AllocationDTO create(AllocationDTO allocationDTO);
+      AllocationResponse create(AllocationDTO allocationDTO);
 
-      AllocationDTO update(Long id, AllocationDTO allocationDTO);
+      AllocationResponse update(Long id, AllocationDTO allocationDTO);
       
 }

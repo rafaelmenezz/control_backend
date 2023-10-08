@@ -136,4 +136,14 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PatrimonyDTO toDTO(Patrimony patrimony) {
+        return patrimonyMapper.toDto(patrimony);
+    }
+
+    @Override
+    public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {
+        return patrimonyMapper.toEntity(patrimonyDTO);
+    }
+
 }

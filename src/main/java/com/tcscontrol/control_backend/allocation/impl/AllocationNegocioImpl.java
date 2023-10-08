@@ -9,12 +9,14 @@ import com.tcscontrol.control_backend.allocation.AllocationNegocio;
 import com.tcscontrol.control_backend.allocation.AllocationRepository;
 import com.tcscontrol.control_backend.allocation.impl.mapper.AllocationMapper;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyRepository;
+import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
-import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
 
@@ -28,10 +30,11 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       private AllocationRepository allocationRepository;
       private AllocationMapper allocationMapper;
       private DepartmentMapper departmentMapper;
+      private AllocationPatrimonyRepository allocationPatrimonyRepository;
       
       
       @Override
-      public List<AllocationDTO> list() {
+      public List<AllocationResponse> list() {
             return allocationRepository.findAll()
             .stream()
             .map(allocationMapper::toDto)
@@ -39,14 +42,14 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       }
 
       @Override
-      public AllocationDTO findById(Long id) {
+      public AllocationResponse findById(Long id) {
             return allocationRepository.findById(id)
             .map(allocationMapper::toDto)
             .orElseThrow(()-> new RecordNotFoundException(id));
       }
 
       @Override
-      public AllocationDTO create(AllocationDTO allocationDTO) {
+      public AllocationResponse create(AllocationDTO allocationDTO) {
             if (isListaDisponivelParaAlocacao(allocationDTO.patrimonies())) {
                   return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));      
             }else{
@@ -56,14 +59,13 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       }
 
       @Override
-      public AllocationDTO update(Long id, AllocationDTO allocationDTO) {
+      public AllocationResponse update(Long id, AllocationDTO allocationDTO) {
            return allocationRepository.findById(id)
            .map(recordFound -> {
             Allocation allocation = allocationMapper.toEntity(allocationDTO);
             Department department = departmentMapper.toEntity(allocationDTO.departament()); 
 
-            recordFound.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-            recordFound.setNmObservacao(allocationDTO.observation());
+            recordFound.getPatrimonios();
             recordFound.getPatrimonios().clear();
             allocation.getPatrimonios().forEach(recordFound.getPatrimonios()::add);
             recordFound.setDepartamento(department);
@@ -73,7 +75,13 @@ public class AllocationNegocioImpl implements AllocationNegocio{
 
       @Override
       public Allocation obtemLocalizacaoPatrimonio(Long id) {
-            return allocationRepository.findByPatrimoniosIdAndDtAlocacaoIsNotNullAndDtDevolucaoIsNull(id);            
+            AllocationPatrimony ap = pesquisAllocationPatrimonyPorId(id); 
+            if (allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
+                  return allocationRepository.findById(ap.getAllocation().getId()).get();
+            } else {
+                  return new Allocation();      
+            }
+            
       }
 
       private Boolean isListaDisponivelParaAlocacao(List<PatrimonyDTO> pDTO){
@@ -87,5 +95,9 @@ public class AllocationNegocioImpl implements AllocationNegocio{
                   }
            }
       return true;
-      }      
+      } 
+      
+      private AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id){
+            return allocationPatrimonyRepository.findByPatrimonyIdAndDtAlocacaoIsNotNullAndDtDevolucaoIsNull(id);
+      }
 }

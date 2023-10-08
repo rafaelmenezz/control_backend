@@ -1,5 +1,6 @@
 package com.tcscontrol.control_backend.allocation.impl.mapper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,11 +9,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation_patrimony.model.dto.AllocationPatrimonyDTO;
+import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
-import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
@@ -27,35 +30,17 @@ public class AllocationMapper {
       private DepartmentMapper departmentMapper;
       private PatrimonyMapper patrimonyMapper;
 
-      public AllocationDTO toDto(Allocation allocation){
+      public AllocationResponse toDto(Allocation allocation){
             if (allocation == null) {
                   return null;
             }
 
-            List<PatrimonyDTO> patrimonyDTO = allocation.getPatrimonios()
-                  .stream()
-                  .map(
-                  patrimony-> new PatrimonyDTO(
-                  patrimony.getId(),
-                patrimony.getNrSerie(),
-                patrimony.getNmPatrimonio(),
-                patrimony.getNmDescricao(),
-                patrimony.getFornecedor().getNrCnpj(),
-                patrimony.getFornecedor().getNmName(),
-                patrimony.getNrNotaFiscal(),
-                UtilData.toString(patrimony.getDtNotaFiscal(), UtilData.FORMATO_DDMMAA),
-                UtilData.toString(patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA),
-                patrimony.getVlAquisicao(),
-                patrimony.getFixo(),
-                listWarrantyDTOs(patrimony.getWarrantys()),
-                departmentMapper.toDTO(allocation.getDepartamento()))).collect(Collectors.toList());
+            List<AllocationPatrimonyDTO> patrimonies = allocation.getPatrimonios().stream().map(p->  this.toDTO(p)).collect(Collectors.toList());
 
-            return new AllocationDTO(
+            return new AllocationResponse(
                   allocation.getId(),
-                  UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
-                  allocation.getNmObservacao(),
-                  patrimonyDTO,
-                  departmentMapper.toDTO(allocation.getDepartamento()));
+                  departmentMapper.toDTO(allocation.getDepartamento()),
+                  patrimonies);
       }
 
       public Allocation toEntity(AllocationDTO allocationDTO){
@@ -70,12 +55,23 @@ public class AllocationMapper {
                   .stream()
                   .map(patrimonyMapper::toEntity).collect(Collectors.toList()));
 
-            Department department = departmentMapper.toEntity(allocationDTO.departament()); 
+            List<AllocationPatrimony> listItens = new ArrayList<>();
 
-            allocation.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-            allocation.setNmObservacao(allocationDTO.observation());
-            allocation.setPatrimonios(patrimonys);
+            for (Patrimony p : patrimonys) {
+                  AllocationPatrimony aP = new AllocationPatrimony();
+                  aP.setId(p.getId());
+                  aP.setAllocation(allocation);
+                  aP.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                  aP.setNmObservacao(allocationDTO.observation());
+                  aP.setPatrimony(p);
+
+                  listItens.add(aP);
+            }
+
+            Department department = departmentMapper.toEntity(allocationDTO.departament()); 
             allocation.setDepartamento(department);
+            allocation.setPatrimonios(new HashSet<>(listItens));
+
 
             return allocation;
 
@@ -89,6 +85,38 @@ public class AllocationMapper {
                     UtilData.toString(warranty.getDtValidade(), UtilData.FORMATO_DDMMAA),
                     warranty.getTypewWarranty().getValue()))
             .collect(Collectors.toList());
+      }
+
+      private AllocationPatrimonyDTO toDTO(AllocationPatrimony allocationPatrimony){
+
+            if(allocationPatrimony == null){
+                  return null;
+            }
+            return new AllocationPatrimonyDTO(
+                  allocationPatrimony.getId(), 
+                  UtilData.toString(allocationPatrimony.getDtAlocacao(), UtilData.FORMATO_DDMMAA), 
+                  UtilData.toString(allocationPatrimony.getDtDevolucao(), UtilData.FORMATO_DDMMAA), 
+                  allocationPatrimony.getNmObservacao(), 
+                  patrimonyMapper.toDto(allocationPatrimony.getPatrimony()));
+      }
+
+      private AllocationPatrimony toEntity(AllocationPatrimonyDTO allocationPatrimonyDTO){
+
+            if(allocationPatrimonyDTO == null){
+                  return null;
+            }
+            AllocationPatrimony aP = new AllocationPatrimony();
+            if(allocationPatrimonyDTO.id() != null){
+                  aP.setId(allocationPatrimonyDTO.id());
+            }
+
+            aP.setDtAlocacao(UtilData.toDate(allocationPatrimonyDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+            aP.setDtAlocacao(UtilData.toDate(allocationPatrimonyDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
+            aP.setNmObservacao(allocationPatrimonyDTO.nmObservacao());
+            aP.setPatrimony(patrimonyMapper.toEntity(allocationPatrimonyDTO.patrimonio()));
+
+            return aP;
+  
       }
 
 }

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
@@ -38,7 +38,7 @@ public class PatrimonyMapper {
                 .stream()
                 .filter(c -> c.getDtDevolucao() == null)
                 .findFirst()
-                .orElse(new Allocation()).getDepartamento());
+                .orElse(new AllocationPatrimony()).getAllocation().getDepartamento());
 
         List<WarrantyDTO> warrantys = patrimony.getWarrantys()
                 .stream()
@@ -84,7 +84,7 @@ public class PatrimonyMapper {
                 .stream()
                 .filter(c -> c.getDtDevolucao() == null)
                 .findFirst()
-                .orElse(new Allocation()).getDepartamento());
+                .orElse(new AllocationPatrimony()).getAllocation().getDepartamento());
 
         return new PatrimonyDTO(
                 patrimony.getId(),

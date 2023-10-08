@@ -6,7 +6,4 @@ import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 
 public interface AllocationRepository extends JpaRepository<Allocation, Long> {
     
-    Allocation findByPatrimoniosIdAndDtAlocacaoIsNotNullAndDtDevolucaoIsNull(Long id);
-
-
 }

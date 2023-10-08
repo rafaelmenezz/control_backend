@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tcscontrol.control_backend.allocation.AllocationService;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -28,23 +29,23 @@ public class AllocationController {
       private final AllocationService allocationService;
 
       @GetMapping
-      public List<AllocationDTO> list() {
+      public List<AllocationResponse> list() {
             return allocationService.list();
       }
 
       @GetMapping("/{id}")
-      public AllocationDTO findById(@PathVariable Long id) {
+      public AllocationResponse findById(@PathVariable Long id) {
             return allocationService.findById(id);
       }
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public AllocationDTO create(@RequestBody @Valid AllocationDTO allocationDTO) {
+      public AllocationResponse create(@RequestBody @Valid AllocationDTO allocationDTO) {
             return allocationService.create(allocationDTO);
       }
 
       @PutMapping("/{id}")
-      public AllocationDTO update(@PathVariable Long id, @RequestBody AllocationDTO allocationDTO) {
+      public AllocationResponse update(@PathVariable Long id, @RequestBody AllocationDTO allocationDTO) {
             return allocationService.update(id, allocationDTO);
       }
 

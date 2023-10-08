@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
@@ -84,8 +85,8 @@ public class Patrimony implements Serializable {
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
 	private Set<Requests> requests = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
-	private Set<Allocation> allocations = new HashSet<>();
+	@OneToMany
+	private Set<AllocationPatrimony> allocations = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "id_fornecedor", nullable = false)
