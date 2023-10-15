@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
-import com.tcscontrol.control_backend.allocation_patrimony.model.dto.AllocationPatrimonyDTO;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;

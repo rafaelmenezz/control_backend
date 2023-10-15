@@ -52,11 +52,10 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       @Override
       public AllocationResponse create(AllocationDTO allocationDTO) {
             if (isListaDisponivelParaAlocacao(allocationDTO.patrimonies())) {
-                  return allocationMapper.toDto(allocationRepository.save(allocationMapper.toEntity(allocationDTO)));      
+                  return allocationMapper.toDto(salvaAlocacao(allocationMapper.toEntity(allocationDTO)));      
             }else{
                   throw new IllegalRequestException("Patrimonios não disponivel para alocação!");
-            }
-            
+            }            
       }
 
       @Override
@@ -102,5 +101,14 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       
       private AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id){
             return allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
+      }
+
+      private Allocation salvaAlocacao(Allocation allocation){
+            return allocationRepository.save(allocation);
+      }
+
+      @Override
+      public Allocation salvaAllocation(Allocation allocation) {
+            return salvaAlocacao(allocation);
       }
 }

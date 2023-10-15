@@ -16,7 +16,10 @@ public interface PatrimonyNegocio extends PatrimonyService {
     Allocation actualAlocation(Long id);
 
     PatrimonyDTO toDTO(Patrimony patrimony);
+
     Patrimony toEntity(PatrimonyDTO patrimonyDTO);
+
+    List<Patrimony> atulizaPatrimonios(List<Patrimony> patrimonies);
 
     
 }

@@ -8,4 +8,6 @@ import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 public interface AllocationNegocio extends AllocationService {
       
     Allocation obtemLocalizacaoPatrimonio(Long id);
+
+    Allocation salvaAllocation(Allocation allocation);
 }

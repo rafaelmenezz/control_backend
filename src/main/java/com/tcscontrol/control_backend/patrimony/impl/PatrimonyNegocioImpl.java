@@ -146,4 +146,9 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
         return patrimonyMapper.toEntity(patrimonyDTO);
     }
 
+    @Override
+    public List<Patrimony> atulizaPatrimonios(List<Patrimony> patrimonies) {
+        return patrimonyRepository.saveAllAndFlush(patrimonies);
+    }
+
 }

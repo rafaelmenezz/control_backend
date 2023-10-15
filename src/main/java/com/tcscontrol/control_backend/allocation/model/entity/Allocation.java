@@ -2,9 +2,9 @@ package com.tcscontrol.control_backend.allocation.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
@@ -30,23 +30,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Allocation implements Serializable {
-      
-      @Serial
-      private static final long serialVersionUID = 1L;
 
-      @Id
-      @GeneratedValue(strategy = GenerationType.AUTO)
-      private Long id;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-      @OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
-      private Set<AllocationPatrimony> patrimonios = new HashSet<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-      @ManyToOne(fetch = FetchType.EAGER)
-      @JoinColumn(name = "id_departamento", nullable = false)
-      @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-      private Department departamento;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_departamento", nullable = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Department departamento;
 
-      @Override
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+	private List<AllocationPatrimony> patrimonios = new ArrayList<>();
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -56,14 +56,14 @@ public class Allocation implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		  if (this == o) {
-				return true;
-		  }
-		  if (o == null || getClass() != o.getClass()) {
-				return false;
-		  }
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-		  Allocation otherAllocation = (Allocation) o; 
-		  return id != null && id.equals(otherAllocation.id);
+		Allocation otherAllocation = (Allocation) o;
+		return id != null && id.equals(otherAllocation.id);
 	}
 }

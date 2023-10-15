@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tcscontrol.control_backend.allocation.AllocationService;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
+import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ import lombok.AllArgsConstructor;
 public class AllocationController {
 
       private final AllocationService allocationService;
+      private final AllocationPatrimonyService allocationPatrimonyService;
 
       @GetMapping
       public List<AllocationResponse> list() {
@@ -40,8 +42,8 @@ public class AllocationController {
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public AllocationResponse create(@RequestBody @Valid AllocationDTO allocationDTO) {
-            return allocationService.create(allocationDTO);
+      public AllocationDTO create(@RequestBody @Valid AllocationDTO allocationDTO) {
+            return allocationPatrimonyService.create(allocationDTO);
       }
 
       @PutMapping("/{id}")

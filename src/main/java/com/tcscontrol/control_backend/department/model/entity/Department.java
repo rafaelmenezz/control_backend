@@ -2,6 +2,7 @@ package com.tcscontrol.control_backend.department.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,6 @@ import org.hibernate.annotations.Where;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
-import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import jakarta.persistence.Column;
@@ -54,7 +54,7 @@ public class Department implements Serializable {
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Allocation> allocations;
+    private List<Allocation> allocations = new ArrayList<>();
 
     @Column(name="status")
     @Convert(converter = StatusConverter.class)

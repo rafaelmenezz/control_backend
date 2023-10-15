@@ -91,8 +91,8 @@ public class Patrimony implements Serializable {
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
 	private Set<Requests> requests = new HashSet<>();
 
-	@OneToMany
-	private Set<AllocationPatrimony> allocations = new HashSet<>();
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+	private List<AllocationPatrimony> allocations = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "id_fornecedor", nullable = false)

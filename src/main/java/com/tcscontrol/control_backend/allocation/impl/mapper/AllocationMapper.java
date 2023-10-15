@@ -51,27 +51,8 @@ public class AllocationMapper {
             if (allocationDTO.id() != null) {
                   return null;
             }
-            Set<Patrimony> patrimonys =  new HashSet<>(allocationDTO.patrimonies()
-                  .stream()
-                  .map(patrimonyMapper::toEntity).collect(Collectors.toList()));
-
-            List<AllocationPatrimony> listItens = new ArrayList<>();
-
-            for (Patrimony p : patrimonys) {
-                  AllocationPatrimony aP = new AllocationPatrimony();
-                  aP.setId(p.getId());
-                  aP.setAllocation(allocation);
-                  aP.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-                  aP.setNmObservacao(allocationDTO.observation());
-                  aP.setPatrimony(p);
-
-                  listItens.add(aP);
-            }
-
             Department department = departmentMapper.toEntity(allocationDTO.departament()); 
             allocation.setDepartamento(department);
-            allocation.setPatrimonios(new HashSet<>(listItens));
-
 
             return allocation;
 
