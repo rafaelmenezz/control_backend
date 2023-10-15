@@ -41,6 +41,8 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
             List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
             List<AllocationPatrimony> aps = new ArrayList<>();
 
+            atulizaPatrimoios(patrimonios);
+
             for (Patrimony p : patrimonios) {
                 AllocationPatrimony ap = new AllocationPatrimony();
                 ap.setAllocation(allocation);
@@ -98,8 +100,7 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         return aps.stream().map(c -> patrimonyNegocio.toDTO(c.getPatrimony())).collect(Collectors.toList());
     }
 
-    private List<Patrimony> atulizaPatrimonies(List<Patrimony> patrimonies){
-
+    private List<Patrimony> atulizaPatrimoios(List<Patrimony> patrimonies){
         if (UtilObjeto.isEmpty(patrimonies)) {
             return new ArrayList<>();
         }
@@ -107,7 +108,7 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         for (Patrimony p : patrimonies) {
             p.setTpSituacao(SituationType.ALOCADO);
         }
-        return null;
+        return patrimonyNegocio.atulizaPatrimonios(patrimonies);
     }
     
 }
