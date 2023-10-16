@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
-import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.allocation_patrimony.model.dto.AllocationPatrimonyDTO;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
