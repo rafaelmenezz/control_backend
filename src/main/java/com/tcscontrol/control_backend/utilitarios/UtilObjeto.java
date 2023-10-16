@@ -6,6 +6,10 @@ public class UtilObjeto {
         return obj == null;
     }
 
+    public static boolean isNotEmpty(Object obj){
+        return !isEmpty(obj);
+    }
+
     public static Boolean isNumero(Object objeto) {
         try {
             UtilCast.toLong(objeto.toString());

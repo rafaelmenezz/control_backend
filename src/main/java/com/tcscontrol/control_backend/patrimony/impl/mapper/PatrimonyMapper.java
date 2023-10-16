@@ -10,6 +10,7 @@ import com.tcscontrol.control_backend.allocation_patrimony.model.entity.Allocati
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
+import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -17,6 +18,7 @@ import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
@@ -83,12 +85,20 @@ public class PatrimonyMapper {
                         UtilData.toString(warranty.getDtValidade(), UtilData.FORMATO_DDMMAA),
                         warranty.getTypewWarranty().getValue()))
                 .collect(Collectors.toList());
+
+        List<AllocationPatrimony> aps = patrimony.getAllocations();
+
+        Department department = null;
+        if (!UtilObjeto.isEmpty(aps)) {
+            for (AllocationPatrimony allocationPatrimony : aps) {
+                if(UtilObjeto.isNotEmpty(allocationPatrimony.getDtAlocacao()) 
+                    && UtilObjeto.isEmpty(allocationPatrimony.getDtDevolucao())){
+                        department = allocationPatrimony.getAllocation().getDepartamento();
+                    }
                 
-        DepartmentDTO departmentDTO = departmentMapper.toDTO(patrimony.getAllocations()
-                .stream()
-                .filter(c -> c.getDtDevolucao() == null)
-                .findFirst()
-                .orElse(new AllocationPatrimony()).getAllocation().getDepartamento());
+            }
+        }
+                
 
         return new PatrimonyDTO(
                 patrimony.getId(),
@@ -103,7 +113,7 @@ public class PatrimonyMapper {
                 patrimony.getVlAquisicao(),
                 patrimony.getFixo(),
                 warrantys,
-                departmentDTO);
+                UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null); 
     }
 
     public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {

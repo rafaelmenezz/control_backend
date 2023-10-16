@@ -38,7 +38,7 @@ public class Allocation implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_departamento", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Department departamento;

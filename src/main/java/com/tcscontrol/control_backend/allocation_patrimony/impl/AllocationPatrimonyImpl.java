@@ -42,20 +42,10 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
             List<AllocationPatrimony> aps = new ArrayList<>();
 
             atulizaPatrimoios(patrimonios);
-
-            for (Patrimony p : patrimonios) {
-                AllocationPatrimony ap = new AllocationPatrimony();
-                ap.setAllocation(allocation);
-                ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-                ap.setNmObservacao(allocationDTO.observation());
-                ap.setPatrimony(p);
-                p.setTpSituacao(SituationType.ALOCADO);
-                p.getAllocations().add(ap);
-                aps.add(ap);
-            }
-
+            adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
             aps = salvaAllocationPatrimony(aps);
-
+            allocation.getPatrimonios().addAll(aps);
+            allocationNegocio.salvaAllocation(allocation);
             List<PatrimonyDTO> pDTO = obtemListPatrimoniosDTO(aps);
 
             return new AllocationDTO(
@@ -109,6 +99,21 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
             p.setTpSituacao(SituationType.ALOCADO);
         }
         return patrimonyNegocio.atulizaPatrimonios(patrimonies);
+    }
+
+    private void adicionaListaPatrimonios(List<Patrimony> patrimonies, List<AllocationPatrimony> allocationPatrimonies, Allocation allocation, AllocationDTO allocationDTO){
+
+         for (Patrimony p : patrimonies) {
+                AllocationPatrimony ap = new AllocationPatrimony();
+                ap.setAllocation(allocation);
+                ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                ap.setNmObservacao(allocationDTO.observation());
+                ap.setPatrimony(p);
+                p.setTpSituacao(SituationType.ALOCADO);
+                p.getAllocations().add(ap);
+                allocationPatrimonies.add(ap);
+            }
+
     }
     
 }

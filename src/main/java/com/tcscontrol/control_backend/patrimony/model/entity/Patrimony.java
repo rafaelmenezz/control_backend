@@ -79,7 +79,7 @@ public class Patrimony implements Serializable {
 
 	@Column(name = "tp_situacao")
 	@Convert(converter = TypeSituationConverter.class)
-	private SituationType tpSituacao = SituationType.LIVRE;
+	private SituationType tpSituacao = SituationType.DISPONIVEL;
 
 	@Column(name = "tp_status")
 	@Convert(converter = StatusConverter.class)
@@ -91,7 +91,7 @@ public class Patrimony implements Serializable {
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
 	private Set<Requests> requests = new HashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
 	private List<AllocationPatrimony> allocations = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
