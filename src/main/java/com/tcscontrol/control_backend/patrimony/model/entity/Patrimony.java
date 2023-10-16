@@ -12,7 +12,9 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.TypeSituation;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
+import com.tcscontrol.control_backend.enuns.converters.TypeSituationConverter;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 import com.tcscontrol.control_backend.requests.model.entity.Requests;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
@@ -77,6 +79,10 @@ public class Patrimony implements Serializable {
 	@Column(name = "tp_status")
 	@Convert(converter = StatusConverter.class)
 	private Status tpStatus = Status.ACTIVE;
+
+	@Column(name = "tp_situacao")
+	@Convert(converter = TypeSituationConverter.class)
+	private TypeSituation tpSituacao = TypeSituation.DISPONIVEL;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
 	private List<Warranty> warrantys = new ArrayList<>();
