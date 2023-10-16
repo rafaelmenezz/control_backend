@@ -10,4 +10,6 @@ public interface AllocationNegocio extends AllocationService {
     Allocation obtemLocalizacaoPatrimonio(Long id);
 
     Allocation salvaAllocation(Allocation allocation);
+
+    Allocation pesquisaAllocationPorId(Long id);
 }

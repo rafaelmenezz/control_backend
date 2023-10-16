@@ -111,4 +111,11 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       public Allocation salvaAllocation(Allocation allocation) {
             return salvaAlocacao(allocation);
       }
+
+      @Override
+      public Allocation pesquisaAllocationPorId(Long id){
+            return allocationRepository.findById(id)
+            .map(c-> c)
+            .orElseThrow(()-> new RecordNotFoundException(id));
+      }
 }

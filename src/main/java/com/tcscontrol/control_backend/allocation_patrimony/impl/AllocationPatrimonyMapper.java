@@ -7,13 +7,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation_patrimony.model.dto.AllocationPatrimonyDTO;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
 import lombok.AllArgsConstructor;
 
@@ -60,6 +63,19 @@ public class AllocationPatrimonyMapper {
             allocation.setPatrimonios(listItens);
 
             return allocation;
+
+      }
+
+      public AllocationPatrimonyDTO toDTO(AllocationPatrimony allocationPatrimony){
+
+            if(UtilObjeto.isEmpty(allocationPatrimony)){
+                  return null;
+            }
+
+            return new AllocationPatrimonyDTO(allocationPatrimony.getId(), 
+            UtilData.toString(allocationPatrimony.getDtAlocacao(), UtilData.FORMATO_DDMMAA), 
+            UtilData.toString(allocationPatrimony.getDtDevolucao(),UtilData.FORMATO_DDMMAA), 
+            allocationPatrimony.getNmObservacao(), patrimonyMapper.toDto(allocationPatrimony.getPatrimony()));
 
       }
 }

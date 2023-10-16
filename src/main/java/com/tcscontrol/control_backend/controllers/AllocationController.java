@@ -42,13 +42,13 @@ public class AllocationController {
 
       @PostMapping
       @ResponseStatus(code = HttpStatus.CREATED)
-      public AllocationDTO create(@RequestBody @Valid AllocationDTO allocationDTO) {
+      public AllocationResponse create(@RequestBody @Valid AllocationDTO allocationDTO) {
             return allocationPatrimonyService.create(allocationDTO);
       }
 
       @PutMapping("/{id}")
       public AllocationResponse update(@PathVariable Long id, @RequestBody AllocationDTO allocationDTO) {
-            return allocationService.update(id, allocationDTO);
+            return allocationPatrimonyService.update(id, allocationDTO);
       }
 
 }

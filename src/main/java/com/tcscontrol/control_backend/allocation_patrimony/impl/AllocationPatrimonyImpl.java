@@ -8,13 +8,16 @@ import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.AllocationNegocio;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyNegocio;
 import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyRepository;
+import com.tcscontrol.control_backend.allocation_patrimony.model.dto.AllocationPatrimonyDTO;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.SituationType;
+import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -29,38 +32,51 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
 
 
     AllocationPatrimonyRepository allocationPatrimonyRepository;
+    AllocationPatrimonyMapper allocationPatrimonyMapper;
     DepartmentMapper departmentMapper;
     AllocationNegocio allocationNegocio;
     PatrimonyNegocio patrimonyNegocio;
 
 
     @Override
-    public AllocationDTO create(AllocationDTO allocationDTO) {
-            Department department = departmentMapper.toEntity(allocationDTO.departament());
+    public AllocationResponse create(AllocationDTO allocationDTO) {
             Allocation allocation = gravarAllocation(allocationDTO);
             List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
             List<AllocationPatrimony> aps = new ArrayList<>();
-
+            validaAlocacaoPatrimonio(patrimonios);
             atulizaPatrimoios(patrimonios);
             adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
             aps = salvaAllocationPatrimony(aps);
             allocation.getPatrimonios().addAll(aps);
             allocationNegocio.salvaAllocation(allocation);
-            List<PatrimonyDTO> pDTO = obtemListPatrimoniosDTO(aps);
+            List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO).collect(Collectors.toList()); 
 
-            return new AllocationDTO(
-                allocation.getId(), 
-                allocationDTO.dtAlocacao(), 
-                allocationDTO.observation(), 
-                pDTO, 
-                departmentMapper.toDTO(department));
+            return new AllocationResponse(
+                allocation.getId(),
+                departmentMapper.toDTO(allocation.getDepartamento()),
+                apDTO);
 
     }
 
     @Override
-    public AllocationDTO update(AllocationDTO allocationDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public AllocationResponse update(Long id, AllocationDTO allocationDTO) {
+        Allocation allocation = allocationNegocio.pesquisaAllocationPorId(id);
+        List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
+        List<AllocationPatrimony> aps = new ArrayList<>();
+        atulizaPatrimoios(patrimonios);
+        adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
+        aps = salvaAllocationPatrimony(aps);
+        allocation.setDepartamento(departmentMapper.toEntity(allocationDTO.departament()));
+        allocation.getPatrimonios().clear();
+        allocation.getPatrimonios().addAll(aps);
+        allocationNegocio.salvaAllocation(allocation);
+
+        List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO).collect(Collectors.toList()); 
+
+        return new AllocationResponse(
+                allocation.getId(),
+                departmentMapper.toDTO(allocation.getDepartamento()),
+                apDTO); 
     }
 
     private Allocation gravarAllocation(AllocationDTO allocationDTO){
@@ -106,7 +122,10 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
          for (Patrimony p : patrimonies) {
                 AllocationPatrimony ap = new AllocationPatrimony();
                 ap.setAllocation(allocation);
-                ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                if (UtilObjeto.isEmpty(ap.getDtAlocacao())) {
+                  ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));  
+                }
+                
                 ap.setNmObservacao(allocationDTO.observation());
                 ap.setPatrimony(p);
                 p.setTpSituacao(SituationType.ALOCADO);
@@ -114,6 +133,15 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
                 allocationPatrimonies.add(ap);
             }
 
+    }
+
+    private void validaAlocacaoPatrimonio(List<Patrimony> list ){
+
+        for (Patrimony p : list) {
+            if (!SituationType.DISPONIVEL.equals(p.getTpSituacao())) {
+                throw new IllegalRequestException(p.getNmPatrimonio() + " não está disponível!");
+            }
+        }
     }
     
 }

@@ -17,6 +17,7 @@ public record PatrimonyResponse(
     String dtAquisicao,
     Double vlAquisicao,
     Boolean fixo,
+    String situacao,
     List<WarrantyDTO> warranties,
     DepartmentDTO actualDepartment
 ){}

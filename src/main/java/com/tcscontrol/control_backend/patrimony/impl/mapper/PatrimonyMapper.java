@@ -67,6 +67,7 @@ public class PatrimonyMapper {
                 UtilData.toString(patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA),
                 patrimony.getVlAquisicao(),
                 patrimony.getFixo(),
+                patrimony.getTpSituacao().getValue(),
                 warrantys,
                 departmentDTO != null ? departmentDTO : null);
 
@@ -99,7 +100,6 @@ public class PatrimonyMapper {
             }
         }
                 
-
         return new PatrimonyDTO(
                 patrimony.getId(),
                 patrimony.getNrSerie(),
@@ -112,6 +112,7 @@ public class PatrimonyMapper {
                 UtilData.toString(patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA),
                 patrimony.getVlAquisicao(),
                 patrimony.getFixo(),
+                patrimony.getTpSituacao().getValue(),
                 warrantys,
                 UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null); 
     }
@@ -144,6 +145,7 @@ public class PatrimonyMapper {
         patrimony.setDtAquisicao(UtilData.toDate(patrimonyDTO.dtAquisicao(), UtilData.FORMATO_DDMMAA));
         patrimony.setVlAquisicao(patrimonyDTO.vlAquisicao());
         patrimony.setFixo(patrimonyDTO.fixo());
+        patrimony.setTpSituacao(UtilControl.convertSituationTypeValue(patrimonyDTO.situacao()));
         patrimony.setFornecedor(fornecedor);
         List<Warranty> warrantys = patrimonyDTO.warranties()
                 .stream()

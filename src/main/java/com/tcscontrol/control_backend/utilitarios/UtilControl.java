@@ -5,29 +5,13 @@
  */
 package com.tcscontrol.control_backend.utilitarios;
 
+import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeMaintenance;
 import com.tcscontrol.control_backend.enuns.TypeWarranty;
 
-/**
- *
- * @author silvio.junior
- */
 public class UtilControl {
     
-        /*public static Endereco gerarEndereco(){
-        Endereco endereco = new Endereco(
-                "Rua " + gerarSobrenome(),
-                "Centro",
-                gerarNumero(3),
-                gerarCidade(),
-                "SC",
-                "casa",
-                gerarCep(),
-                "px vaca branca"
-        );
-        return endereco;
-    }*/
 
     public static String gerarNumero(int qtde) {
         String numeroGerado = "";
@@ -35,7 +19,6 @@ public class UtilControl {
         for (int i = 0; i < qtde; i++) {
             indice = (int) (Math.random() * 10);
             numeroGerado += indice;
-            //numeroGerado = numeroGerado + indice;
         }
         return numeroGerado;
     }
@@ -150,6 +133,20 @@ public class UtilControl {
             case "Contratual" -> TypeWarranty.CONTRATUAL;
             case "Estendida" -> TypeWarranty.ESTENDIDA;
             default -> throw new IllegalArgumentException("Tipo de garantia inválida!");
+        };
+    }
+
+
+    public static SituationType convertSituationTypeValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Disponivel" -> SituationType.DISPONIVEL;
+            case "Alocado" -> SituationType.ALOCADO;
+            case "Registrado" -> SituationType.REGISTRADO;
+            case "Manutenção" -> SituationType.EM_MANUTENCAO;
+            default -> throw new IllegalArgumentException("Situação do património inválida!");
         };
     }
 }
