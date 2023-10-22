@@ -134,6 +134,27 @@ public class UserMapper {
         return user;
     }
 
+    public UserResponse toResponse(User user) {
+        if (user == null) {
+            return null;
+        }
+        List<ContactsDTO> contacts = user.getContacts()
+                .stream()
+                .map(contact -> new ContactsDTO(
+                        contact.getIdContacts(),
+                        contact.getTypeContacts().getValue(),
+                        contact.getDsContato()))
+                .collect(Collectors.toList());
+
+        return new UserResponse(
+                user.getId(),
+                user.getNmName(),
+                user.getNrMatricula(),
+                user.getNrCpf(),
+                user.getFtFoto(),
+                contacts);
+    }
+
     public TypeUser convertTypeUserValue(String value) {
         if (value == null) {
             return null;
