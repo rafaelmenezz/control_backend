@@ -1,6 +1,6 @@
 package com.tcscontrol.control_backend.constructions.model.dto;
 
-import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserResponse;
 
 public record ConstructionDTO(
         Long id,
@@ -17,6 +17,5 @@ public record ConstructionDTO(
         String dsObservacao,
         String dtInicio,
         String dtPrevisaoConclusao,
-        String dtFim,
-        UserCreateDTO usuario) {
+        UserResponse usuario) {
 }

@@ -3,10 +3,14 @@ package com.tcscontrol.control_backend.constructions.model.entity;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,8 +83,32 @@ public class Construction implements Serializable {
       private Date dtFim;
 
       @ManyToOne(fetch = FetchType.EAGER, optional = false)
-      @JoinColumn(name = "id_usuario", nullable = false)
+      @JoinColumn(name = "usuario_id", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
       private User user;
+
+      @OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "construction")
+      private List<RequestPatrimony> patrimonies;
+
+      @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Objects.hashCode(getId());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+		Construction otherConstruction = (Construction) o;
+		return id != null && id.equals(otherConstruction.id);
+	}
 
 }

@@ -51,7 +51,7 @@ public class ConstructionNegocioImpl implements ConstructionNegocio {
       public ConstructionDTO update(Long id, ConstructionDTO constructionDTO) {
             return constructionRepository.findById(id)
                         .map(recordFound -> {
-                              User user = userMapper.toCreateEntity(constructionDTO.usuario());
+                              User user = userMapper.toEntity(constructionDTO.usuario());
                               recordFound.setNmObra(constructionDTO.nmObra());
                               recordFound.setNrCnpjCpf(constructionDTO.nrCnpjCpf());
                               recordFound.setNmCliente(constructionDTO.nmCliente());
@@ -67,7 +67,6 @@ public class ConstructionNegocioImpl implements ConstructionNegocio {
                                           UtilData.toDate(constructionDTO.dtInicio(), UtilData.FORMATO_DDMMAA));
                               recordFound.setDtPrevisaoConclusao(UtilData.toDate(constructionDTO.dtPrevisaoConclusao(),
                                           UtilData.FORMATO_DDMMAA));
-                              recordFound.setDtFim(UtilData.toDate(constructionDTO.dtFim(), UtilData.FORMATO_DDMMAA));
                               recordFound.setUser(user);
                               return constructionMapper.toDto(constructionRepository.save(recordFound));
                         }).orElseThrow(() -> new RecordNotFoundException(id));

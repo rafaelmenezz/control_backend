@@ -36,8 +36,7 @@ public class ConstructionMapper {
                         construction.getDsObservacao(),
                         UtilData.toString(construction.getDtInicio(), UtilData.FORMATO_DDMMAA),
                         UtilData.toString(construction.getDtPrevisaoConclusao(), UtilData.FORMATO_DDMMAA),
-                        UtilData.toString(construction.getDtFim(), UtilData.FORMATO_DDMMAA),
-                        userMapper.toCreateDto(construction.getUser()));
+                        userMapper.toResponse(construction.getUser()));
       }
 
       public Construction toEntity(ConstructionDTO constructionDTO) {
@@ -50,7 +49,7 @@ public class ConstructionMapper {
                   construction.setId(constructionDTO.id());
             }
 
-            User user = userMapper.toCreateEntity(constructionDTO.usuario());
+            User user = userMapper.toEntity(constructionDTO.usuario());
 
             construction.setNmObra(constructionDTO.nmObra());
             construction.setNrCnpjCpf(constructionDTO.nrCnpjCpf());
@@ -66,7 +65,6 @@ public class ConstructionMapper {
             construction.setDtInicio(UtilData.toDate(constructionDTO.dtInicio(), UtilData.FORMATO_DDMMAA));
             construction.setDtPrevisaoConclusao(
                         UtilData.toDate(constructionDTO.dtPrevisaoConclusao(), UtilData.FORMATO_DDMMAA));
-            construction.setDtFim(UtilData.toDate(constructionDTO.dtFim(), UtilData.FORMATO_DDMMAA));
             construction.setUser(user);
 
             return construction;
