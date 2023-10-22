@@ -141,7 +141,7 @@ public class UserMapper {
         return switch (value) {
             case "Admin" -> TypeUser.ADMIN;
             case "Gestor" -> TypeUser.GESTOR;
-            case "Peão" -> TypeUser.PEAO;
+            case "Requisitante" -> TypeUser.REQUISITANTE;
             default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
         };
     }

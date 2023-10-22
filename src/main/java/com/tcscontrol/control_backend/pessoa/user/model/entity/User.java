@@ -54,7 +54,7 @@ public class User extends Pessoa implements UserDetails{
     @NotNull
     @Column(name= "tp_usuario", length = 15)
     @Convert(converter = TypeUserConverter.class)
-    private TypeUser typeUser = TypeUser.PEAO;
+    private TypeUser typeUser = TypeUser.REQUISITANTE;
 
     @Builder
     public User(Long id, String nmName, DocumentoType documentoType, Status status, 
