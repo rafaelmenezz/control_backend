@@ -55,7 +55,7 @@ public class ControlBackendApplication {
 			User user = new User();
 			user.setNmName("teste");
 			user.setNrMatricula("2121");
-			user.setNmSenha(new BCryptPasswordEncoder().encode("teste"));
+			user.setNmSenha(new BCryptPasswordEncoder().encode("Administrador"));
 			user.setNrCpf("111.111.111-11");
 			user.setTpStatus(Status.ACTIVE);
 			user.setTypeUser(TypeUser.ADMIN);

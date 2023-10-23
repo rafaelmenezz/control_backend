@@ -74,8 +74,8 @@ public class UserImpl implements UserNegocio {
                     User user = userMapper.toCreateEntity(userCreateDto);
                     recordFound.setNmName(userCreateDto.nmUsuario());
                     recordFound.setFtFoto(userCreateDto.ftFoto());
-                    recordFound.setTypeUser(userMapper.convertTypeUserValue(userCreateDto.typeUser()));
-                    recordFound.setTpStatus(userMapper.convertStatusValue(userCreateDto.flStatus()));
+                    recordFound.setTypeUser(UtilControl.convertTypeUserValue(userCreateDto.typeUser()));
+                    recordFound.setTpStatus(UtilControl.convertStatusValue(userCreateDto.flStatus()));
                     recordFound.getContacts().clear();
                     user.getContacts().forEach(recordFound.getContacts()::add);
                     return userMapper.toCreateDto(userRepository.save(recordFound));
@@ -181,4 +181,14 @@ public class UserImpl implements UserNegocio {
             throw new IllegalRequestException("Senha informada inválida!");
         }
     }
+
+    @Override
+    public User obtemUsuarioPorId(Long id) {
+        return pesquisaPorId(id);
+    }
+
+    private User pesquisaPorId(Long id){
+        return userRepository.findById(id).stream().findFirst().orElseThrow(()-> new IllegalRequestException("Usuario não encontrado!"));
+    }
 }
+

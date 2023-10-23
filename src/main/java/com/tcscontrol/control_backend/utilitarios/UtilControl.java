@@ -5,9 +5,12 @@
  */
 package com.tcscontrol.control_backend.utilitarios;
 
+import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enuns.TypeMaintenance;
+import com.tcscontrol.control_backend.enuns.TypeUser;
 import com.tcscontrol.control_backend.enuns.TypeWarranty;
 
 public class UtilControl {
@@ -147,6 +150,43 @@ public class UtilControl {
             case "Registrado" -> SituationType.REGISTRADO;
             case "Manutenção" -> SituationType.EM_MANUTENCAO;
             default -> throw new IllegalArgumentException("Situação do património inválida!");
+        };
+    }
+
+    public static TypeUser convertTypeUserValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Admin" -> TypeUser.ADMIN;
+            case "Gestor" -> TypeUser.GESTOR;
+            case "Requisitante" -> TypeUser.REQUISITANTE;
+            default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
+        };
+    }
+
+     public static TypeContacts convertTypeContactsValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Telefone" -> TypeContacts.TELEFONE;
+            case "Celular" -> TypeContacts.CELULAR;
+            case "E-mail" -> TypeContacts.EMAIL;
+            case "WhatsApp" -> TypeContacts.WHATSAPP;
+            case "Instagran" -> TypeContacts.INSTAGRAN;
+            default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
+        };
+    }
+
+    public static DocumentoType convertDocumentoValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "CPF" -> DocumentoType.CPF;
+            case "CNPJ" -> DocumentoType.CNPJ;
+            default -> throw new IllegalArgumentException("Documento do usuário inválido.");
         };
     }
 }

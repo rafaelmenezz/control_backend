@@ -2,24 +2,24 @@ package com.tcscontrol.control_backend.requests.model.entity;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
-import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
+import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,23 +39,33 @@ public class Requests implements Serializable{
       @GeneratedValue(strategy = GenerationType.AUTO)
       private Long id;
 
-      @Column(name = "dt_solicitacao")
-      private Date dtSolicitacao;
+      @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "obra_id", nullable = false)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Construction construction = new Construction();
 
-      @Column(name = "dt_inicio")
-      private Date dtInicio;
+      @OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+      private List<RequestPatrimony> patrimonies = new ArrayList<>();
 
-      @Column(name = "dt_devolucao")
-      private Date dtDevolcao;
+      @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Objects.hashCode(getId());
+		return result;
+	}
 
-      @ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "obra_patrimonio", 
-	joinColumns = @JoinColumn(name = "patrimonio_id"),
-	inverseJoinColumns = @JoinColumn(name = "obra_id"))
-      private Set<Patrimony> patrimonios = new HashSet<>();
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-      @ManyToOne(fetch = FetchType.EAGER, optional = false)
-      @JoinColumn(name = "id_obras", nullable = false)
-      @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-      private Construction construction;
+		Requests otherRequests = (Requests) o;
+		return id != null && id.equals(otherRequests.id);
+	}
+
 }

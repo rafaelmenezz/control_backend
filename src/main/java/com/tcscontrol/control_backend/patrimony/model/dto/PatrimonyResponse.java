@@ -8,7 +8,7 @@ import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 public record PatrimonyResponse(
     Long id,
     String nmPatrimonio,
-    Integer nrSerie,
+    String nrSerie,
     String nmDescricao,
     String nrCnpj,
     String nmFornecedor,

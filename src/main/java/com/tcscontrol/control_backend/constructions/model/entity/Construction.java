@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
-import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -88,7 +88,7 @@ public class Construction implements Serializable {
       private User user;
 
       @OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "construction")
-      private List<RequestPatrimony> patrimonies;
+      private List<Requests> requests;
 
       @Override
 	public int hashCode() {

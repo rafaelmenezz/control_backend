@@ -13,9 +13,9 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
     
     List<Patrimony> findAll(Specification<Patrimony> specification);
 
-    List<Patrimony> findByNmPatrimonioContainingOrNrSerieOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(
+    List<Patrimony> findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(
         String nmPatrimonio,
-        Integer nrSerie,
+        String nrSerie,
         String nmDescricao,
         String nrCnpj,
         String nmFornecedor,

@@ -9,8 +9,9 @@ import com.tcscontrol.control_backend.constructions.ConstructionNegocio;
 import com.tcscontrol.control_backend.constructions.ConstructionRepository;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
+import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
-import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
+import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
@@ -24,7 +25,7 @@ public class ConstructionNegocioImpl implements ConstructionNegocio {
 
       private ConstructionRepository constructionRepository;
       private ConstructionMapper constructionMapper;
-      private UserMapper userMapper;
+      private UserNegocio userNegocio;
 
       @Override
       public List<ConstructionDTO> list() {
@@ -51,7 +52,7 @@ public class ConstructionNegocioImpl implements ConstructionNegocio {
       public ConstructionDTO update(Long id, ConstructionDTO constructionDTO) {
             return constructionRepository.findById(id)
                         .map(recordFound -> {
-                              User user = userMapper.toEntity(constructionDTO.usuario());
+                              User user = userNegocio.obtemUsuarioPorId(constructionDTO.usuario().id());
                               recordFound.setNmObra(constructionDTO.nmObra());
                               recordFound.setNrCnpjCpf(constructionDTO.nrCnpjCpf());
                               recordFound.setNmCliente(constructionDTO.nmCliente());
@@ -76,6 +77,16 @@ public class ConstructionNegocioImpl implements ConstructionNegocio {
       public void delete(@NotNull @Positive Long id) {
             constructionRepository
                         .delete(constructionRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id)));
+      }
+
+      @Override
+      public Construction toEntity(ConstructionDTO constructionDTO) {
+            return constructionMapper.toEntity(constructionDTO);
+      }
+
+      @Override
+      public ConstructionDTO toDTO(Construction construction) {
+            return constructionMapper.toDto(construction);
       }
 
 }

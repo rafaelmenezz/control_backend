@@ -15,6 +15,6 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(IllegalRequestException.class)
     public ResponseEntity<String> handleRequestException(IllegalRequestException ex){
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ex.getMessage());
+        return ResponseEntity.status(480).body(ex.getMessage());
     }
 }

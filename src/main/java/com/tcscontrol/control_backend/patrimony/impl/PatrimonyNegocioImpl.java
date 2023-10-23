@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.AllocationNegocio;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.PatrimonyRepository;
@@ -18,7 +19,6 @@ import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
-import com.tcscontrol.control_backend.utilitarios.UtilCast;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -54,7 +54,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
 
     @Override
     public PatrimonyResponse create(PatrimonyDTO patrimonyDTO) {    
-        return patrimonyMapper.toResponse(patrimonyRepository.save(patrimonyMapper.toEntity(patrimonyDTO)));
+        return patrimonyMapper.toResponse(salveNewPatrimony(patrimonyDTO));
     }
 
     @Override
@@ -98,16 +98,12 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     @Override
     public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCnpj, String nmFornecedor, String dtAquisicao){ 
                         
-        Integer numeroSerie = null;
-        if(!UtilObjeto.isEmpty(nrSerie)){
-            numeroSerie = UtilCast.toInteger(nrSerie);
-        }
         Date dt = null; 
         if (!UtilObjeto.isEmpty(dtAquisicao)) {
             dt = UtilData.toDate(dtAquisicao, UtilData.FORMATO_DDMMAA);
         }
         
-        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, numeroSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
+        return patrimonyRepository.findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(nmPatrimonio, nrSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
@@ -149,6 +145,19 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     @Override
     public List<Patrimony> atulizaPatrimonios(List<Patrimony> patrimonies) {
         return patrimonyRepository.saveAllAndFlush(patrimonies);
+    }
+
+    @Override
+    public List<Patrimony> toListEntity(List<PatrimonyDTO> patrimonyDTOs) {
+        return patrimonyDTOs.stream().map(patrimonyMapper::toEntity).collect(Collectors.toList());
+    }
+
+
+    private Patrimony salveNewPatrimony(PatrimonyDTO patrimonyDTO){
+        Patrimony p = patrimonyMapper.toEntity(patrimonyDTO);
+        p.setTpSituacao(SituationType.DISPONIVEL);
+
+        return patrimonyRepository.save(p);
     }
 
 }

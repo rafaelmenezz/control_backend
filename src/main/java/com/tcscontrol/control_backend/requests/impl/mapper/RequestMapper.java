@@ -1,18 +1,16 @@
 package com.tcscontrol.control_backend.requests.impl.mapper;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
-import com.tcscontrol.control_backend.constructions.model.entity.Construction;
-import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
-import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.requests.model.dto.RequestsDTO;
+import com.tcscontrol.control_backend.request_patrimony.impl.mapper.RequestPatrimonyMapper;
+import com.tcscontrol.control_backend.request_patrimony.model.dto.RequestPatrimonyDTO;
+import com.tcscontrol.control_backend.requests.model.dto.RequestResponse;
 import com.tcscontrol.control_backend.requests.model.entity.Requests;
-import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
 import lombok.AllArgsConstructor;
 
@@ -20,40 +18,25 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RequestMapper {
       
-      private PatrimonyMapper patrimonyMapper;
       private ConstructionMapper constructionMapper;
+      private RequestPatrimonyMapper requestPatrimonyMapper;
 
-      public RequestsDTO toDto(Requests requests){
-            if (requests == null) {
+
+      public RequestResponse toResponse(Requests requests){
+            if (UtilObjeto.isEmpty(requests)) {
                   return null;
             }
-            return new RequestsDTO(
-            requests.getId(),
-            UtilData.toString(requests.getDtSolicitacao(), UtilData.FORMATO_DDMMAA),
-            UtilData.toString(requests.getDtInicio(), UtilData.FORMATO_DDMMAA), 
-            UtilData.toString(requests.getDtDevolcao(), UtilData.FORMATO_DDMMAA),
-            requests.getPatrimonios().stream().map(patrimonyMapper::toDto).collect(Collectors.toList()),
-            constructionMapper.toDto(requests.getConstruction()));
+
+            List<RequestPatrimonyDTO> pDtos = requests.getPatrimonies()
+            .stream()
+            .map(requestPatrimonyMapper::toDTO)
+            .collect(Collectors.toList());
+
+            return new RequestResponse(
+                  requests.getId(), 
+                  constructionMapper.toDto(requests.getConstruction()), 
+                  pDtos);
       }
 
-      public Requests toEntity(RequestsDTO requestDto){
-            if (requestDto == null) {
-                  return null;
-            }
-            Requests requests = new Requests();
-            if (requestDto.id() != null) {
-                  requests.setId(requestDto.id());
-            }
-
-            Set<Patrimony> patrimonys = new HashSet<>(requestDto.patrimonios().stream().map(patrimonyMapper::toEntity).collect(Collectors.toList())) ;
-            Construction construction = constructionMapper.toEntity(requestDto.obra());
-
-            requests.setDtSolicitacao(UtilData.toDate(requestDto.dtSolicitacao(), UtilData.FORMATO_DDMMAA));
-            requests.setDtInicio(UtilData.toDate(requestDto.dtInicio(), UtilData.FORMATO_DDMMAA));
-            requests.setDtDevolcao(UtilData.toDate(requestDto.dtDevolcao(), UtilData.FORMATO_DDMMAA));
-            requests.setPatrimonios(patrimonys);
-            requests.setConstruction(construction);
-
-            return requests;
-      }
+      
 }

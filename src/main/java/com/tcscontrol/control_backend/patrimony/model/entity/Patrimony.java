@@ -4,10 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
@@ -16,7 +14,7 @@ import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.enuns.converters.TypeSituationConverter;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
-import com.tcscontrol.control_backend.requests.model.entity.Requests;
+import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
 import jakarta.persistence.CascadeType;
@@ -29,7 +27,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -53,7 +50,7 @@ public class Patrimony implements Serializable {
 	private Long id;
 
 	@Column(name = "nr_serie", nullable = true)
-	private Integer nrSerie;
+	private String nrSerie;
 
 	@Column(name = "nm_patrimonio")
 	private String nmPatrimonio;
@@ -88,14 +85,14 @@ public class Patrimony implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
 	private List<Warranty> warrantys = new ArrayList<>();
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "patrimonios")
-	private Set<Requests> requests = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = false, mappedBy = "patrimony")
+	private List<RequestPatrimony> requests = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
 	private List<AllocationPatrimony> allocations = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
-	@JoinColumn(name = "id_fornecedor", nullable = false)
+	@JoinColumn(name = "fornecedor_id", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Fornecedor fornecedor;
 
