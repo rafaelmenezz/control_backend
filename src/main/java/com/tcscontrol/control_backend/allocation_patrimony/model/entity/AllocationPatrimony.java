@@ -6,9 +6,12 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -44,6 +47,10 @@ public class AllocationPatrimony implements Serializable {
 
     @Column(name = "nm_observacao")
     private String nmObservacao;
+
+    @Column(name="status")
+    @Convert(converter = StatusConverter.class)
+    private Status status = Status.ACTIVE;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "alocacao_id", nullable = false)

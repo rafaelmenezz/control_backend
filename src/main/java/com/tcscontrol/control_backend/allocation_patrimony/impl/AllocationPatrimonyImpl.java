@@ -17,6 +17,7 @@ import com.tcscontrol.control_backend.allocation_patrimony.model.entity.Allocati
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.SituationType;
+import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -141,7 +142,10 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
                 if (UtilObjeto.isEmpty(ap.getDtAlocacao())) {
                   ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));  
                 }
-                ap.setDtDevolucao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                if (UtilObjeto.isNotEmpty(allocationDTO.dtDevolucao())) {
+                    ap.setDtDevolucao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                    ap.setStatus(Status.INACTIVE);    
+                }
                 ap.setNmObservacao(allocationDTO.observation());
                 ap.setPatrimony(p);
                 p.setTpSituacao(SituationType.ALOCADO);
