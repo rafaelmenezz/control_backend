@@ -11,4 +11,6 @@ public interface AllocationPatrimonyService {
     AllocationResponse create(AllocationDTO allocationDTO);
 
     AllocationResponse update(Long id, AllocationDTO allocationDTO);
+
+    AllocationResponse giveBackPatrimony(AllocationDTO allocationDTO);
 }

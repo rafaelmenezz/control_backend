@@ -121,12 +121,12 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     }
 
     @Override
-    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(Boolean fixo) {
-         return obtemPatrimoniosPorTipo(fixo);
+    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(String nmPatrimony, Boolean fixo) {
+         return obtemPatrimoniosPorTipo(nmPatrimony, fixo);
     }
 
-    private List<PatrimonyResponse>  obtemPatrimoniosPorTipo(Boolean fixo){
-        return patrimonyRepository.findPatrimoniesToAllocation(fixo)
+    private List<PatrimonyResponse>  obtemPatrimoniosPorTipo(String nmPatrimony, Boolean fixo){
+        return patrimonyRepository.findPatrimoniesToAllocation("%"+nmPatrimony+"%", fixo)
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());

@@ -50,7 +50,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rps.add(rp);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
-        requests.getPatrimonies().addAll(rps);
+        requests.getPatrimonies().addAll(saveAllRequestPatrimonies(rps));
         return requestNegocio.toResponse(salvaRequests(requests));
     }
 
@@ -73,7 +73,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rps.add(rp);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
-        requests.getPatrimonies().addAll(rps);
+        requests.getPatrimonies().addAll(saveAllRequestPatrimonies(rps));
         return requestNegocio.toResponse(salvaRequests(requests));
 
     }
@@ -89,10 +89,6 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
 
     private Requests salvaRequests(Requests requests) {
         return requestNegocio.salvaRequests(requests);
-    }
-
-    private RequestPatrimony saveNewRequestPatrimony(RequestPatrimony requestPatrimony) {
-        return requestPatrimonyRepository.save(requestPatrimony);
     }
 
     private List<RequestPatrimony> saveAllRequestPatrimonies(List<RequestPatrimony> listRequestPatrimonies) {

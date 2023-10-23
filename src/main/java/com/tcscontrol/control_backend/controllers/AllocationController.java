@@ -51,4 +51,10 @@ public class AllocationController {
             return allocationPatrimonyService.update(id, allocationDTO);
       }
 
+      @PutMapping("/devolver-patrimonio")
+      @ResponseStatus(code = HttpStatus.NO_CONTENT)
+      public AllocationResponse giveBack(@RequestBody AllocationDTO allocationDTO) {
+            return allocationPatrimonyService.giveBackPatrimony(allocationDTO);
+      }
+
 }

@@ -26,6 +26,6 @@ public interface PatrimonyService {
 
     public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCpf, String nmFornecedor, String dtAquisicao);
 
-    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(Boolean fixo);
+    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(String nmPatrimony,Boolean fixo);
 
 }

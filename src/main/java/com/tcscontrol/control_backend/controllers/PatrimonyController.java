@@ -76,8 +76,10 @@ public class PatrimonyController {
     }
 
     @GetMapping("/allocation")
-    public ResponseEntity<List<PatrimonyResponse>> findPatrimoniesToAllocation(){ 
-        List<PatrimonyResponse> list = patrimonyService.listPatrimoniesFixOrNotFix(Boolean.TRUE);
+    public ResponseEntity<List<PatrimonyResponse>> findPatrimoniesToAllocation(
+         @RequestParam(name = "nmPatrimonio", required = false) String nmPatrimonio
+        ){ 
+        List<PatrimonyResponse> list = patrimonyService.listPatrimoniesFixOrNotFix(nmPatrimonio, Boolean.TRUE);
         if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else{
@@ -86,8 +88,10 @@ public class PatrimonyController {
         
     }
     @GetMapping("/construction")
-    public ResponseEntity<List<PatrimonyResponse>> findPatrimoniesToConstruction(){ 
-        List<PatrimonyResponse> list = patrimonyService.listPatrimoniesFixOrNotFix(Boolean.FALSE);
+    public ResponseEntity<List<PatrimonyResponse>> findPatrimoniesToConstruction(
+         @RequestParam(name = "nmPatrimonio", required = false) String nmPatrimonio
+        ){ 
+        List<PatrimonyResponse> list = patrimonyService.listPatrimoniesFixOrNotFix(nmPatrimonio, Boolean.FALSE);
         if (list.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else{

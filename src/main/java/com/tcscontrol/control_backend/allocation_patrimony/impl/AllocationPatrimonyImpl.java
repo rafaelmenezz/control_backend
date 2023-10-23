@@ -19,7 +19,6 @@ import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
-import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -40,6 +39,7 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
 
     @Override
     public AllocationResponse create(AllocationDTO allocationDTO) {
+            validaAlocacao(allocationDTO);
             Allocation allocation = gravarAllocation(allocationDTO);
             List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
             List<AllocationPatrimony> aps = new ArrayList<>();
@@ -57,6 +57,26 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
                 apDTO);
 
     }
+
+        @Override
+        public AllocationResponse giveBackPatrimony(AllocationDTO allocationDTO) {
+            validaAlocacao(allocationDTO);
+            Allocation allocation = gravarAllocation(allocationDTO);
+            List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
+            List<AllocationPatrimony> aps = new ArrayList<>();
+            validaAlocacaoPatrimonio(patrimonios);
+            atulizaPatrimoios(patrimonios);
+            adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
+            aps = salvaAllocationPatrimony(aps);
+            allocation.getPatrimonios().addAll(aps);
+            allocationNegocio.salvaAllocation(allocation);
+            List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO).collect(Collectors.toList());
+
+             return new AllocationResponse(
+                allocation.getId(),
+                departmentMapper.toDTO(allocation.getDepartamento()),
+                apDTO);
+        }
 
     @Override
     public AllocationResponse update(Long id, AllocationDTO allocationDTO) {
@@ -102,10 +122,6 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         return allocationPatrimonyRepository.saveAll(ap);
     }
 
-    private List<PatrimonyDTO> obtemListPatrimoniosDTO(List<AllocationPatrimony> aps){
-        return aps.stream().map(c -> patrimonyNegocio.toDTO(c.getPatrimony())).collect(Collectors.toList());
-    }
-
     private List<Patrimony> atulizaPatrimoios(List<Patrimony> patrimonies){
         if (UtilObjeto.isEmpty(patrimonies)) {
             return new ArrayList<>();
@@ -125,7 +141,7 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
                 if (UtilObjeto.isEmpty(ap.getDtAlocacao())) {
                   ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));  
                 }
-                
+                ap.setDtDevolucao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
                 ap.setNmObservacao(allocationDTO.observation());
                 ap.setPatrimony(p);
                 p.setTpSituacao(SituationType.ALOCADO);
@@ -143,5 +159,20 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
             }
         }
     }
+
+        private void validaAlocacao(AllocationDTO allocationDTO){
+        if (UtilObjeto.isEmpty(allocationDTO.dtAlocacao())) {
+            throw new IllegalRequestException("Data de Retirada não informada!");
+        }
+        if (UtilObjeto.isEmpty(allocationDTO.patrimonies())) {
+            throw new IllegalRequestException("Nenhum patrimônio foi informado!");
+        }
+        if (UtilObjeto.isEmpty(allocationDTO.departament())) {
+            throw new IllegalRequestException("Obra não informado!");
+        }
+        
+    }
+
+
     
 }
