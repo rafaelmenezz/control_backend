@@ -13,7 +13,6 @@ import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.request_patrimony.RequestPatrimonyNegocio;
-import com.tcscontrol.control_backend.request_patrimony.RequestPatrimonyRepository;
 import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 import com.tcscontrol.control_backend.requests.RequestNegocio;
 import com.tcscontrol.control_backend.requests.model.dto.RequestResponse;
@@ -28,7 +27,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
 
-    private RequestPatrimonyRepository requestPatrimonyRepository;
     private RequestNegocio requestNegocio;
     private ConstructionNegocio constructionNegocio;
     private PatrimonyNegocio patrimonyNegocio;
@@ -47,10 +45,11 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
             patrimony.setTpSituacao(SituationType.REGISTRADO);
+            patrimony.getRequests().add(rp);
             rps.add(rp);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
-        requests.getPatrimonies().addAll(saveAllRequestPatrimonies(rps));
+        requests.getPatrimonies().addAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
 
@@ -73,7 +72,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rps.add(rp);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
-        requests.getPatrimonies().addAll(saveAllRequestPatrimonies(rps));
+        requests.getPatrimonies().addAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
 
     }
@@ -89,10 +88,6 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
 
     private Requests salvaRequests(Requests requests) {
         return requestNegocio.salvaRequests(requests);
-    }
-
-    private List<RequestPatrimony> saveAllRequestPatrimonies(List<RequestPatrimony> listRequestPatrimonies) {
-        return requestPatrimonyRepository.saveAllAndFlush(listRequestPatrimonies);
     }
 
     private void validaRequisicao(RequestsDTO requestsDTO){

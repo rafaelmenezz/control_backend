@@ -1,7 +1,10 @@
 package com.tcscontrol.control_backend.enuns;
 
 public enum SituationType {
-    DISPONIVEL("Disponivel"), ALOCADO("Alocado"), REGISTRADO("Registrado"), EM_MANUTENCAO("Manutenção");
+    DISPONIVEL("Disponivel"), 
+    ALOCADO("Alocado"), 
+    REGISTRADO("Registrado"), 
+    EM_MANUTENCAO("Em Manutenção");
 
     private String value;
 

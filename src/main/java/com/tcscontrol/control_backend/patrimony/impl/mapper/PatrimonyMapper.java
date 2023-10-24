@@ -8,14 +8,21 @@ import org.springframework.stereotype.Component;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
+import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
+import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.department.model.entity.Department;
+import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
+import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
+import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -31,6 +38,7 @@ public class PatrimonyMapper {
     FornecedorNegocio fornecedorNegocio;
     DepartmentMapper departmentMapper;
     ConstructionMapper constructionMapper;
+    MaintenanceMapper maintenanceMapper;
 
     public PatrimonyResponse toResponse(Patrimony patrimony) {
         if (patrimony == null) {
@@ -43,8 +51,17 @@ public class PatrimonyMapper {
                 .findFirst()
                 .orElse(new AllocationPatrimony());
 
+        RequestPatrimony rPatrimony = patrimony.getRequests()
+                .stream()
+                .filter(c -> c.getDtRetirada() != null && c.getDtDevolucao() == null)
+                .findFirst()
+                .orElse(new RequestPatrimony());
+
         Allocation a = aPatrimony == null ? null : aPatrimony.getAllocation();
-        DepartmentDTO departmentDTO =  a != null ? departmentMapper.toDTO(a.getDepartamento()) : null;
+        DepartmentDTO departmentDTO = a != null ? departmentMapper.toDTO(a.getDepartamento()) : null;
+
+        Requests r = rPatrimony == null ? null : rPatrimony.getRequests();
+        ConstructionDTO constructionDTO = r != null ? constructionMapper.toDto(r.getConstruction()) : null; 
 
         List<WarrantyDTO> warrantys = patrimony.getWarrantys()
                 .stream()
@@ -69,7 +86,8 @@ public class PatrimonyMapper {
                 patrimony.getFixo(),
                 patrimony.getTpSituacao().getValue(),
                 warrantys,
-                departmentDTO != null ? departmentDTO : null);
+                departmentDTO != null ? departmentDTO : null,
+                constructionDTO != null ? constructionDTO : null);
 
     }
 
@@ -88,18 +106,40 @@ public class PatrimonyMapper {
                 .collect(Collectors.toList());
 
         List<AllocationPatrimony> aps = patrimony.getAllocations();
+        List<RequestPatrimony> rps = patrimony.getRequests();
+        List<Maintenance> maintenances = patrimony.getMaintenances();
 
         Department department = null;
-        if (!UtilObjeto.isEmpty(aps)) {
+        if (UtilObjeto.isNotEmpty(aps)) {
             for (AllocationPatrimony allocationPatrimony : aps) {
-                if(UtilObjeto.isNotEmpty(allocationPatrimony.getDtAlocacao()) 
-                    && UtilObjeto.isEmpty(allocationPatrimony.getDtDevolucao())){
-                        department = allocationPatrimony.getAllocation().getDepartamento();
-                    }
-                
+                if (UtilObjeto.isNotEmpty(allocationPatrimony.getDtAlocacao())
+                        && UtilObjeto.isEmpty(allocationPatrimony.getDtDevolucao())) {
+                    department = allocationPatrimony.getAllocation().getDepartamento();
+                }
+
             }
         }
-                
+
+        Construction construction = null;
+        if (UtilObjeto.isNotEmpty(rps)) {
+            for (RequestPatrimony requestPatrimony : rps) {
+                if (UtilObjeto.isNotEmpty(requestPatrimony.getDtRetirada())
+                        && UtilObjeto.isEmpty(requestPatrimony.getDtDevolucao())) {
+                    construction = requestPatrimony.getRequests().getConstruction();
+                }
+
+            }
+        }
+
+        Maintenance maintenance = null;
+        if (UtilObjeto.isNotEmpty(maintenances)) {
+            maintenance = maintenances
+            .stream()
+            .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
+            .findFirst()
+            .orElse(new Maintenance());
+        }
+
         return new PatrimonyDTO(
                 patrimony.getId(),
                 patrimony.getNrSerie(),
@@ -114,7 +154,9 @@ public class PatrimonyMapper {
                 patrimony.getFixo(),
                 patrimony.getTpSituacao().getValue(),
                 warrantys,
-                UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null); 
+                UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null,
+                UtilObjeto.isNotEmpty(construction) ? constructionMapper.toDto(construction) : null,
+                maintenanceMapper.toDto(maintenance));
     }
 
     public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {
@@ -174,15 +216,12 @@ public class PatrimonyMapper {
         if (patrimonyResponse.id() != null) {
             patrimony.setId(patrimonyResponse.id());
         }
-
         Fornecedor fornecedor = fornecedorNegocio.pesquisaFornecedorCnpj(patrimonyResponse.nrCnpj());
-
         if (fornecedor == null) {
             fornecedor = new Fornecedor();
             fornecedor.setNmName(patrimonyResponse.nmFornecedor());
             fornecedor.setNrCnpj(patrimonyResponse.nrCnpj());
             fornecedor = fornecedorNegocio.cadastrarFornecedor(fornecedor);
-
         }
 
         patrimony.setNrSerie(patrimonyResponse.nrSerie());

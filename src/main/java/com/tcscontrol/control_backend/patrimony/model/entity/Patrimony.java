@@ -13,6 +13,7 @@ import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.enuns.converters.TypeSituationConverter;
+import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
@@ -95,6 +96,9 @@ public class Patrimony implements Serializable {
 	@JoinColumn(name = "fornecedor_id", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Fornecedor fornecedor;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
+	private List<Maintenance> maintenances = new ArrayList<>();
 
 	@Override
 	public int hashCode() {

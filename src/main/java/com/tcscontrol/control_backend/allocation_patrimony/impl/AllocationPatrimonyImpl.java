@@ -30,54 +30,54 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
 
-
     AllocationPatrimonyRepository allocationPatrimonyRepository;
     AllocationPatrimonyMapper allocationPatrimonyMapper;
     DepartmentMapper departmentMapper;
     AllocationNegocio allocationNegocio;
     PatrimonyNegocio patrimonyNegocio;
 
-
     @Override
     public AllocationResponse create(AllocationDTO allocationDTO) {
-            validaAlocacao(allocationDTO);
-            Allocation allocation = gravarAllocation(allocationDTO);
-            List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
-            List<AllocationPatrimony> aps = new ArrayList<>();
-            validaAlocacaoPatrimonio(patrimonios);
-            atulizaPatrimoios(patrimonios);
-            adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
-            aps = salvaAllocationPatrimony(aps);
-            allocation.getPatrimonios().addAll(aps);
-            allocationNegocio.salvaAllocation(allocation);
-            List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO).collect(Collectors.toList()); 
+        validaAlocacao(allocationDTO);
+        Allocation allocation = gravarAllocation(allocationDTO);
+        List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
+        List<AllocationPatrimony> aps = new ArrayList<>();
+        validaAlocacaoPatrimonio(patrimonios);
+        atulizaPatrimoios(patrimonios);
+        adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
+        aps = salvaAllocationPatrimony(aps);
+        allocation.getPatrimonios().addAll(aps);
+        allocationNegocio.salvaAllocation(allocation);
+        List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO)
+                .collect(Collectors.toList());
 
-            return new AllocationResponse(
+        return new AllocationResponse(
                 allocation.getId(),
                 departmentMapper.toDTO(allocation.getDepartamento()),
                 apDTO);
 
     }
 
-        @Override
-        public AllocationResponse giveBackPatrimony(AllocationDTO allocationDTO) {
-            validaAlocacao(allocationDTO);
-            Allocation allocation = gravarAllocation(allocationDTO);
-            List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
-            List<AllocationPatrimony> aps = new ArrayList<>();
-            validaAlocacaoPatrimonio(patrimonios);
-            atulizaPatrimoios(patrimonios);
-            adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
-            aps = salvaAllocationPatrimony(aps);
-            allocation.getPatrimonios().addAll(aps);
-            allocationNegocio.salvaAllocation(allocation);
-            List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO).collect(Collectors.toList());
+    @Override
+    public AllocationResponse giveBackPatrimony(AllocationDTO allocationDTO) {
+        validaAlocacao(allocationDTO);
+        Allocation allocation = gravarAllocation(allocationDTO);
+        List<Patrimony> patrimonios = obterPatrimonies(allocationDTO);
+        List<AllocationPatrimony> aps = new ArrayList<>();
+        validaAlocacaoPatrimonio(patrimonios);
+        atulizaPatrimoios(patrimonios);
+        adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
+        aps = salvaAllocationPatrimony(aps);
+        allocation.getPatrimonios().addAll(aps);
+        allocationNegocio.salvaAllocation(allocation);
+        List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO)
+                .collect(Collectors.toList());
 
-             return new AllocationResponse(
+        return new AllocationResponse(
                 allocation.getId(),
                 departmentMapper.toDTO(allocation.getDepartamento()),
                 apDTO);
-        }
+    }
 
     @Override
     public AllocationResponse update(Long id, AllocationDTO allocationDTO) {
@@ -92,15 +92,16 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         allocation.getPatrimonios().addAll(aps);
         allocationNegocio.salvaAllocation(allocation);
 
-        List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO).collect(Collectors.toList()); 
+        List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO)
+                .collect(Collectors.toList());
 
         return new AllocationResponse(
                 allocation.getId(),
                 departmentMapper.toDTO(allocation.getDepartamento()),
-                apDTO); 
+                apDTO);
     }
 
-    private Allocation gravarAllocation(AllocationDTO allocationDTO){
+    private Allocation gravarAllocation(AllocationDTO allocationDTO) {
         Allocation allocation = new Allocation();
         Department department = departmentMapper.toEntity(allocationDTO.departament());
         department.getAllocations().add(allocation);
@@ -110,20 +111,20 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         return allocation;
     }
 
-    private List<Patrimony> obterPatrimonies(AllocationDTO allocationDTO){
+    private List<Patrimony> obterPatrimonies(AllocationDTO allocationDTO) {
         if (UtilObjeto.isEmpty(allocationDTO.patrimonies())) {
             return new ArrayList<>();
         }
         return allocationDTO.patrimonies()
-                  .stream()
-                  .map(patrimonyNegocio::toEntity).collect(Collectors.toList());
+                .stream()
+                .map(patrimonyNegocio::toEntity).collect(Collectors.toList());
     }
 
-    private List<AllocationPatrimony> salvaAllocationPatrimony(List<AllocationPatrimony> ap){
+    private List<AllocationPatrimony> salvaAllocationPatrimony(List<AllocationPatrimony> ap) {
         return allocationPatrimonyRepository.saveAll(ap);
     }
 
-    private List<Patrimony> atulizaPatrimoios(List<Patrimony> patrimonies){
+    private List<Patrimony> atulizaPatrimoios(List<Patrimony> patrimonies) {
         if (UtilObjeto.isEmpty(patrimonies)) {
             return new ArrayList<>();
         }
@@ -134,28 +135,29 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         return patrimonyNegocio.atulizaPatrimonios(patrimonies);
     }
 
-    private void adicionaListaPatrimonios(List<Patrimony> patrimonies, List<AllocationPatrimony> allocationPatrimonies, Allocation allocation, AllocationDTO allocationDTO){
+    private void adicionaListaPatrimonios(List<Patrimony> patrimonies, List<AllocationPatrimony> allocationPatrimonies,
+            Allocation allocation, AllocationDTO allocationDTO) {
 
-         for (Patrimony p : patrimonies) {
-                AllocationPatrimony ap = new AllocationPatrimony();
-                ap.setAllocation(allocation);
-                if (UtilObjeto.isEmpty(ap.getDtAlocacao())) {
-                  ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));  
-                }
-                if (UtilObjeto.isNotEmpty(allocationDTO.dtDevolucao())) {
-                    ap.setDtDevolucao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
-                    ap.setStatus(Status.INACTIVE);    
-                }
-                ap.setNmObservacao(allocationDTO.observation());
-                ap.setPatrimony(p);
-                p.setTpSituacao(SituationType.ALOCADO);
-                p.getAllocations().add(ap);
-                allocationPatrimonies.add(ap);
+        for (Patrimony p : patrimonies) {
+            AllocationPatrimony ap = new AllocationPatrimony();
+            ap.setAllocation(allocation);
+            if (UtilObjeto.isEmpty(ap.getDtAlocacao())) {
+                ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             }
+            if (UtilObjeto.isNotEmpty(allocationDTO.dtDevolucao())) {
+                ap.setDtDevolucao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                ap.setStatus(Status.INACTIVE);
+            }
+            ap.setNmObservacao(allocationDTO.observation());
+            ap.setPatrimony(p);
+            p.setTpSituacao(SituationType.ALOCADO);
+            p.getAllocations().add(ap);
+            allocationPatrimonies.add(ap);
+        }
 
     }
 
-    private void validaAlocacaoPatrimonio(List<Patrimony> list ){
+    private void validaAlocacaoPatrimonio(List<Patrimony> list) {
 
         for (Patrimony p : list) {
             if (!SituationType.DISPONIVEL.equals(p.getTpSituacao())) {
@@ -164,19 +166,17 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         }
     }
 
-        private void validaAlocacao(AllocationDTO allocationDTO){
+    private void validaAlocacao(AllocationDTO allocationDTO) {
         if (UtilObjeto.isEmpty(allocationDTO.dtAlocacao())) {
-            throw new IllegalRequestException("Data de Retirada não informada!");
+            throw new IllegalRequestException("Data de alocação não informada!");
         }
         if (UtilObjeto.isEmpty(allocationDTO.patrimonies())) {
             throw new IllegalRequestException("Nenhum patrimônio foi informado!");
         }
         if (UtilObjeto.isEmpty(allocationDTO.departament())) {
-            throw new IllegalRequestException("Obra não informado!");
+            throw new IllegalRequestException("Departamento não informado!");
         }
-        
+
     }
 
-
-    
 }

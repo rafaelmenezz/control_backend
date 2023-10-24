@@ -3,9 +3,13 @@ package com.tcscontrol.control_backend.maintenance.model.entity;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tcscontrol.control_backend.enuns.MaintenanceStatus;
+import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeMaintenance;
+import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.enuns.converters.TypeUserConverter;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
@@ -33,7 +37,7 @@ import lombok.NoArgsConstructor;
 public class Maintenance implements Serializable {
 
       @Serial
-      private static final long serialVersionUID = 1L;
+      private static final Long serialVersionUID = 1L;
 
       @Id
       @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,6 +48,11 @@ public class Maintenance implements Serializable {
       @Column(name = "tp_manutencao", length = 15)
       @Convert(converter = TypeUserConverter.class)
       private TypeMaintenance tpManutencao;
+
+      @NotNull
+      @Column(name = "status_manutencao", length = 15)
+      @Convert(converter = TypeUserConverter.class)
+      private MaintenanceStatus maintenanceStatus = MaintenanceStatus.AGENDADA;
 
       @Column(name = "ds_motivo_manutencao")
       private String dsMotivoManutencao;
@@ -63,14 +72,39 @@ public class Maintenance implements Serializable {
       @Column(name = "dt_fim")
       private Date dtFim;
 
+      @Column(name = "tp_status")
+      @Convert(converter = StatusConverter.class)
+      private Status tpStatus = Status.ACTIVE;
+
       @ManyToOne(fetch = FetchType.EAGER, optional = false)
-      @JoinColumn(name = "id_patrimonio", nullable = false)
+      @JoinColumn(name = "patrimonio_id", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
       private Patrimony patrimony;
 
       @ManyToOne(fetch = FetchType.EAGER, optional = false)
-      @JoinColumn(name = "id_fornecedor", nullable = false)
+      @JoinColumn(name = "fornecedor_id", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
       private Fornecedor fornecedor;
+
+      @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Objects.hashCode(getId());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		  if (this == o) {
+				return true;
+		  }
+		  if (o == null || getClass() != o.getClass()) {
+				return false;
+		  }
+
+		  Maintenance otherMaintenance = (Maintenance) o; 
+		  return id != null && id.equals(otherMaintenance.id);
+	}
 
 }
