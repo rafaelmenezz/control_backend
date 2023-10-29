@@ -47,4 +47,28 @@ public class MaintenanceController {
       public MaintenanceDTO update(@PathVariable Long id, @RequestBody MaintenanceDTO maintenanceDTO) {
             return maintenanceService.update(id, maintenanceDTO);
       }
+
+      @PutMapping("/agendar/{id}")
+      @ResponseStatus(code = HttpStatus.NO_CONTENT)
+      public MaintenanceDTO agendar(@PathVariable Long id, @RequestBody MaintenanceDTO maintenanceDTO) {
+            return maintenanceService.toSchedule(id, maintenanceDTO);
+      }
+
+      @PutMapping("/iniciar/{id}")
+      @ResponseStatus(code = HttpStatus.NO_CONTENT)
+      public MaintenanceDTO iniciar(@PathVariable Long id, @RequestBody MaintenanceDTO maintenanceDTO) {
+            return maintenanceService.toExecute(id, maintenanceDTO);
+      }
+
+      @PutMapping("/finalizar/{id}")
+      @ResponseStatus(code = HttpStatus.NO_CONTENT)
+      public MaintenanceDTO finalizar(@PathVariable Long id, @RequestBody MaintenanceDTO maintenanceDTO) {
+            return maintenanceService.toFinish(id, maintenanceDTO);
+      }
+
+      @PutMapping("/cancelar/{id}")
+      @ResponseStatus(code = HttpStatus.NO_CONTENT)
+      public void cancelar(@PathVariable Long id, @RequestBody MaintenanceDTO maintenanceDTO) {
+            maintenanceService.cancel(id, maintenanceDTO);
+      }
 }

@@ -25,6 +25,7 @@ public class RequestPatrimonyMapper {
         if (UtilObjeto.isNotEmpty(rpDTO.id())) {
             rp.setId(rpDTO.id());
         }
+        rp.setDtPrevisaoRetirada(UtilData.toDate(rpDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
         rp.setDtDevolucao(UtilData.toDate(rpDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
         rp.setDtRetirada(UtilData.toDate(rpDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
         rp.setPatrimony(patrimonyMapper.toEntity(rpDTO.patrimonios()));
@@ -39,6 +40,7 @@ public class RequestPatrimonyMapper {
         }
         return new RequestPatrimonyDTO(
             rp.getId(), 
+            UtilData.toString(rp.getDtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA), 
             UtilData.toString(rp.getDtRetirada(), UtilData.FORMATO_DDMMAA), 
             UtilData.toString(rp.getDtDevolucao(),UtilData.FORMATO_DDMMAA),  
             patrimonyMapper.toDto(rp.getPatrimony()));

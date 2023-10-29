@@ -43,6 +43,9 @@ public class RequestPatrimony implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "dtPrevisaoRetirada")
+    private Date dtPrevisaoRetirada;
+
     @Column(name = "dt_retirada")
     private Date dtRetirada;
 

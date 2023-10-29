@@ -45,6 +45,12 @@ public class RequestsController {
         return requestPatrimonyService.addNewRequest(requestsDTO);
     }
 
+    @PutMapping("/retirar")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public RequestResponse retirar(@RequestBody RequestsDTO requestsDTO){
+        return requestPatrimonyService.giveBackPatrimony(requestsDTO);
+    } 
+
     @PutMapping("/devolver-patrimonio")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public RequestResponse giveBack(@RequestBody RequestsDTO requestsDTO){
