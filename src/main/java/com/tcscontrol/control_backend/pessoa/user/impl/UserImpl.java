@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
+import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
@@ -25,7 +26,6 @@ import com.tcscontrol.control_backend.config.SecurityConfig;
 import com.tcscontrol.control_backend.contacts.ContactsRepository;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
-import com.tcscontrol.control_backend.utilitarios.EmailService;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 
 import jakarta.validation.Valid;
@@ -42,7 +42,7 @@ public class UserImpl implements UserNegocio {
     RefreshTokenRepository refreshTokenRepository;
     ContactsRepository contactsRepository;
     UserMapper userMapper;
-    EmailService emailService;
+    EmailNegocio emailNegocio;
     SecurityConfig config;
     
 
@@ -63,7 +63,7 @@ public class UserImpl implements UserNegocio {
     @Override
     public UserCreateDTO create(@Valid @NotNull UserDTO userDTO, String password) { 
         String email = obtemEmailDTO(userDTO.contacts());
-        emailService.enviarEmail(email, password);
+        emailNegocio.enviarEmailNovoUsuario(userMapper.toCreateEntity(userDTO), password);
         return userMapper.toCreateDto(userRepository.save(userMapper.toCreateEntity(userDTO)));
     }
 
@@ -104,7 +104,7 @@ public class UserImpl implements UserNegocio {
     public void register(UserSenhaDTO user) {
         UserSenhaDTO userD = user;      
         String email = userD.contacts().get(0).dsContato();
-        emailService.enviarEmail(email, UtilControl.gerarSenha(8));
+        emailNegocio.enviarEmail(email, UtilControl.gerarSenha(8));
         userMapper.toCreateDto(userRepository.save(userMapper.toRegisterEntity(user)));
     }
 
