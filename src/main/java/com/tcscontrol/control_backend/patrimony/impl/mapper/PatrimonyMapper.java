@@ -15,7 +15,6 @@ import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
-import com.tcscontrol.control_backend.maintenance.model.dto.MaintenanceDTO;
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
@@ -63,7 +62,7 @@ public class PatrimonyMapper {
         .stream()
         .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
         .findFirst()
-        .orElse(new Maintenance());
+        .orElse(null);
 
         MaintenancePatrimonyDTO maintenancePatrimonyDTO = maintenanceMapper.toMaintenancePatrimonyDTO(maintenance);
         Allocation a = aPatrimony == null ? null : aPatrimony.getAllocation();

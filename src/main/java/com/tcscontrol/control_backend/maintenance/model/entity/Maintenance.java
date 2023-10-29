@@ -9,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.enuns.MaintenanceStatus;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.TypeMaintenance;
+import com.tcscontrol.control_backend.enuns.converters.MaintenanceStatusConverter;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
+import com.tcscontrol.control_backend.enuns.converters.TypeMaintenanceConverter;
 import com.tcscontrol.control_backend.enuns.converters.TypeUserConverter;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
@@ -46,12 +48,12 @@ public class Maintenance implements Serializable {
 
       @NotNull
       @Column(name = "tp_manutencao", length = 15)
-      @Convert(converter = TypeUserConverter.class)
+      @Convert(converter = TypeMaintenanceConverter.class)
       private TypeMaintenance tpManutencao;
 
       @NotNull
       @Column(name = "status_manutencao", length = 15)
-      @Convert(converter = TypeUserConverter.class)
+      @Convert(converter = MaintenanceStatusConverter.class)
       private MaintenanceStatus maintenanceStatus = MaintenanceStatus.AGENDADA;
 
       @Column(name = "ds_motivo_manutencao")

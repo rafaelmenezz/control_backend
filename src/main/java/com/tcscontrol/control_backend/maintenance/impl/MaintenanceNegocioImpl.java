@@ -133,7 +133,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             maintenance.setDtFim(new Date());
             maintenance.setTpStatus(Status.INACTIVE);
             maintenance.setMaintenanceStatus(MaintenanceStatus.CANCELADA);
-            
+
             maintenance = alterar(id, maintenance);
             
       }
@@ -145,7 +145,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
                   f = new Fornecedor();
                   f.setNmName(nome);
                   f.setNrCnpj(cnpj);
-                  fornecedorNegocio.cadastrarFornecedor(f);
+                  f = fornecedorNegocio.cadastrarFornecedor(f);
                   return f;
             }
 
