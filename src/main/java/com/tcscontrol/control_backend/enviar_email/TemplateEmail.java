@@ -2,6 +2,9 @@ package com.tcscontrol.control_backend.enviar_email;
 
 public interface TemplateEmail {
 
+    String TEMPLATE_SAUDACAO = "{SAUDACAO}";
+    String TEMPLATE_MENSAGEM = "{CORPO_MENSAGEM}";
+
     String TEMPLATE_EMAIL = """
 
             <!DOCTYPE html>
@@ -61,8 +64,19 @@ public interface TemplateEmail {
                         padding-bottom: 3%;
                     }
 
-                    p{
-                        margin-bottom: 35px;
+                    .msg-corpo > ul{
+                        list-style: circle;
+                        margin-bottom: 3%;
+                        margin-left: 3%;
+                    }
+
+                    p.saudacao{
+                        margin-bottom: 25px;
+                    }
+
+                    p.final{
+                        margin-top: 25px;
+                        margin-bottom: 15px;
                     }
                     .footer {
                         background-color: #f5f1f1;
@@ -71,7 +85,7 @@ public interface TemplateEmail {
                         width: 750px;
                     }
 
-                    .footer ul{
+                    .footer > ul{
                         list-style: none;
                     }
                 </style>
@@ -84,8 +98,8 @@ public interface TemplateEmail {
                     </div>
                     <div class="msg-corpo">
                         <p class='saudacao'>{SAUDACAO}</p>
-                        <p>{CORPO_MENSAGEM}</p>
-                        <p>Atenciosamente,</p>
+                        {CORPO_MENSAGEM}
+                        <p class="final">Atenciosamente,</p>
                     </div>
 
                     <div class="footer">

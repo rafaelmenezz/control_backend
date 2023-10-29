@@ -2,7 +2,8 @@ package com.tcscontrol.control_backend.enuns;
 
 public enum MaintenanceStatus {
     AGENDADA("Agendada"), 
-    CANCELADA("Cancelada"), 
+    CANCELADA("Cancelada"),
+    EXECUTADA("Executada"), 
     EM_EXECUCAO("Em Execução");
     
     private String value;

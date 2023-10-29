@@ -18,9 +18,11 @@ import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
+import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
@@ -30,11 +32,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
 
-    AllocationPatrimonyRepository allocationPatrimonyRepository;
-    AllocationPatrimonyMapper allocationPatrimonyMapper;
-    DepartmentMapper departmentMapper;
-    AllocationNegocio allocationNegocio;
-    PatrimonyNegocio patrimonyNegocio;
+    private AllocationPatrimonyRepository allocationPatrimonyRepository;
+    private AllocationPatrimonyMapper allocationPatrimonyMapper;
+    private DepartmentMapper departmentMapper;
+    private AllocationNegocio allocationNegocio;
+    private PatrimonyNegocio patrimonyNegocio;
+    private EmailNegocio emailNegocio;
 
     @Override
     public AllocationResponse create(AllocationDTO allocationDTO) {
@@ -47,7 +50,11 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
         aps = salvaAllocationPatrimony(aps);
         allocation.getPatrimonios().addAll(aps);
-        allocationNegocio.salvaAllocation(allocation);
+
+        User usuario = allocation.getDepartamento().getUser();
+        allocation = allocationNegocio.salvaAllocation(allocation);
+        emailNegocio.enviarEmailNovaAlocacao(usuario, allocation.getDepartamento(), obtemListPatrimonies(allocation.getPatrimonios()));
+
         List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO)
                 .collect(Collectors.toList());
 
@@ -69,7 +76,11 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         adicionaListaPatrimonios(patrimonios, aps, allocation, allocationDTO);
         aps = salvaAllocationPatrimony(aps);
         allocation.getPatrimonios().addAll(aps);
-        allocationNegocio.salvaAllocation(allocation);
+
+        User usuario = allocation.getDepartamento().getUser();
+        allocation = allocationNegocio.salvaAllocation(allocation);
+        emailNegocio.enviarEmailDevolucaoAlocacao(usuario, obtemListPatrimonies(allocation.getPatrimonios()));
+
         List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO)
                 .collect(Collectors.toList());
 
@@ -143,18 +154,24 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
             ap.setAllocation(allocation);
             if (UtilObjeto.isEmpty(ap.getDtAlocacao())) {
                 ap.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
+                p.setTpSituacao(SituationType.ALOCADO);
             }
             if (UtilObjeto.isNotEmpty(allocationDTO.dtDevolucao())) {
                 ap.setDtDevolucao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
                 ap.setStatus(Status.INACTIVE);
+                p.setTpSituacao(SituationType.DISPONIVEL);
             }
             ap.setNmObservacao(allocationDTO.observation());
             ap.setPatrimony(p);
-            p.setTpSituacao(SituationType.ALOCADO);
             p.getAllocations().add(ap);
             allocationPatrimonies.add(ap);
         }
 
+    }
+
+    @Override
+    public AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id) {
+        return allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
     }
 
     private void validaAlocacaoPatrimonio(List<Patrimony> list) {
@@ -178,5 +195,20 @@ public class AllocationPatrimonyImpl implements AllocationPatrimonyNegocio {
         }
 
     }
+
+    public List<Patrimony> obtemListPatrimonies(List<AllocationPatrimony> list){
+        if (UtilObjeto.isEmpty(list)) {
+            return null;
+        }
+        List<Patrimony> retorno = new ArrayList<>();
+        for (AllocationPatrimony allocationPatrimony : list) {
+            retorno.add(allocationPatrimony.getPatrimony());
+        }
+
+        return retorno;
+
+    }
+
+
 
 }

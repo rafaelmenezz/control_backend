@@ -30,8 +30,8 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       
       private AllocationRepository allocationRepository;
       private AllocationMapper allocationMapper;
-      private DepartmentNegocio departmentNegocio;
       private AllocationPatrimonyRepository allocationPatrimonyRepository;
+      private DepartmentNegocio departmentNegocio;
       
       
       @Override
@@ -52,9 +52,13 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       @Override
       public AllocationResponse create(AllocationDTO allocationDTO) {
             if (isListaDisponivelParaAlocacao(allocationDTO.patrimonies())) {
-                  return allocationMapper.toDto(salvaAlocacao(allocationMapper.toEntity(allocationDTO)));      
+
+                  Allocation allocation = allocationMapper.toEntity(allocationDTO);
+                  allocation = salvaAlocacao(allocation);
+
+                  return allocationMapper.toDto(allocation);      
             }else{
-                  throw new IllegalRequestException("Patrimonios não disponivel para alocação!");
+                  throw new IllegalRequestException(MSG_ALERTA_PATRIMONIO_INDISPONIVEL);
             }            
       }
 
@@ -75,7 +79,7 @@ public class AllocationNegocioImpl implements AllocationNegocio{
 
       @Override
       public Allocation obtemLocalizacaoPatrimonio(Long id) {
-            AllocationPatrimony ap = pesquisAllocationPatrimonyPorId(id); 
+            AllocationPatrimony ap = allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id); 
 
             if (!UtilObjeto.isEmpty(ap) &&  allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
                   return allocationRepository.findById(ap.getAllocation().getId()).get();
@@ -99,10 +103,6 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       return true;
       } 
       
-      private AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id){
-            return allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
-      }
-
       private Allocation salvaAlocacao(Allocation allocation){
             return allocationRepository.save(allocation);
       }
@@ -118,4 +118,5 @@ public class AllocationNegocioImpl implements AllocationNegocio{
             .map(c-> c)
             .orElseThrow(()-> new RecordNotFoundException(id));
       }
+
 }

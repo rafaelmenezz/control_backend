@@ -62,7 +62,6 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public UserCreateDTO create(@Valid @NotNull UserDTO userDTO, String password) { 
-        String email = obtemEmailDTO(userDTO.contacts());
         emailNegocio.enviarEmailNovoUsuario(userMapper.toCreateEntity(userDTO), password);
         return userMapper.toCreateDto(userRepository.save(userMapper.toCreateEntity(userDTO)));
     }
