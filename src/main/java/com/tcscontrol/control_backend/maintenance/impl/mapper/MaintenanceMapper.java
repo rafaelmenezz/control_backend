@@ -3,13 +3,14 @@ package com.tcscontrol.control_backend.maintenance.impl.mapper;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenanceDTO;
+import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
-import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
-import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorMapper;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
 import lombok.AllArgsConstructor;
 
@@ -17,10 +18,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MaintenanceMapper {
 
-      private PatrimonyMapper patrimonyMapper;
-      private FornecedorMapper fornecedorMapper;      
-
-      public MaintenanceDTO toDto(Maintenance maintenance){
+      public MaintenanceDTO toDto(Maintenance maintenance, PatrimonyDTO patrimonyDTO){
             if(maintenance == null){
                   return null;
             }
@@ -33,12 +31,31 @@ public class MaintenanceMapper {
                   maintenance.getDsObservacao(), 
                   UtilData.toString(maintenance.getDtAgendamento(), UtilData.FORMATO_DDMMAA), 
                   UtilData.toString(maintenance.getDtEntrada(), UtilData.FORMATO_DDMMAA), 
-                  UtilData.toString(maintenance.getDtFim(), UtilData.FORMATO_DDMMAA), 
-                  patrimonyMapper.toDto(maintenance.getPatrimony()), 
-                  fornecedorMapper.toDTO(maintenance.getFornecedor()));
+                  UtilData.toString(maintenance.getDtFim(), UtilData.FORMATO_DDMMAA),
+                  maintenance.getFornecedor().getNmName(),
+                  maintenance.getFornecedor().getNrCnpj(),
+                  patrimonyDTO);
       }
 
-      public Maintenance toEntity(MaintenanceDTO maintenanceDTO){
+      public MaintenancePatrimonyDTO toMaintenancePatrimonyDTO(Maintenance maintenance){
+            if(maintenance == null){
+                  return null;
+            }
+
+            return new MaintenancePatrimonyDTO(
+                  maintenance.getId(), 
+                  UtilObjeto.isNotEmpty(maintenance.getTpManutencao()) ? maintenance.getTpManutencao().getValue() : null, 
+                  maintenance.getDsMotivoManutencao(), 
+                  maintenance.getVlManutencao(), 
+                  maintenance.getDsObservacao(), 
+                  UtilData.toString(maintenance.getDtAgendamento(), UtilData.FORMATO_DDMMAA), 
+                  UtilData.toString(maintenance.getDtEntrada(), UtilData.FORMATO_DDMMAA), 
+                  UtilData.toString(maintenance.getDtFim(), UtilData.FORMATO_DDMMAA),
+                  maintenance.getFornecedor().getNmName(),
+                  maintenance.getFornecedor().getNrCnpj());
+      }
+
+      public Maintenance toEntity(MaintenanceDTO maintenanceDTO, Fornecedor fornecedor, Patrimony patrimony){
             if (maintenanceDTO == null) {
                   return null;
             }
@@ -46,17 +63,13 @@ public class MaintenanceMapper {
             if (maintenanceDTO.id() != null) {
                   maintenance.setId(maintenanceDTO.id());
             }
-            Patrimony patrimony = patrimonyMapper.toEntity(maintenanceDTO.patrimonio());
-            Fornecedor fornecedor = fornecedorMapper.toEntity(maintenanceDTO.fornecedor());
-
-            maintenance.setId(maintenanceDTO.id());
-            maintenance.setTpManutencao(UtilControl.convertTypeMaintenanceValue(maintenanceDTO.tpManutencao()));
-            maintenance.setDsMotivoManutencao(maintenanceDTO.dsMotivoManutencao());
-            maintenance.setVlManutencao(maintenanceDTO.vlManutencao());
-            maintenance.setDsObservacao(maintenanceDTO.dsObservacao());
-            maintenance.setDtAgendamento(UtilData.toDate(maintenanceDTO.dtAgendamento(), UtilData.FORMATO_DDMMAA));
-            maintenance.setDtEntrada(UtilData.toDate(maintenanceDTO.dtEntrada(), UtilData.FORMATO_DDMMAA));
-            maintenance.setDtFim(UtilData.toDate(maintenanceDTO.dtFim(), UtilData.FORMATO_DDMMAA));            
+            maintenance.setTpManutencao(UtilControl.convertTypeMaintenanceValue(maintenanceDTO.nmTypeMaintence()));
+            maintenance.setDsMotivoManutencao(maintenanceDTO.dsMaintence());
+            maintenance.setVlManutencao(maintenanceDTO.vlMaintence());
+            maintenance.setDsObservacao(maintenanceDTO.observation());
+            maintenance.setDtAgendamento(UtilData.toDate(maintenanceDTO.dtPrevisionMaintence(), UtilData.FORMATO_DDMMAA));
+            maintenance.setDtEntrada(UtilData.toDate(maintenanceDTO.dtStartMaintence(), UtilData.FORMATO_DDMMAA));
+            maintenance.setDtFim(UtilData.toDate(maintenanceDTO.dtEndMaintence(), UtilData.FORMATO_DDMMAA));            
             maintenance.setPatrimony(patrimony);
             maintenance.setFornecedor(fornecedor);
 

@@ -10,15 +10,14 @@ import com.tcscontrol.control_backend.maintenance.MaintenanceNegocio;
 import com.tcscontrol.control_backend.maintenance.MaintenanceRepository;
 import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenanceDTO;
-import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
+import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
-import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorMapper;
+import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 @Component
@@ -28,52 +27,91 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio{
       
       private MaintenanceRepository maintenanceRepository;
       private MaintenanceMapper maintenanceMapper;
-      private FornecedorMapper fornecedorMapper;
-      private PatrimonyMapper patrimonyMapper;
+      private FornecedorNegocio fornecedorNegocio;
+      private PatrimonyNegocio patrimonyNegocio;
       
       @Override
       public List<MaintenanceDTO> list() {
             return maintenanceRepository.findAll()
             .stream()
-            .map(maintenanceMapper::toDto)
+            .map(m -> maintenanceMapper.toDto(m, patrimonyNegocio.toDTO(m.getPatrimony())))
             .collect(Collectors.toList());
       }
 
       @Override
       public MaintenanceDTO findById(Long id) {
             return maintenanceRepository.findById(id)
-            .map(maintenanceMapper::toDto)
+            .map(m -> maintenanceMapper.toDto(m, patrimonyNegocio.toDTO(m.getPatrimony())))
             .orElseThrow(()-> new RecordNotFoundException(id));
       }
 
       @Override
       public MaintenanceDTO create(MaintenanceDTO maintenanceDTO) {
-           return maintenanceMapper.toDto(maintenanceRepository.save(maintenanceMapper.toEntity(maintenanceDTO)));
+            Fornecedor f = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
+            Patrimony p = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
+
+           return maintenanceMapper.toDto(maintenanceRepository.save(maintenanceMapper.toEntity(maintenanceDTO, f, p)), patrimonyNegocio.toDTO(p));
       }
 
       @Override
       public MaintenanceDTO update(Long id, MaintenanceDTO maintenanceDTO) {
             return maintenanceRepository.findById(id)
             .map(recordFound->{
-            Patrimony patrimony = patrimonyMapper.toEntity(maintenanceDTO.patrimonio());
-            Fornecedor fornecedor = fornecedorMapper.toEntity(maintenanceDTO.fornecedor());
+            Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
+            Fornecedor fornecedor = fornecedorNegocio.obtemFornecedor(maintenanceDTO.nrCnpj());
+            fornecedor.setNmName(maintenanceDTO.nmFornecedor());
+            fornecedor = fornecedorNegocio.cadastrarFornecedor(fornecedor);
             recordFound.setId(maintenanceDTO.id());
-            recordFound.setTpManutencao(UtilControl.convertTypeMaintenanceValue(maintenanceDTO.tpManutencao()));
-            recordFound.setDsMotivoManutencao(maintenanceDTO.dsMotivoManutencao());
-            recordFound.setVlManutencao(maintenanceDTO.vlManutencao());
-            recordFound.setDsObservacao(maintenanceDTO.dsObservacao());
-            recordFound.setDtAgendamento(UtilData.toDate(maintenanceDTO.dtAgendamento(), UtilData.FORMATO_DDMMAA));
-            recordFound.setDtEntrada(UtilData.toDate(maintenanceDTO.dtEntrada(), UtilData.FORMATO_DDMMAA));
-            recordFound.setDtFim(UtilData.toDate(maintenanceDTO.dtFim(), UtilData.FORMATO_DDMMAA));            
+            recordFound.setTpManutencao(UtilControl.convertTypeMaintenanceValue(maintenanceDTO.nmTypeMaintence()));
+            recordFound.setDsMotivoManutencao(maintenanceDTO.dsMaintence());
+            recordFound.setVlManutencao(maintenanceDTO.vlMaintence());
+            recordFound.setDsObservacao(maintenanceDTO.observation());
+            recordFound.setDtAgendamento(UtilData.toDate(maintenanceDTO.dtPrevisionMaintence(), UtilData.FORMATO_DDMMAA));
+            recordFound.setDtEntrada(UtilData.toDate(maintenanceDTO.dtStartMaintence(), UtilData.FORMATO_DDMMAA));
+            recordFound.setDtFim(UtilData.toDate(maintenanceDTO.dtEndMaintence(), UtilData.FORMATO_DDMMAA));            
             recordFound.setPatrimony(patrimony);
             recordFound.setFornecedor(fornecedor);
-                  return maintenanceMapper.toDto(maintenanceRepository.save(recordFound));
+                  return maintenanceMapper.toDto(maintenanceRepository.save(recordFound), patrimonyNegocio.toDTO(patrimony));
             }).orElseThrow(()-> new RecordNotFoundException(id));
       }
 
       @Override
-      public void delete(@NotNull @Positive Long id) {
-           maintenanceRepository.delete(maintenanceRepository.findById(id).orElseThrow(()-> new RecordNotFoundException(id) ));
+      public MaintenanceDTO toSchedule(Long id, MaintenanceDTO maintenanceDTO) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'toSchedule'");
       }
+
+      @Override
+      public MaintenanceDTO toExecute(Long id, MaintenanceDTO maintenanceDTO) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'toExecute'");
+      }
+
+      @Override
+      public MaintenanceDTO toFinish(Long id, MaintenanceDTO maintenanceDTO) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'toFinish'");
+      }
+
+      @Override
+      public void cancel(Long id, MaintenanceDTO maintenanceDTO) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'cancel'");
+      }
+
+      private Fornecedor obtemFornecedor(String nome, String cnpj){
+            Fornecedor f = fornecedorNegocio.obtemFornecedor(cnpj);
+
+            if (UtilObjeto.isEmpty(f)) {
+                  f = new Fornecedor();
+                  f.setNmName(nome);
+                  f.setNrCnpj(cnpj);
+                  fornecedorNegocio.cadastrarFornecedor(f);
+                  return f;
+            }
+
+            return f;
+      }
+
       
 }

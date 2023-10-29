@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
+import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 
 public record PatrimonyResponse(
@@ -21,5 +22,6 @@ public record PatrimonyResponse(
     String situacao,
     List<WarrantyDTO> warranties,
     DepartmentDTO actualDepartment,
-    ConstructionDTO actualConstruction
+    ConstructionDTO actualConstruction,
+    MaintenancePatrimonyDTO actualMaintenance
 ){}

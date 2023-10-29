@@ -13,7 +13,7 @@ import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyRepository;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
-import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
+import com.tcscontrol.control_backend.department.DepartmentNegocio;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
@@ -30,7 +30,7 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       
       private AllocationRepository allocationRepository;
       private AllocationMapper allocationMapper;
-      private DepartmentMapper departmentMapper;
+      private DepartmentNegocio departmentNegocio;
       private AllocationPatrimonyRepository allocationPatrimonyRepository;
       
       
@@ -63,7 +63,7 @@ public class AllocationNegocioImpl implements AllocationNegocio{
            return allocationRepository.findById(id)
            .map(recordFound -> {
             Allocation allocation = allocationMapper.toEntity(allocationDTO);
-            Department department = departmentMapper.toEntity(allocationDTO.departament()); 
+            Department department = departmentNegocio.toEntity(allocationDTO.departament()); 
 
             recordFound.getPatrimonios();
             recordFound.getPatrimonios().clear();

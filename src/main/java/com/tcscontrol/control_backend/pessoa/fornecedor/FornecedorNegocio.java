@@ -8,4 +8,7 @@ public interface FornecedorNegocio extends FornecedorService{
     Fornecedor pesquisaFornecedorCnpj(String nrCnpj);
 
     Fornecedor cadastrarFornecedor(Fornecedor fornecedor);
+
+    Fornecedor obtemFornecedor(String cnpj);
+
 }

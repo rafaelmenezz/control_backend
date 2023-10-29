@@ -76,7 +76,8 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
                             recordFound))
                     .collect(Collectors.toList());
                     recordFound.setNrSerie(patrimonyDto.nrSerie());
-                    recordFound.setNmPatrimonio(patrimonyDto.nmDescricao());
+                    recordFound.setNmPatrimonio(patrimonyDto.nmPatrimonio());
+                    recordFound.setNmDescricao(patrimonyDto.nmDescricao());
                     recordFound.setNrNotaFiscal(patrimonyDto.nrNF());
                     recordFound.setDtNotaFiscal(UtilData.toDate(patrimonyDto.dtNF(), UtilData.FORMATO_DDMMAA));
                     recordFound.setDtAquisicao(UtilData.toDate(patrimonyDto.dtAquisicao(), UtilData.FORMATO_DDMMAA));

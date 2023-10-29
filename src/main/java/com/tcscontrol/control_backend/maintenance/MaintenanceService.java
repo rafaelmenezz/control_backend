@@ -21,6 +21,12 @@ public interface MaintenanceService {
 
       MaintenanceDTO update(Long id, MaintenanceDTO maintenanceDTO);
 
-      public void delete(@PathVariable @NotNull @Positive Long id);
+      MaintenanceDTO toSchedule(Long id,  MaintenanceDTO maintenanceDTO);
+
+      MaintenanceDTO toExecute(Long id,  MaintenanceDTO maintenanceDTO);
+
+      MaintenanceDTO toFinish(Long id,  MaintenanceDTO maintenanceDTO);
+
+      void cancel(Long id,  MaintenanceDTO maintenanceDTO);
       
 }

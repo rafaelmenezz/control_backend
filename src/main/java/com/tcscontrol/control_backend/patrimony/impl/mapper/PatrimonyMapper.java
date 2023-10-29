@@ -15,6 +15,8 @@ import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
+import com.tcscontrol.control_backend.maintenance.model.dto.MaintenanceDTO;
+import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
@@ -57,6 +59,13 @@ public class PatrimonyMapper {
                 .findFirst()
                 .orElse(new RequestPatrimony());
 
+        Maintenance maintenance = patrimony.getMaintenances()
+        .stream()
+        .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
+        .findFirst()
+        .orElse(new Maintenance());
+
+        MaintenancePatrimonyDTO maintenancePatrimonyDTO = maintenanceMapper.toMaintenancePatrimonyDTO(maintenance);
         Allocation a = aPatrimony == null ? null : aPatrimony.getAllocation();
         DepartmentDTO departmentDTO = a != null ? departmentMapper.toDTO(a.getDepartamento()) : null;
 
@@ -72,7 +81,7 @@ public class PatrimonyMapper {
                         warranty.getTypewWarranty().getValue()))
                 .collect(Collectors.toList());
 
-        return new PatrimonyResponse(
+                return new PatrimonyResponse(
                 patrimony.getId(),
                 patrimony.getNmPatrimonio(),
                 patrimony.getNrSerie(),
@@ -87,7 +96,8 @@ public class PatrimonyMapper {
                 patrimony.getTpSituacao().getValue(),
                 warrantys,
                 departmentDTO != null ? departmentDTO : null,
-                constructionDTO != null ? constructionDTO : null);
+                constructionDTO != null ? constructionDTO : null, 
+                maintenancePatrimonyDTO != null ? maintenancePatrimonyDTO : null);
 
     }
 
@@ -137,7 +147,7 @@ public class PatrimonyMapper {
             .stream()
             .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
             .findFirst()
-            .orElse(new Maintenance());
+            .orElse(null);
         }
 
         return new PatrimonyDTO(
@@ -156,7 +166,7 @@ public class PatrimonyMapper {
                 warrantys,
                 UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null,
                 UtilObjeto.isNotEmpty(construction) ? constructionMapper.toDto(construction) : null,
-                maintenanceMapper.toDto(maintenance));
+                UtilObjeto.isNotEmpty(maintenance) ? maintenanceMapper.toMaintenancePatrimonyDTO(maintenance) : null);
     }
 
     public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {

@@ -31,9 +31,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "MANUTENCOES")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "MANUTENCOES")
 public class Maintenance implements Serializable {
 
       @Serial
@@ -79,12 +79,12 @@ public class Maintenance implements Serializable {
       @ManyToOne(fetch = FetchType.EAGER, optional = false)
       @JoinColumn(name = "patrimonio_id", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-      private Patrimony patrimony;
+      private Patrimony patrimony = new Patrimony();
 
       @ManyToOne(fetch = FetchType.EAGER, optional = false)
       @JoinColumn(name = "fornecedor_id", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-      private Fornecedor fornecedor;
+      private Fornecedor fornecedor = new Fornecedor();
 
       @Override
 	public int hashCode() {

@@ -9,6 +9,7 @@ import com.tcscontrol.control_backend.department.DepartmentNegocio;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentCreateDTO;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
+import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.department.repository.DepartmentRepository;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
@@ -73,6 +74,16 @@ public class DepartmentNegocioImpl implements DepartmentNegocio{
     public void delete(@NotNull @Positive Long id) {
         departmentRepository
                 .delete(departmentRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id)));
+    }
+
+    @Override
+    public DepartmentDTO tDto(Department department) {
+        return departmentMapper.toDTO(department);
+    }
+
+    @Override
+    public Department toEntity(DepartmentDTO departmentDTO) {
+        return departmentMapper.toEntity(departmentDTO);
     }
 
 }
