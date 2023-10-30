@@ -70,7 +70,7 @@ public class FornecedorNegocioImpl implements FornecedorNegocio {
 
     @Override
     public Fornecedor cadastrarFornecedor(Fornecedor fornecedor) {
-        return fornecedorRepository.saveAndFlush(fornecedor);
+        return fornecedorRepository.save(fornecedor);
     }
 
     @Override

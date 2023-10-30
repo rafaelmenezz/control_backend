@@ -12,7 +12,6 @@ import com.tcscontrol.control_backend.enuns.TypeMaintenance;
 import com.tcscontrol.control_backend.enuns.converters.MaintenanceStatusConverter;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.enuns.converters.TypeMaintenanceConverter;
-import com.tcscontrol.control_backend.enuns.converters.TypeUserConverter;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 

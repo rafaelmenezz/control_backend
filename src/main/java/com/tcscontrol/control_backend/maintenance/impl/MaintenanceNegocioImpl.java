@@ -141,13 +141,9 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
       private Fornecedor obtemFornecedor(String nome, String cnpj) {
             Fornecedor f = fornecedorNegocio.obtemFornecedor(cnpj);
 
-            if (UtilObjeto.isEmpty(f)) {
-                  f = new Fornecedor();
-                  f.setNmName(nome);
-                  f.setNrCnpj(cnpj);
-                  f = fornecedorNegocio.cadastrarFornecedor(f);
-                  return f;
-            }
+            f.setNmName(nome);
+            f.setNrCnpj(cnpj);
+            f = fornecedorNegocio.cadastrarFornecedor(f);
 
             return f;
       }
