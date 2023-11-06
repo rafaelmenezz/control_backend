@@ -34,6 +34,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
     @Override
     public RequestResponse addNewRequest(RequestsDTO requestsDTO) {
         validaRequisicao(requestsDTO);
+        validarDataManutencao(AGENDAR, requestsDTO);
         Requests requests = obtemRequests(requestsDTO.id());
         Construction construction = constructionNegocio.toEntity(requestsDTO.obra());
         requests.setConstruction(construction);
@@ -41,7 +42,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         List<RequestPatrimony> rps = new ArrayList<>();
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
-            rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
             patrimony.setTpSituacao(SituationType.REGISTRADO);
@@ -54,8 +55,32 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
     }
 
     @Override
+    public RequestResponse toRemove(RequestsDTO requestsDTO) {
+        validaRequisicao(requestsDTO);
+        validarDataManutencao(RETIRAR, requestsDTO);
+        Requests requests = obtemRequests(requestsDTO.id());
+        Construction construction = constructionNegocio.toEntity(requestsDTO.obra());
+        requests.setConstruction(construction);
+        List<Patrimony> patrimonies = patrimonyNegocio.toListEntity(requestsDTO.patrimonios());
+        List<RequestPatrimony> rps = new ArrayList<>();
+        for (Patrimony patrimony : patrimonies) {
+            RequestPatrimony rp = new RequestPatrimony();
+            rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setRequests(requests);
+            rp.setPatrimony(patrimony);
+            patrimony.setTpSituacao(SituationType.EM_MANUTENCAO);
+            patrimony.getRequests().add(rp);
+            rps.add(rp);
+        }
+        patrimonyNegocio.atulizaPatrimonios(patrimonies);
+        requests.getPatrimonies().addAll(rps);
+        return requestNegocio.toResponse(salvaRequests(requests));
+    }
+
+    @Override
     public RequestResponse giveBackPatrimony(RequestsDTO requestsDTO) {
         validaRequisicao(requestsDTO);
+        validarDataManutencao(FINALIZAR, requestsDTO);
         Requests requests = obtemRequests(requestsDTO.id());
         Construction construction = constructionNegocio.toEntity(requestsDTO.obra());
         requests.setConstruction(construction);
@@ -91,9 +116,6 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
     }
 
     private void validaRequisicao(RequestsDTO requestsDTO){
-        if (UtilObjeto.isEmpty(requestsDTO.dtRetirada())) {
-            throw new IllegalRequestException("Data de Retirada não informada!");
-        }
         if (UtilObjeto.isEmpty(requestsDTO.patrimonios())) {
             throw new IllegalRequestException("Nenhum patrimônio foi informado!");
         }
@@ -102,6 +124,31 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         }
         
     }
+
+    private void validarDataManutencao(Integer action, RequestsDTO requestsDTO){
+        switch (action) {
+            case 1:
+                geraErroObjetoNulo(requestsDTO.dtPrevisaoRetirada(), MSG_ERRO_DATA_PREVISAO_NAO_INFORMADA);
+                break;
+            case 2:
+                geraErroObjetoNulo(requestsDTO.dtPrevisaoRetirada(), MSG_ERRO_DATA_PREVISAO_NAO_INFORMADA);
+                geraErroObjetoNulo(requestsDTO.dtRetirada(), MSG_ERRO_DATA_INICIO_NAO_INFORMADA);
+            case 3:
+                geraErroObjetoNulo(requestsDTO.dtPrevisaoRetirada(), MSG_ERRO_DATA_PREVISAO_NAO_INFORMADA);
+                geraErroObjetoNulo(requestsDTO.dtRetirada(), MSG_ERRO_DATA_INICIO_NAO_INFORMADA);
+                geraErroObjetoNulo(requestsDTO.dtDevolucao(), MSG_ERRO_DATA_FIM_NAO_INFORMADA);
+            default:
+                break;
+        }
+    }
+
+    private void geraErroObjetoNulo(Object object, String msg){
+        if (UtilObjeto.isEmpty(object)) {
+            throw new IllegalRequestException(msg);
+        }
+    }
+
+
 
 
 }

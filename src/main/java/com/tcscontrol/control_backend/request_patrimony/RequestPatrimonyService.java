@@ -10,6 +10,8 @@ import com.tcscontrol.control_backend.requests.model.dto.RequestsDTO;
 public interface RequestPatrimonyService {
     RequestResponse addNewRequest(RequestsDTO requestsDTO);
 
+    RequestResponse toRemove(RequestsDTO requestsDTO);
+
     RequestResponse giveBackPatrimony(RequestsDTO requestsDTO);
 
 }
