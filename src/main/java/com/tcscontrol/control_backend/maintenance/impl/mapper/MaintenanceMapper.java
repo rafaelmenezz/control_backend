@@ -32,6 +32,7 @@ public class MaintenanceMapper {
                   UtilData.toString(maintenance.getDtAgendamento(), UtilData.FORMATO_DDMMAA), 
                   UtilData.toString(maintenance.getDtEntrada(), UtilData.FORMATO_DDMMAA), 
                   UtilData.toString(maintenance.getDtFim(), UtilData.FORMATO_DDMMAA),
+                  maintenance.getMaintenanceStatus().getValue(),
                   maintenance.getFornecedor().getNmName(),
                   maintenance.getFornecedor().getNrCnpj(),
                   patrimonyDTO);

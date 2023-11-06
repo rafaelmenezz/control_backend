@@ -11,6 +11,7 @@ public record MaintenanceDTO(
       String dtPrevisionMaintence,
       String dtStartMaintence, 
       String dtEndMaintence,
+      String statusMaintenance,
       String nmFornecedor,
       String nrCnpj,
       PatrimonyDTO patrimony ){}
