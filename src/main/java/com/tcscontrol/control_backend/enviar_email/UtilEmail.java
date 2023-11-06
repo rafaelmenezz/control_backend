@@ -11,6 +11,7 @@ import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
+import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
@@ -56,10 +57,6 @@ public class UtilEmail implements EmailNegocio, TemplateEmail{
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, "<p>" + mensagem + "</p>");
         sendRegistrationEmail(email, "Bem-vindo!", emailText);
-
-
-
-
     }
 
     @Override
@@ -84,6 +81,12 @@ public class UtilEmail implements EmailNegocio, TemplateEmail{
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, mensagem);
         sendRegistrationEmail(email, MSG_ASSUNTO_ALOCACAO, emailText);
+    }
+
+    @Override
+    public void enviarEmailAgendaManutencao(Maintenance maintenance, User user) {
+        String emailText = TEMPLATE_EMAIL;
+        throw new UnsupportedOperationException("Unimplemented method 'enviarEmailAgendaManutencao'");
     }
 
     private String montarTituloNovoUsuario(User usuario){
@@ -138,6 +141,8 @@ public class UtilEmail implements EmailNegocio, TemplateEmail{
         Contacts contato = usuario.getContacts().stream().filter(c -> TypeContacts.EMAIL.equals(c.getTypeContacts())).findFirst().orElseThrow(()->  new IllegalRequestException("E-mail inválido!"));
         return contato.getDsContato();
     }
+
+
 
 
 
