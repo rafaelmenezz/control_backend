@@ -144,7 +144,7 @@ public class PatrimonyMapper {
         if (UtilObjeto.isNotEmpty(maintenances)) {
             maintenance = maintenances
             .stream()
-            .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
+            .filter(c-> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
             .findFirst()
             .orElse(null);
         }
