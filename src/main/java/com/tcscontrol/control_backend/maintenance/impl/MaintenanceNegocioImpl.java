@@ -93,7 +93,6 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setMaintenanceStatus(MaintenanceStatus.AGENDADA);
-
             maintenance = alterar(id, maintenance);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
@@ -105,7 +104,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             patrimony.setTpSituacao(SituationType.EM_MANUTENCAO);
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
-            maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
+           maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
 
             maintenance = alterar(id, maintenance);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
@@ -117,6 +116,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
+            patrimony.setTpSituacao(SituationType.DISPONIVEL);
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
 
             maintenance = alterar(id, maintenance);
