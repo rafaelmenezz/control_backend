@@ -148,7 +148,7 @@ public class UtilControl {
             case "Disponivel" -> SituationType.DISPONIVEL;
             case "Alocado" -> SituationType.ALOCADO;
             case "Registrado" -> SituationType.REGISTRADO;
-            case "Manutenção" -> SituationType.EM_MANUTENCAO;
+            case "Em Manutenção" -> SituationType.EM_MANUTENCAO;
             default -> throw new IllegalArgumentException("Situação do património inválida!");
         };
     }

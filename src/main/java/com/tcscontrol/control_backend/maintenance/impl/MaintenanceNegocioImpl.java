@@ -117,9 +117,9 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
-            patrimony.setTpSituacao(SituationType.DISPONIVEL);
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
             maintenance = alterar(id, maintenance);
+            patrimony.setTpSituacao(SituationType.DISPONIVEL);
             patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
@@ -129,13 +129,14 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             validarItem(maintenanceDTO.observation(), EXCEPTION_MSG_ERRO_OBSERVATION_NOT_NULL);
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
-            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setDtFim(new Date());
             maintenance.setTpStatus(Status.INACTIVE);
             maintenance.setMaintenanceStatus(MaintenanceStatus.CANCELADA);
-            patrimony = atualizarPatrimonio(patrimony);
             maintenance = alterar(id, maintenance);
+            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            patrimony = atualizarPatrimonio(patrimony);
       }
 
       private Fornecedor obtemFornecedor(String nome, String cnpj) {
