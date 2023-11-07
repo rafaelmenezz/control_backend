@@ -1,6 +1,5 @@
 package com.tcscontrol.control_backend.maintenance.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -106,8 +105,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             patrimony.setTpSituacao(SituationType.EM_MANUTENCAO);
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
-           maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
-
+            maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
             maintenance = alterar(id, maintenance);
             patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
@@ -121,7 +119,6 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             patrimony.setTpSituacao(SituationType.DISPONIVEL);
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
-
             maintenance = alterar(id, maintenance);
             patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
@@ -160,8 +157,9 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
                               recordFound.setTpManutencao(maintenance.getTpManutencao());
                               recordFound.setDsMotivoManutencao(maintenance.getDsMotivoManutencao());
                               recordFound.setVlManutencao(maintenance.getVlManutencao());
-                              recordFound.setDsObservacao(maintenance.getDsObservacao() );
+                              recordFound.setDsObservacao(maintenance.getDsObservacao());
                               recordFound.setDtAgendamento(maintenance.getDtAgendamento());
+                              recordFound.setMaintenanceStatus(maintenance.getMaintenanceStatus());
                               recordFound.setDtEntrada(
                                           maintenance.getDtEntrada());
                               recordFound.setDtFim(
@@ -178,7 +176,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             }
       }
 
-      private Patrimony atualizarPatrimonio(Patrimony patrimony){
+      private Patrimony atualizarPatrimonio(Patrimony patrimony) {
             return patrimonyNegocio.atualizaPatrimonio(patrimony);
       }
 
