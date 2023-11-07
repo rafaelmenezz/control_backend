@@ -14,4 +14,6 @@ public interface RequestPatrimonyService {
 
     RequestResponse giveBackPatrimony(RequestsDTO requestsDTO);
 
+    RequestResponse cancel(RequestsDTO requestsDTO);
+
 }

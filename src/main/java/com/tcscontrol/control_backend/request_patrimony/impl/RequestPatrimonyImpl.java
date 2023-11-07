@@ -45,7 +45,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
-            patrimony.setTpSituacao(SituationType.REGISTRADO);
+            patrimony.setTpSituacao(SituationType.DISPONIVEL);
             patrimony.getRequests().add(rp);
             rps.add(rp);
         }
@@ -68,11 +68,12 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
-            patrimony.setTpSituacao(SituationType.EM_MANUTENCAO);
+            patrimony.setTpSituacao(SituationType.REGISTRADO);
             patrimony.getRequests().add(rp);
             rps.add(rp);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
+        requests.getPatrimonies().clear();
         requests.getPatrimonies().addAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
@@ -100,6 +101,31 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         requests.getPatrimonies().addAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
 
+    }
+
+    
+    @Override
+    public RequestResponse cancel(RequestsDTO requestsDTO) {
+        Requests requests = obtemRequests(requestsDTO.id());
+        Construction construction = constructionNegocio.toEntity(requestsDTO.obra());
+        requests.setConstruction(construction);
+        List<Patrimony> patrimonies = patrimonyNegocio.toListEntity(requestsDTO.patrimonios());
+        List<RequestPatrimony> rps = new ArrayList<>();
+        for (Patrimony patrimony : patrimonies) {
+            RequestPatrimony rp = new RequestPatrimony();
+            
+            rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
+            rp.setRequests(requests);
+            rp.setPatrimony(patrimony);
+            rp.setStatus(Status.INACTIVE);
+            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            rps.add(rp);
+        }
+        patrimonyNegocio.atulizaPatrimonios(patrimonies);
+        requests.getPatrimonies().addAll(rps);
+        return requestNegocio.toResponse(salvaRequests(requests));
     }
 
 
@@ -133,6 +159,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             case 2:
                 geraErroObjetoNulo(requestsDTO.dtPrevisaoRetirada(), MSG_ERRO_DATA_PREVISAO_NAO_INFORMADA);
                 geraErroObjetoNulo(requestsDTO.dtRetirada(), MSG_ERRO_DATA_INICIO_NAO_INFORMADA);
+                break;
             case 3:
                 geraErroObjetoNulo(requestsDTO.dtPrevisaoRetirada(), MSG_ERRO_DATA_PREVISAO_NAO_INFORMADA);
                 geraErroObjetoNulo(requestsDTO.dtRetirada(), MSG_ERRO_DATA_INICIO_NAO_INFORMADA);
@@ -147,6 +174,8 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             throw new IllegalRequestException(msg);
         }
     }
+
+
 
 
 

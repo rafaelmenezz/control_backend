@@ -57,6 +57,13 @@ public class RequestsController {
         return requestPatrimonyService.giveBackPatrimony(requestsDTO);
     } 
 
+    @PutMapping("/cancelar")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public RequestResponse cancel(@RequestBody RequestsDTO requestsDTO){
+        return requestPatrimonyService.cancel(requestsDTO);
+    } 
+
+
 
     
 }
