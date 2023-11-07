@@ -23,5 +23,7 @@ public interface PatrimonyNegocio extends PatrimonyService {
 
     List<Patrimony> toListEntity(List<PatrimonyDTO> patrimonyDTOs);
 
+    Patrimony atualizaPatrimonio(Patrimony patrimony);
+
     
 }

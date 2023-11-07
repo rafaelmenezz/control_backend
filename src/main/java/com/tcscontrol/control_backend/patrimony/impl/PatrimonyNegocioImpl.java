@@ -161,4 +161,9 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
         return patrimonyRepository.save(p);
     }
 
+    @Override
+    public Patrimony atualizaPatrimonio(Patrimony patrimony) {
+        return patrimonyRepository.save(patrimony);
+    }
+
 }

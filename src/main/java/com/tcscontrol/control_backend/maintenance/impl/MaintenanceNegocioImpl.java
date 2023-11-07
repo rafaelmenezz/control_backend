@@ -1,5 +1,6 @@
 package com.tcscontrol.control_backend.maintenance.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,6 +95,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setMaintenanceStatus(MaintenanceStatus.AGENDADA);
             maintenance = alterar(id, maintenance);
+            patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
 
@@ -107,6 +109,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
            maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
 
             maintenance = alterar(id, maintenance);
+            patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
 
@@ -120,6 +123,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
 
             maintenance = alterar(id, maintenance);
+            patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
 
@@ -133,9 +137,8 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             maintenance.setDtFim(new Date());
             maintenance.setTpStatus(Status.INACTIVE);
             maintenance.setMaintenanceStatus(MaintenanceStatus.CANCELADA);
-
+            patrimony = atualizarPatrimonio(patrimony);
             maintenance = alterar(id, maintenance);
-            
       }
 
       private Fornecedor obtemFornecedor(String nome, String cnpj) {
@@ -173,6 +176,10 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             if (UtilObjeto.isEmpty(object)) {
                   throw new IllegalRequestException(mensagem);
             }
+      }
+
+      private Patrimony atualizarPatrimonio(Patrimony patrimony){
+            return patrimonyNegocio.atualizaPatrimonio(patrimony);
       }
 
 }
