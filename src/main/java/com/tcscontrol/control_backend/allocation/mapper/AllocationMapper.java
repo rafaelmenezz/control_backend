@@ -37,6 +37,8 @@ public class AllocationMapper {
 
             return new AllocationResponse(
                         allocation.getId(),
+                        UtilData.toString(allocation.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
+                        allocation.getNmObservacao(),
                         departmentMapper.toDTO(allocation.getDepartamento()),
                         patrimonies);
       }
