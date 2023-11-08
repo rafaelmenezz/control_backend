@@ -1,6 +1,6 @@
-package com.tcscontrol.control_backend.allocationPatrimony.model.entity;
+package com.tcscontrol.control_backend.allocationPatrimony.model;
 
-import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation.model.Allocation;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.allocation.model.entity;
+package com.tcscontrol.control_backend.allocation.model;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tcscontrol.control_backend.allocationPatrimony.model.entity.AllocationPatrimony;
+import com.tcscontrol.control_backend.allocationPatrimony.model.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 
 import jakarta.persistence.CascadeType;

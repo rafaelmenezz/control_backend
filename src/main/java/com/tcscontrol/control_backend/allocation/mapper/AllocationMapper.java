@@ -1,13 +1,15 @@
-package com.tcscontrol.control_backend.allocation.impl.mapper;
+package com.tcscontrol.control_backend.allocation.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
-import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
-import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
-import com.tcscontrol.control_backend.allocationPatrimony.model.entity.AllocationPatrimony;
+import com.tcscontrol.control_backend.allocation.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.dto.AllocationResponse;
+import com.tcscontrol.control_backend.allocation.model.Allocation;
+import com.tcscontrol.control_backend.allocationPatrimony.model.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
@@ -20,19 +22,18 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AllocationMapper {
 
-      private DepartmentMapper departmentMapper;
-      private PatrimonyMapper patrimonyMapper;
+      private final DepartmentMapper departmentMapper;
+      private final PatrimonyMapper patrimonyMapper;
 
       public AllocationResponse toDto(Allocation allocation) {
             if (allocation == null) {
-                  return null;
+                  throw new IllegalArgumentException("Allocation cannot be null");
             }
 
-            List<PatrimonyDTO> patrimonies = new ArrayList<PatrimonyDTO>();
-
-            for (AllocationPatrimony patrimony : allocation.getAllocationPatrimonies()) {
-                  patrimonies.add(patrimonyMapper.toDto(patrimony.getPatrimony()));
-            }
+            List<PatrimonyDTO> patrimonies = allocation.getAllocationPatrimonies().stream()
+                        .map(AllocationPatrimony::getPatrimony)
+                        .map(patrimonyMapper::toDto)
+                        .collect(Collectors.toList());
 
             return new AllocationResponse(
                         allocation.getId(),
@@ -42,21 +43,19 @@ public class AllocationMapper {
 
       public Allocation toEntity(AllocationDTO allocationDTO) {
             if (allocationDTO == null) {
-                  return null;
+                  throw new IllegalArgumentException("AllocationDTO cannot be null");
             }
-            Allocation allocation = new Allocation();
             if (allocationDTO.id() != null) {
-                  return null;
+                  throw new IllegalArgumentException("AllocationDTO id must be null when creating a new Allocation");
             }
+
             Department department = departmentMapper.toEntity(allocationDTO.departament());
+            Allocation allocation = new Allocation();
             allocation.setDepartamento(department);
             allocation.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             allocation.setNmObservacao(allocationDTO.observation());
-
             allocation.setAllocationPatrimonies(new ArrayList<>());
-
             return allocation;
-
       }
 
 }

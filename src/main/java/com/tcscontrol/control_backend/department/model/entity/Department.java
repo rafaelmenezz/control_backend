@@ -9,7 +9,7 @@ import java.util.Objects;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocation.model.Allocation;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;

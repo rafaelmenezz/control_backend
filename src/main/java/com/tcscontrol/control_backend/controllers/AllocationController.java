@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcscontrol.control_backend.allocation.AllocationService;
-import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
-import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
+import com.tcscontrol.control_backend.allocation.dto.AllocationDTO;
+import com.tcscontrol.control_backend.allocation.dto.AllocationResponse;
+import com.tcscontrol.control_backend.allocation.service.AllocationService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

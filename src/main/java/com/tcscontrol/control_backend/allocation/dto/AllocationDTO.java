@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.allocation.model.dto;
+package com.tcscontrol.control_backend.allocation.dto;
 
 import java.util.List;
 

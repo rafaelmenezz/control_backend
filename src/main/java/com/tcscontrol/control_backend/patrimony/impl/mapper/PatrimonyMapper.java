@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.allocationPatrimony.AllocationPatrimonyRepository;
-import com.tcscontrol.control_backend.allocationPatrimony.model.entity.AllocationPatrimony;
+import com.tcscontrol.control_backend.allocationPatrimony.model.AllocationPatrimony;
+import com.tcscontrol.control_backend.allocationPatrimony.repository.AllocationPatrimonyRepository;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
