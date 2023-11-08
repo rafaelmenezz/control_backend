@@ -1,5 +1,7 @@
 package com.tcscontrol.control_backend.allocation.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,33 +22,30 @@ import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
-
 import lombok.AllArgsConstructor;
 
-
-@Component
+@Component(value = "allocationNegocio")
 @AllArgsConstructor
-public class AllocationNegocioImpl implements AllocationNegocio{
-      
+public class AllocationNegocioImpl implements AllocationNegocio {
+
       private AllocationRepository allocationRepository;
       private AllocationMapper allocationMapper;
       private AllocationPatrimonyRepository allocationPatrimonyRepository;
       private DepartmentNegocio departmentNegocio;
-      
-      
+
       @Override
       public List<AllocationResponse> list() {
             return allocationRepository.findAll()
-            .stream()
-            .map(allocationMapper::toDto)
-            .collect(Collectors.toList());
+                        .stream()
+                        .map(allocationMapper::toDto)
+                        .collect(Collectors.toList());
       }
 
       @Override
       public AllocationResponse findById(Long id) {
             return allocationRepository.findById(id)
-            .map(allocationMapper::toDto)
-            .orElseThrow(()-> new RecordNotFoundException(id));
+                        .map(allocationMapper::toDto)
+                        .orElseThrow(() -> new RecordNotFoundException(id));
       }
 
       @Override
@@ -56,54 +55,55 @@ public class AllocationNegocioImpl implements AllocationNegocio{
                   Allocation allocation = allocationMapper.toEntity(allocationDTO);
                   allocation = salvaAlocacao(allocation);
 
-                  return allocationMapper.toDto(allocation);      
-            }else{
+                  return allocationMapper.toDto(allocation);
+            } else {
                   throw new IllegalRequestException(MSG_ALERTA_PATRIMONIO_INDISPONIVEL);
-            }            
+            }
       }
 
       @Override
       public AllocationResponse update(Long id, AllocationDTO allocationDTO) {
-           return allocationRepository.findById(id)
-           .map(recordFound -> {
-            Allocation allocation = allocationMapper.toEntity(allocationDTO);
-            Department department = departmentNegocio.toEntity(allocationDTO.departament()); 
+            return allocationRepository.findById(id)
+                        .map(recordFound -> {
+                              Allocation allocation = allocationMapper.toEntity(allocationDTO);
+                              Department department = departmentNegocio.toEntity(allocationDTO.departament());
 
-            recordFound.getPatrimonios();
-            recordFound.getPatrimonios().clear();
-            allocation.getPatrimonios().forEach(recordFound.getPatrimonios()::add);
-            recordFound.setDepartamento(department);
-            return allocationMapper.toDto(allocationRepository.save(recordFound));
-           }).orElseThrow(()-> new RecordNotFoundException(id));
+                              recordFound.getPatrimonios();
+                              recordFound.getPatrimonios().clear();
+                              allocation.getPatrimonios().forEach(recordFound.getPatrimonios()::add);
+                              recordFound.setDepartamento(department);
+                              return allocationMapper.toDto(allocationRepository.save(recordFound));
+                        }).orElseThrow(() -> new RecordNotFoundException(id));
       }
 
       @Override
       public Allocation obtemLocalizacaoPatrimonio(Long id) {
-            AllocationPatrimony ap = allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id); 
+            AllocationPatrimony ap = allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
 
-            if (!UtilObjeto.isEmpty(ap) &&  allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
+            if (!UtilObjeto.isEmpty(ap) && allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
                   return allocationRepository.findById(ap.getAllocation().getId()).get();
             } else {
-                  return new Allocation();      
+                  return new Allocation();
             }
-            
+
       }
 
-      private Boolean isListaDisponivelParaAlocacao(List<PatrimonyDTO> pDTO){
-            
-           if (pDTO == null) {
-            return false;
-           }
+      private Boolean isListaDisponivelParaAlocacao(List<PatrimonyDTO> pDTO) {
+
+            if (pDTO == null) {
+                  return false;
+            }
             for (PatrimonyDTO p : pDTO) {
                   Allocation a = obtemLocalizacaoPatrimonio(p.id());
                   if (!UtilObjeto.isEmpty(a.getDepartamento())) {
-                       return false; 
+                        return false;
                   }
-           }
-      return true;
-      } 
-      
-      private Allocation salvaAlocacao(Allocation allocation){
+            }
+            return true;
+      }
+
+
+      private Allocation salvaAlocacao(Allocation allocation) {
             return allocationRepository.save(allocation);
       }
 
@@ -113,10 +113,10 @@ public class AllocationNegocioImpl implements AllocationNegocio{
       }
 
       @Override
-      public Allocation pesquisaAllocationPorId(Long id){
+      public Allocation pesquisaAllocationPorId(Long id) {
             return allocationRepository.findById(id)
-            .map(c-> c)
-            .orElseThrow(()-> new RecordNotFoundException(id));
+                        .map(c -> c)
+                        .orElseThrow(() -> new RecordNotFoundException(id));
       }
 
 }
