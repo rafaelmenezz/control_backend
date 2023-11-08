@@ -103,8 +103,11 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             validarItem(maintenanceDTO.dtStartMaintence(), EXCEPTION_MSG_ERRO_DATA_INICIAL_INVALIDA);
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
-            patrimony.setTpSituacao(SituationType.EM_MANUTENCAO);
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
+            if (maintenance.getPatrimony().getTpSituacao() == SituationType.EM_MANUTENCAO) {
+                  throw new IllegalRequestException("Patrimônio já está em manutenção!");
+            }
+            patrimony.setTpSituacao(SituationType.EM_MANUTENCAO);
             maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
             maintenance = alterar(id, maintenance);
             patrimony = atualizarPatrimonio(patrimony);
@@ -117,7 +120,11 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
-            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            if (patrimony.getFixo()) {
+                  patrimony.setTpSituacao(SituationType.FIXO);
+            } else {
+                  patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            }
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
             maintenance = alterar(id, maintenance);
             patrimony = atualizarPatrimonio(patrimony);
@@ -129,7 +136,11 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             validarItem(maintenanceDTO.observation(), EXCEPTION_MSG_ERRO_OBSERVATION_NOT_NULL);
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
-            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            if (patrimony.getFixo()) {
+                  patrimony.setTpSituacao(SituationType.FIXO);
+            } else {
+                  patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            }
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setDtFim(new Date());
             maintenance.setTpStatus(Status.INACTIVE);
