@@ -11,7 +11,12 @@ import com.tcscontrol.control_backend.allocation.impl.mapper.AllocationMapper;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationDTO;
 import com.tcscontrol.control_backend.allocation.model.dto.AllocationResponse;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocationPatrimony.AllocationPatrimonyRepository;
+import com.tcscontrol.control_backend.allocationPatrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
+import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 
 import lombok.AllArgsConstructor;
 
@@ -21,6 +26,8 @@ public class AllocationNegocioImpl implements AllocationNegocio {
 
       private AllocationRepository allocationRepository;
       private AllocationMapper allocationMapper;
+      private AllocationPatrimonyRepository allocationPatrimonyRepository;
+      private PatrimonyMapper patrimonyMapper;
 
       @Override
       public List<AllocationResponse> list() {
@@ -40,44 +47,25 @@ public class AllocationNegocioImpl implements AllocationNegocio {
       @Override
       public AllocationResponse create(AllocationDTO allocationDTO) {
             Allocation allocation = allocationMapper.toEntity(allocationDTO);
-            allocation = salvaAlocacao(allocation);
+            allocation = save(allocation);
+
+            if (allocationDTO.patrimonies() != null) {
+                  for (PatrimonyDTO patrimonyDTO : allocationDTO.patrimonies()) {
+                        AllocationPatrimony allocationPatrimony = new AllocationPatrimony();
+                        Patrimony patrimony = patrimonyMapper.toEntity(patrimonyDTO);
+                        allocationPatrimony.setAllocation(allocation);
+                        allocationPatrimony.setPatrimony(patrimony);
+
+                        allocationPatrimonyRepository.save(allocationPatrimony);
+                  }
+            }
+
             return allocationMapper.toDto(allocation);
       }
 
       @Override
-      public Allocation obtemLocalizacaoPatrimonio(Long id) {
-
-            return null;
-
-            // AllocationPatrimony ap =
-            // allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
-
-            // if (!UtilObjeto.isEmpty(ap) &&
-            // allocationRepository.findById(ap.getAllocation().getId()).isPresent()) {
-            // return allocationRepository.findById(ap.getAllocation().getId()).get();
-            // } else {
-            // return new Allocation();
-            // }
-
-      }
-
-      private Allocation salvaAlocacao(Allocation allocation) {
-
-            
-
+      public Allocation save(Allocation allocation) {
             return allocationRepository.save(allocation);
-      }
-
-      @Override
-      public Allocation salvaAllocation(Allocation allocation) {
-            return salvaAlocacao(allocation);
-      }
-
-      @Override
-      public Allocation pesquisaAllocationPorId(Long id) {
-            return allocationRepository.findById(id)
-                        .map(c -> c)
-                        .orElseThrow(() -> new RecordNotFoundException(id));
       }
 
 }

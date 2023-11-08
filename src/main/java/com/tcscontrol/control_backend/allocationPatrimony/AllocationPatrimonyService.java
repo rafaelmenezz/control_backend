@@ -16,7 +16,7 @@ public class AllocationPatrimonyService {
     }
 
     @Transactional
-    public AllocationPatrimony saveAllocationPatrimony(AllocationPatrimony allocationPatrimony) {
+    public AllocationPatrimony save(AllocationPatrimony allocationPatrimony) {
         return allocationPatrimonyRepository.save(allocationPatrimony);
     }
 

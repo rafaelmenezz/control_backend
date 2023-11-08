@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Positive;
 
 @Service
 public interface PatrimonyService {
- 
+
     List<PatrimonyResponse> list();
 
     public PatrimonyResponse findById(Long id);
@@ -24,8 +24,9 @@ public interface PatrimonyService {
 
     public void delete(@PathVariable @NotNull @Positive Long id);
 
-    public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCpf, String nmFornecedor, String dtAquisicao);
+    public List<PatrimonyResponse> search(String nmPatrimonio, String nrSerie, String dsPatrimonio, String nrCpf,
+            String nmFornecedor, String dtAquisicao);
 
-    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(String nmPatrimony,Boolean fixo);
+    public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(String nmPatrimony, Boolean fixo);
 
 }

@@ -12,7 +12,6 @@ import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
-import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 
 import lombok.AllArgsConstructor;
@@ -54,18 +53,7 @@ public class AllocationMapper {
             allocation.setDtAlocacao(UtilData.toDate(allocationDTO.dtAlocacao(), UtilData.FORMATO_DDMMAA));
             allocation.setNmObservacao(allocationDTO.observation());
 
-            List<Patrimony> patrimonies = new ArrayList<Patrimony>();
-            for (PatrimonyDTO patrimonyDTO : allocationDTO.patrimonies()) {
-                  patrimonies.add(patrimonyMapper.toEntity(patrimonyDTO));
-            }
-
-            List<AllocationPatrimony> allocationPatrimonies = new ArrayList<AllocationPatrimony>();
-            for (Patrimony patrimony : patrimonies) {
-                  AllocationPatrimony allocationPatrimony = new AllocationPatrimony();
-                  allocationPatrimony.setAllocation(allocation);
-                  allocationPatrimony.setPatrimony(patrimony);
-                  allocationPatrimonies.add(allocationPatrimony);
-            }
+            allocation.setAllocationPatrimonies(new ArrayList<>());
 
             return allocation;
 

@@ -5,7 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
+import com.tcscontrol.control_backend.allocationPatrimony.AllocationPatrimonyRepository;
+import com.tcscontrol.control_backend.allocationPatrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
@@ -39,6 +40,7 @@ public class PatrimonyMapper {
     DepartmentMapper departmentMapper;
     ConstructionMapper constructionMapper;
     MaintenanceMapper maintenanceMapper;
+    AllocationPatrimonyRepository allocationPatrimonyRepository;
 
     public PatrimonyResponse toResponse(Patrimony patrimony) {
         if (patrimony == null) {
@@ -57,8 +59,10 @@ public class PatrimonyMapper {
                 .findFirst()
                 .orElse(null);
 
+        Department department = getActualDepartment(patrimony.getId());
+        DepartmentDTO departmentDTO = department != null ? departmentMapper.toDTO(department) : null;
+
         MaintenancePatrimonyDTO maintenancePatrimonyDTO = maintenanceMapper.toMaintenancePatrimonyDTO(maintenance);
-        DepartmentDTO departmentDTO = null;
 
         Requests r = rPatrimony == null ? null : rPatrimony.getRequests();
         ConstructionDTO constructionDTO = r != null ? constructionMapper.toDto(r.getConstruction()) : null;
@@ -109,7 +113,7 @@ public class PatrimonyMapper {
         List<RequestPatrimony> rps = patrimony.getRequests();
         List<Maintenance> maintenances = patrimony.getMaintenances();
 
-        Department department = null;
+        Department department = getActualDepartment(patrimony.getId());
 
         Construction construction = null;
         if (UtilObjeto.isNotEmpty(rps)) {
@@ -240,6 +244,17 @@ public class PatrimonyMapper {
 
         return patrimony;
 
+    }
+
+    public Department getActualDepartment(Long idPatrimony) {
+
+        List<AllocationPatrimony> allocationPatrimony = allocationPatrimonyRepository
+                .findByPatrimonyIdOrderByAllocationIdDesc(idPatrimony);
+
+        if (allocationPatrimony != null && !allocationPatrimony.isEmpty()) {
+            return allocationPatrimony.get(0).getAllocation().getDepartamento();
+        }
+        return null;
     }
 
 }

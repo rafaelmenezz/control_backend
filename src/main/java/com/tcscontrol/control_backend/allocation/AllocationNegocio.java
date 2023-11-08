@@ -9,9 +9,6 @@ public interface AllocationNegocio extends AllocationService {
 
     String MSG_ALERTA_PATRIMONIO_INDISPONIVEL = "Patrimonios não disponivel para alocação!";
 
-    Allocation obtemLocalizacaoPatrimonio(Long id);
+    Allocation save(Allocation allocation);
 
-    Allocation salvaAllocation(Allocation allocation);
-
-    Allocation pesquisaAllocationPorId(Long id);
 }
