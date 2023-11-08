@@ -43,6 +43,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
             patrimony.setTpSituacao(SituationType.DISPONIVEL);
@@ -65,6 +66,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         List<RequestPatrimony> rps = new ArrayList<>();
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
+            rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
@@ -89,6 +91,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         List<RequestPatrimony> rps = new ArrayList<>();
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
+            rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);

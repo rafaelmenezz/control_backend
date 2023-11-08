@@ -23,7 +23,7 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
         Date dtAquisicao
     );
 
-    @Query("FROM Patrimony p WHERE p.nmPatrimonio ilike %:nome% AND p.fixo = :fixo AND p.tpSituacao = 'Disponivel' ")
+    @Query("FROM Patrimony p WHERE p.nmPatrimonio ilike %:nome% AND p.fixo = :fixo AND (p.tpSituacao = 'Disponivel' OR p.tpSituacao = 'Alocado')")
     List<Patrimony> findPatrimoniesToAllocation(@Param("nome") String nmPatrimony, @Param("fixo") Boolean fixo);
 
 
