@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
-import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.constructions.impl.mapper.ConstructionMapper;
 import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
@@ -46,12 +45,6 @@ public class PatrimonyMapper {
             return null;
         }
 
-        AllocationPatrimony aPatrimony = patrimony.getAllocations()
-                .stream()
-                .filter(c -> c.getDtDevolucao() == null && c.getDtAlocacao() != null)
-                .findFirst()
-                .orElse(new AllocationPatrimony());
-
         RequestPatrimony rPatrimony = patrimony.getRequests()
                 .stream()
                 .filter(c -> c.getDtRetirada() != null && c.getDtDevolucao() == null)
@@ -59,17 +52,16 @@ public class PatrimonyMapper {
                 .orElse(new RequestPatrimony());
 
         Maintenance maintenance = patrimony.getMaintenances()
-        .stream()
-        .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
-        .findFirst()
-        .orElse(null);
+                .stream()
+                .filter(c -> Status.ACTIVE.equals(c.getTpStatus()))
+                .findFirst()
+                .orElse(null);
 
         MaintenancePatrimonyDTO maintenancePatrimonyDTO = maintenanceMapper.toMaintenancePatrimonyDTO(maintenance);
-        Allocation a = aPatrimony == null ? null : aPatrimony.getAllocation();
-        DepartmentDTO departmentDTO = a != null ? departmentMapper.toDTO(a.getDepartamento()) : null;
+        DepartmentDTO departmentDTO = null;
 
         Requests r = rPatrimony == null ? null : rPatrimony.getRequests();
-        ConstructionDTO constructionDTO = r != null ? constructionMapper.toDto(r.getConstruction()) : null; 
+        ConstructionDTO constructionDTO = r != null ? constructionMapper.toDto(r.getConstruction()) : null;
 
         List<WarrantyDTO> warrantys = patrimony.getWarrantys()
                 .stream()
@@ -80,7 +72,7 @@ public class PatrimonyMapper {
                         warranty.getTypewWarranty().getValue()))
                 .collect(Collectors.toList());
 
-                return new PatrimonyResponse(
+        return new PatrimonyResponse(
                 patrimony.getId(),
                 patrimony.getNmPatrimonio(),
                 patrimony.getNrSerie(),
@@ -95,7 +87,7 @@ public class PatrimonyMapper {
                 patrimony.getTpSituacao().getValue(),
                 warrantys,
                 departmentDTO != null ? departmentDTO : null,
-                constructionDTO != null ? constructionDTO : null, 
+                constructionDTO != null ? constructionDTO : null,
                 maintenancePatrimonyDTO != null ? maintenancePatrimonyDTO : null);
 
     }
@@ -114,20 +106,10 @@ public class PatrimonyMapper {
                         warranty.getTypewWarranty().getValue()))
                 .collect(Collectors.toList());
 
-        List<AllocationPatrimony> aps = patrimony.getAllocations();
         List<RequestPatrimony> rps = patrimony.getRequests();
         List<Maintenance> maintenances = patrimony.getMaintenances();
 
         Department department = null;
-        if (UtilObjeto.isNotEmpty(aps)) {
-            for (AllocationPatrimony allocationPatrimony : aps) {
-                if (UtilObjeto.isNotEmpty(allocationPatrimony.getDtAlocacao())
-                        && UtilObjeto.isEmpty(allocationPatrimony.getDtDevolucao())) {
-                    department = allocationPatrimony.getAllocation().getDepartamento();
-                }
-
-            }
-        }
 
         Construction construction = null;
         if (UtilObjeto.isNotEmpty(rps)) {
@@ -143,10 +125,10 @@ public class PatrimonyMapper {
         Maintenance maintenance = null;
         if (UtilObjeto.isNotEmpty(maintenances)) {
             maintenance = maintenances
-            .stream()
-            .filter(c-> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
-            .findFirst()
-            .orElse(null);
+                    .stream()
+                    .filter(c -> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
+                    .findFirst()
+                    .orElse(null);
         }
 
         return new PatrimonyDTO(

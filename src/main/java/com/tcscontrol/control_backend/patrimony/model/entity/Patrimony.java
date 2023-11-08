@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.enuns.converters.StatusConverter;
@@ -89,9 +88,6 @@ public class Patrimony implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, orphanRemoval = false, mappedBy = "patrimony")
 	private List<RequestPatrimony> requests = new ArrayList<>();
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
-	private List<AllocationPatrimony> allocations = new ArrayList<>();
-
 	@ManyToOne(fetch = FetchType.EAGER, optional = true)
 	@JoinColumn(name = "fornecedor_id", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -110,14 +106,14 @@ public class Patrimony implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		  if (this == o) {
-				return true;
-		  }
-		  if (o == null || getClass() != o.getClass()) {
-				return false;
-		  }
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-		  Patrimony otherPatrimony = (Patrimony) o; 
-		  return id != null && id.equals(otherPatrimony.id);
+		Patrimony otherPatrimony = (Patrimony) o;
+		return id != null && id.equals(otherPatrimony.id);
 	}
 }

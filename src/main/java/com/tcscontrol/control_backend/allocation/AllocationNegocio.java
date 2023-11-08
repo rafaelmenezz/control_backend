@@ -8,7 +8,7 @@ import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 public interface AllocationNegocio extends AllocationService {
 
     String MSG_ALERTA_PATRIMONIO_INDISPONIVEL = "Patrimonios não disponivel para alocação!";
-      
+
     Allocation obtemLocalizacaoPatrimonio(Long id);
 
     Allocation salvaAllocation(Allocation allocation);
