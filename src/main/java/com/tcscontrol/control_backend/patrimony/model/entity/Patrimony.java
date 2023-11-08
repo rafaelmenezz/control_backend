@@ -76,7 +76,7 @@ public class Patrimony implements Serializable {
 
 	@Column(name = "tp_situacao")
 	@Convert(converter = TypeSituationConverter.class)
-	private SituationType tpSituacao = SituationType.DISPONIVEL;
+	private SituationType tpSituacao;
 
 	@Column(name = "tp_status")
 	@Convert(converter = StatusConverter.class)

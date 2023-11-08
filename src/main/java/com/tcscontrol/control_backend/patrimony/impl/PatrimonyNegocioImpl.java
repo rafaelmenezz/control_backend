@@ -20,6 +20,7 @@ import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
+import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 import com.tcscontrol.control_backend.warranty.model.entity.Warranty;
 
 import jakarta.validation.constraints.NotNull;
@@ -56,36 +57,66 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
 
     @Override
     public PatrimonyResponse update(Long id, PatrimonyDTO patrimonyDto) {
-        return patrimonyRepository.findById(id)
-                .map(recordFound -> {
-                    Patrimony patrimony = patrimonyMapper.toEntity(patrimonyDto);
-                    Fornecedor fornecedor = fornecedorNegocio.pesquisaFornecedorCnpj(patrimonyDto.nrCnpj());
-                    if (fornecedor == null) {
-                        throw new IllegalArgumentException("Fonecedor não encontrado!");
-                    }
-                    List<Warranty> warranties = patrimonyDto.warranties()
-                            .stream()
-                            .map(warranty -> new Warranty(
-                                    warranty.id(),
-                                    warranty.dsGarantia(),
-                                    UtilData.toDate(warranty.dtValidade(), UtilData.FORMATO_DDMMAA),
-                                    UtilControl.convertTypeWarrantyValue(warranty.tipoGarantia()),
-                                    recordFound))
-                            .collect(Collectors.toList());
-                    recordFound.setNrSerie(patrimonyDto.nrSerie());
-                    recordFound.setNmPatrimonio(patrimonyDto.nmPatrimonio());
-                    recordFound.setNmDescricao(patrimonyDto.nmDescricao());
-                    recordFound.setNrNotaFiscal(patrimonyDto.nrNF());
-                    recordFound.setDtNotaFiscal(UtilData.toDate(patrimonyDto.dtNF(), UtilData.FORMATO_DDMMAA));
-                    recordFound.setDtAquisicao(UtilData.toDate(patrimonyDto.dtAquisicao(), UtilData.FORMATO_DDMMAA));
-                    recordFound.setVlAquisicao(patrimonyDto.vlAquisicao());
-                    recordFound.setFixo(patrimonyDto.fixo());
-                    recordFound.setFornecedor(fornecedor);
-                    recordFound.getWarrantys().clear();
-                    patrimony.getWarrantys().forEach(recordFound.getWarrantys()::add);
-                    recordFound.setWarrantys(warranties);
-                    return patrimonyMapper.toResponse(patrimonyRepository.save(recordFound));
-                }).orElseThrow(() -> new RecordNotFoundException(id));
+        Patrimony patrimonyToUpdate = patrimonyRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException(id));
+
+        updatePatrimonySituation(patrimonyToUpdate, patrimonyDto);
+        updatePatrimonyFields(patrimonyToUpdate, patrimonyDto);
+        updateWarranties(patrimonyToUpdate, patrimonyDto.warranties());
+
+        Patrimony updatedPatrimony = patrimonyRepository.save(patrimonyToUpdate);
+        return patrimonyMapper.toResponse(updatedPatrimony);
+    }
+
+    private void updatePatrimonyFields(Patrimony patrimonyToUpdate, PatrimonyDTO patrimonyDto) {
+        Fornecedor fornecedor = fornecedorNegocio.pesquisaFornecedorCnpj(patrimonyDto.nrCnpj());
+        patrimonyToUpdate.setNrSerie(patrimonyDto.nrSerie());
+        patrimonyToUpdate.setNmPatrimonio(patrimonyDto.nmPatrimonio());
+        patrimonyToUpdate.setNmDescricao(patrimonyDto.nmDescricao());
+        patrimonyToUpdate.setNrNotaFiscal(patrimonyDto.nrNF());
+        patrimonyToUpdate.setDtNotaFiscal(UtilData.toDate(patrimonyDto.dtNF(), UtilData.FORMATO_DDMMAA));
+        patrimonyToUpdate.setDtAquisicao(UtilData.toDate(patrimonyDto.dtAquisicao(), UtilData.FORMATO_DDMMAA));
+        patrimonyToUpdate.setVlAquisicao(patrimonyDto.vlAquisicao());
+        patrimonyToUpdate.setFixo(patrimonyDto.fixo());
+        patrimonyToUpdate.setFornecedor(fornecedor);
+
+    }
+
+    private void updatePatrimonySituation(Patrimony patrimonyToUpdate, PatrimonyDTO patrimonyDto) {
+        if (patrimonyToUpdate.getFixo() && (patrimonyToUpdate.getTpSituacao() == SituationType.FIXO)
+                && !patrimonyDto.fixo()) {
+            patrimonyToUpdate.setTpSituacao(SituationType.DISPONIVEL);
+        }
+        if (!patrimonyToUpdate.getFixo() && (patrimonyToUpdate.getTpSituacao() == SituationType.DISPONIVEL)
+                && patrimonyDto.fixo()) {
+            patrimonyToUpdate.setTpSituacao(SituationType.FIXO);
+        }
+
+        if (patrimonyDto.fixo()) {
+            if (patrimonyToUpdate.getTpSituacao() != SituationType.FIXO && !patrimonyToUpdate.getFixo()) {
+                throw new IllegalArgumentException("Patrimônio não pode ser alterado!");
+            }
+        } else {
+            if (patrimonyToUpdate.getTpSituacao() != SituationType.DISPONIVEL && patrimonyToUpdate.getFixo()) {
+                throw new IllegalArgumentException("Patrimônio não pode ser alterado!");
+            }
+        }
+    }
+
+    private void updateWarranties(Patrimony patrimonyToUpdate, List<WarrantyDTO> warrantyDTOs) {
+        List<Warranty> warranties = warrantyDTOs.stream()
+                .map(warrantyDto -> {
+                    return new Warranty(
+                            warrantyDto.id(),
+                            warrantyDto.dsGarantia(),
+                            UtilData.toDate(warrantyDto.dtValidade(), UtilData.FORMATO_DDMMAA),
+                            UtilControl.convertTypeWarrantyValue(warrantyDto.tipoGarantia()),
+                            patrimonyToUpdate);
+                })
+                .collect(Collectors.toList());
+
+        patrimonyToUpdate.getWarrantys().clear();
+        patrimonyToUpdate.getWarrantys().addAll(warranties);
     }
 
     @Override
@@ -150,8 +181,6 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
 
     private Patrimony salveNewPatrimony(PatrimonyDTO patrimonyDTO) {
         Patrimony p = patrimonyMapper.toEntity(patrimonyDTO);
-        p.setTpSituacao(SituationType.DISPONIVEL);
-
         return patrimonyRepository.save(p);
     }
 

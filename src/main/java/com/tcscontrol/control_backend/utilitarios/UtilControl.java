@@ -14,7 +14,6 @@ import com.tcscontrol.control_backend.enuns.TypeUser;
 import com.tcscontrol.control_backend.enuns.TypeWarranty;
 
 public class UtilControl {
-    
 
     public static String gerarNumero(int qtde) {
         String numeroGerado = "";
@@ -48,50 +47,52 @@ public class UtilControl {
     }
 
     public static String gerarNome() {
-        String[] nomes = {"Junior", "Marcos", "Ana", "Maria", "Silvio", "Suelen", "Joana", "Mateus",
-                          "Lúcio", "João", "Leandro", "Soeli"};
+        String[] nomes = { "Junior", "Marcos", "Ana", "Maria", "Silvio", "Suelen", "Joana", "Mateus",
+                "Lúcio", "João", "Leandro", "Soeli" };
         int indice = (int) (Math.random() * nomes.length);
         return nomes[indice] + " " + gerarSobrenome();
     }
-    
+
     public static String gerarProfissao() {
-        String[] profissoes = {"Programador", "Analista", "Pintor", "Costureiro",
-                               "Padeiro", "Eletricista", "Consultor", "Predeiro",
-                               "Carpinteiro", "Professor", "Testador", "Pescador"};
+        String[] profissoes = { "Programador", "Analista", "Pintor", "Costureiro",
+                "Padeiro", "Eletricista", "Consultor", "Predeiro",
+                "Carpinteiro", "Professor", "Testador", "Pescador" };
         int indice = (int) (Math.random() * profissoes.length);
         return profissoes[indice];
     }
-    
+
     public static String gerarBandeira() {
-        String[] bandeiras = {"Master-Card", "Visa", "Danners", "Amex"};
+        String[] bandeiras = { "Master-Card", "Visa", "Danners", "Amex" };
         int indice = (int) (Math.random() * bandeiras.length);
         return bandeiras[indice];
     }
-    
+
     private static String gerarSobrenome() {
-        String[] sobrenomes = {"Pereira", "Oliveira", "Antunes", "da Silva", "Santos", "Rocha", "Moura", 
-            "Dias", "Mendes", "Albino", "Dutra", "Mendonça"};
+        String[] sobrenomes = { "Pereira", "Oliveira", "Antunes", "da Silva", "Santos", "Rocha", "Moura",
+                "Dias", "Mendes", "Albino", "Dutra", "Mendonça" };
         int indice = (int) (Math.random() * sobrenomes.length);
         return sobrenomes[indice];
     }
-    
+
     public static String gerarCidade() {
-        String[] cidades = {"São José", "Palhoça", "Florianópolis", "Criciuma", "Chapecó", "Curitiba",
-            "Porto Alegre", "São Paulo", "Máceio", "Biguaçú", "Belo Horizonte", "Pinhais"};
+        String[] cidades = { "São José", "Palhoça", "Florianópolis", "Criciuma", "Chapecó", "Curitiba",
+                "Porto Alegre", "São Paulo", "Máceio", "Biguaçú", "Belo Horizonte", "Pinhais" };
         int indice = (int) (Math.random() * cidades.length);
         return cidades[indice];
     }
-    
-    public static String gerarLogin(){
-        String nome = gerarNome();        
+
+    public static String gerarLogin() {
+        String nome = gerarNome();
         return nome.toLowerCase() + "@";
     }
 
     public static String gerarSenha(int qtde) {
-        String[] letras = {"a", "b", "c", "d", "e", "f", "g", "h", "i",
-            "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E",
-            "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0",
-            "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+        String[] letras = { "a", "b", "c", "d", "e", "f", "g", "h", "i",
+                "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D",
+                "E",
+                "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                "0",
+                "1", "2", "3", "4", "5", "6", "7", "8", "9" };
         int indice;
         String senha = "";
         for (int i = 0; i < qtde; i++) {
@@ -139,16 +140,16 @@ public class UtilControl {
         };
     }
 
-
     public static SituationType convertSituationTypeValue(String value) {
         if (value == null) {
             return null;
         }
         return switch (value) {
-            case "Disponivel" -> SituationType.DISPONIVEL;
+            case "Disponível" -> SituationType.DISPONIVEL;
+            case "Fixo" -> SituationType.FIXO;
             case "Alocado" -> SituationType.ALOCADO;
             case "Registrado" -> SituationType.REGISTRADO;
-            case "Manutenção" -> SituationType.EM_MANUTENCAO;
+            case "Em Manutenção" -> SituationType.EM_MANUTENCAO;
             default -> throw new IllegalArgumentException("Situação do património inválida!");
         };
     }
@@ -165,7 +166,7 @@ public class UtilControl {
         };
     }
 
-     public static TypeContacts convertTypeContactsValue(String value) {
+    public static TypeContacts convertTypeContactsValue(String value) {
         if (value == null) {
             return null;
         }

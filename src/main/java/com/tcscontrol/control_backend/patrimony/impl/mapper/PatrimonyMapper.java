@@ -13,7 +13,8 @@ import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.department.impl.mapper.DepartmentMapper;
 import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
 import com.tcscontrol.control_backend.department.model.entity.Department;
-import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.MaintenanceStatus;
+import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
@@ -55,7 +56,7 @@ public class PatrimonyMapper {
 
         Maintenance maintenance = patrimony.getMaintenances()
                 .stream()
-                .filter(c -> Status.ACTIVE.equals(c.getTpStatus()))
+                .filter(c -> MaintenanceStatus.EM_EXECUCAO.equals(c.getMaintenanceStatus()))
                 .findFirst()
                 .orElse(null);
 
@@ -130,7 +131,7 @@ public class PatrimonyMapper {
         if (UtilObjeto.isNotEmpty(maintenances)) {
             maintenance = maintenances
                     .stream()
-                    .filter(c -> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
+                    .filter(c -> MaintenanceStatus.EM_EXECUCAO.equals(c.getMaintenanceStatus()))
                     .findFirst()
                     .orElse(null);
         }
@@ -164,6 +165,16 @@ public class PatrimonyMapper {
             patrimony.setId(patrimonyDTO.id());
         }
 
+        if (patrimonyDTO.situacao() == null) {
+            if (patrimonyDTO.fixo()) {
+                patrimony.setTpSituacao(SituationType.FIXO);
+            } else {
+                patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            }
+        } else {
+            patrimony.setTpSituacao(UtilControl.convertSituationTypeValue(patrimonyDTO.situacao()));
+        }
+
         Fornecedor fornecedor = fornecedorNegocio.pesquisaFornecedorCnpj(patrimonyDTO.nrCnpj());
 
         if (fornecedor == null) {
@@ -182,7 +193,6 @@ public class PatrimonyMapper {
         patrimony.setDtAquisicao(UtilData.toDate(patrimonyDTO.dtAquisicao(), UtilData.FORMATO_DDMMAA));
         patrimony.setVlAquisicao(patrimonyDTO.vlAquisicao());
         patrimony.setFixo(patrimonyDTO.fixo());
-        patrimony.setTpSituacao(UtilControl.convertSituationTypeValue(patrimonyDTO.situacao()));
         patrimony.setFornecedor(fornecedor);
         List<Warranty> warrantys = patrimonyDTO.warranties()
                 .stream()
