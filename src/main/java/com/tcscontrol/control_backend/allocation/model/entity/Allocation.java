@@ -7,12 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import org.hibernate.annotations.ManyToAny;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.allocationPatrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.department.model.entity.Department;
-import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,7 +19,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -55,7 +51,7 @@ public class Allocation implements Serializable {
 	@Column(name = "nm_observacao")
 	private String nmObservacao;
 
-	@OneToMany(mappedBy = "patrimony", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "allocation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AllocationPatrimony> allocationPatrimonies = new ArrayList<>();
 
 	@Override

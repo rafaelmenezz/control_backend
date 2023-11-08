@@ -28,7 +28,7 @@ public class AllocationPatrimony {
     private Allocation allocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patrimony_id", referencedColumnName = "id")
+    @JoinColumn(name = "patrimony_id", referencedColumnName = "id_patrimonio")
     private Patrimony patrimony;
 
 }
