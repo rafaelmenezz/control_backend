@@ -19,4 +19,10 @@ public interface AllocationPatrimonyRepository extends JpaRepository<AllocationP
             "WHERE ap.patrimony.id IN (:ids) AND ap.status = 'Ativo'")
     List<AllocationPatrimony> getList(List<Long> ids);
 
+     @Query("SELECT ap " + //
+            "FROM AllocationPatrimony ap " + //
+            "JOIN FETCH ap.patrimony p " + //
+            "WHERE ap.patrimony.id = :id AND ap.status = 'Ativo'")
+    AllocationPatrimony pesquisAllocationPatrimonyPorIdPatrimonio(Long id);
+
 }

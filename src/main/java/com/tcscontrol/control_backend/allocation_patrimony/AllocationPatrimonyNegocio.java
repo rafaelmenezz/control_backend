@@ -9,5 +9,6 @@ public interface AllocationPatrimonyNegocio extends AllocationPatrimonyService  
  
     List<Patrimony> obtemListPatrimonies(List<AllocationPatrimony> list);
 
-    AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id);
+    AllocationPatrimony pesquisaAllocationPatrimonyPorId(Long id);
+
 }

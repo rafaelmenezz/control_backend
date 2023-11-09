@@ -172,8 +172,8 @@ public class AllocationPatrimonyNegocioImpl implements AllocationPatrimonyNegoci
     }
 
     @Override
-    public AllocationPatrimony pesquisAllocationPatrimonyPorId(Long id) {
-        return allocationPatrimonyRepository.findByPatrimonyIdAndDtDevolucaoIsNull(id);
+    public AllocationPatrimony pesquisaAllocationPatrimonyPorId(Long id) {
+        return allocationPatrimonyRepository.pesquisAllocationPatrimonyPorIdPatrimonio(id);
     }
 
     private void validaAlocacaoPatrimonio(List<Patrimony> list) {

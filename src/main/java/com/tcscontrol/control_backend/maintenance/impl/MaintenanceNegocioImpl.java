@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyNegocio;
+import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
 import com.tcscontrol.control_backend.enuns.MaintenanceStatus;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
@@ -34,6 +36,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
       private MaintenanceMapper maintenanceMapper;
       private FornecedorNegocio fornecedorNegocio;
       private PatrimonyNegocio patrimonyNegocio;
+      private AllocationPatrimonyNegocio allocationPatrimonyNegocio;
 
       @Override
       public List<MaintenanceDTO> list() {
@@ -119,7 +122,11 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
             maintenance = alterar(id, maintenance);
-            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+            if (patrimony.getFixo()) {
+                patrimony.setTpSituacao(SituationType.ALOCADO);  
+            }else{
+                patrimony.setTpSituacao(SituationType.DISPONIVEL);    
+            }
             patrimony = atualizarPatrimonio(patrimony);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
@@ -135,7 +142,11 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             maintenance.setTpStatus(Status.INACTIVE);
             maintenance.setMaintenanceStatus(MaintenanceStatus.CANCELADA);
             maintenance = alterar(id, maintenance);
-            patrimony.setTpSituacao(SituationType.DISPONIVEL);
+             if (patrimony.getFixo() && patrimonioAlocado(patrimony.getId())) {
+                patrimony.setTpSituacao(SituationType.ALOCADO);  
+            }else{
+                patrimony.setTpSituacao(SituationType.DISPONIVEL);    
+            }
             patrimony = atualizarPatrimonio(patrimony);
       }
 
@@ -180,5 +191,10 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
       private Patrimony atualizarPatrimonio(Patrimony patrimony) {
             return patrimonyNegocio.atualizaPatrimonio(patrimony);
       }
+
+      private Boolean patrimonioAlocado(Long id){
+            AllocationPatrimony ap = allocationPatrimonyNegocio.pesquisaAllocationPatrimonyPorId(id);
+            return UtilObjeto.isEmpty(ap) ? Boolean.FALSE : Boolean.TRUE;
+      } 
 
 }
