@@ -5,8 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
-import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
-import com.tcscontrol.control_backend.enuns.TypeContacts;
 import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
@@ -141,22 +139,6 @@ public class UserImpl implements UserNegocio {
     @Override
     public UserDetails userLogin(String login) {
         return userRepository.validarLogin(login);
-    }
-
-    private String obtemEmailDTO (List<ContactsDTO> dto){
-
-        if (dto.isEmpty()) {
-            return null;
-        }
-
-        List<ContactsDTO> contatos = dto;
-        String email = "";
-        for (ContactsDTO obj : contatos) {
-            if(TypeContacts.EMAIL.getValue().equals(obj.typeContacts())){
-                email = obj.dsContato();
-            }
-        }
-        return email;
     }
 
     @Override

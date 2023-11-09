@@ -1,6 +1,7 @@
 package com.tcscontrol.control_backend.request_patrimony.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.request_patrimony.RequestPatrimonyNegocio;
+import com.tcscontrol.control_backend.request_patrimony.RequestPatrimonyRepository;
 import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 import com.tcscontrol.control_backend.requests.RequestNegocio;
 import com.tcscontrol.control_backend.requests.model.dto.RequestResponse;
@@ -28,6 +30,7 @@ import lombok.AllArgsConstructor;
 public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
 
     private RequestNegocio requestNegocio;
+    private RequestPatrimonyRepository requestPatrimonyRepository;
     private ConstructionNegocio constructionNegocio;
     private PatrimonyNegocio patrimonyNegocio;
 
@@ -60,23 +63,19 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         validaRequisicao(requestsDTO);
         validarDataManutencao(RETIRAR, requestsDTO);
         Requests requests = obtemRequests(requestsDTO.id());
-        Construction construction = constructionNegocio.toEntity(requestsDTO.obra());
-        requests.setConstruction(construction);
-        List<Patrimony> patrimonies = patrimonyNegocio.toListEntity(requestsDTO.patrimonios());
-        List<RequestPatrimony> rps = new ArrayList<>();
-        for (Patrimony patrimony : patrimonies) {
-            RequestPatrimony rp = new RequestPatrimony();
+        List<RequestPatrimony> rps = requests.getPatrimonies();
+        List<Patrimony> patrimonies = new ArrayList<>();
+        for (RequestPatrimony rp : rps) {
+            Patrimony patrimony = rp.getPatrimony();
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
-            rp.setRequests(requests);
-            rp.setPatrimony(patrimony);
             patrimony.setTpSituacao(SituationType.REGISTRADO);
             patrimony.getRequests().add(rp);
-            rps.add(rp);
+
+            patrimonies.add(patrimony);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
-        requests.getPatrimonies().clear();
-        requests.getPatrimonies().addAll(rps);
+        requestPatrimonyRepository.saveAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
 
@@ -85,28 +84,25 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         validaRequisicao(requestsDTO);
         validarDataManutencao(FINALIZAR, requestsDTO);
         Requests requests = obtemRequests(requestsDTO.id());
-        Construction construction = constructionNegocio.toEntity(requestsDTO.obra());
-        requests.setConstruction(construction);
-        List<Patrimony> patrimonies = patrimonyNegocio.toListEntity(requestsDTO.patrimonios());
-        List<RequestPatrimony> rps = new ArrayList<>();
-        for (Patrimony patrimony : patrimonies) {
-            RequestPatrimony rp = new RequestPatrimony();
+        List<RequestPatrimony> rps = requests.getPatrimonies();
+        List<Patrimony> patrimonies = new ArrayList<>();
+        for (RequestPatrimony rp : rps) {
+            Patrimony patrimony = rp.getPatrimony();
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
-            rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
+            rp.setDtDevolucao(new Date());
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
             rp.setStatus(Status.INACTIVE);
             patrimony.setTpSituacao(SituationType.DISPONIVEL);
-            rps.add(rp);
+            patrimonies.add(patrimony);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
-        requests.getPatrimonies().addAll(rps);
+        requestPatrimonyRepository.saveAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
 
     }
 
-    
     @Override
     public RequestResponse cancel(RequestsDTO requestsDTO) {
         Requests requests = obtemRequests(requestsDTO.id());
@@ -116,7 +112,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         List<RequestPatrimony> rps = new ArrayList<>();
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
-            
+
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
@@ -130,7 +126,6 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         requests.getPatrimonies().addAll(rps);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
-
 
     private Requests obtemRequests(Long id) {
         if (UtilObjeto.isEmpty(id)) {
@@ -144,17 +139,17 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         return requestNegocio.salvaRequests(requests);
     }
 
-    private void validaRequisicao(RequestsDTO requestsDTO){
+    private void validaRequisicao(RequestsDTO requestsDTO) {
         if (UtilObjeto.isEmpty(requestsDTO.patrimonios())) {
             throw new IllegalRequestException("Nenhum patrimônio foi informado!");
         }
         if (UtilObjeto.isEmpty(requestsDTO.obra())) {
             throw new IllegalRequestException("Obra não informado!");
         }
-        
+
     }
 
-    private void validarDataManutencao(Integer action, RequestsDTO requestsDTO){
+    private void validarDataManutencao(Integer action, RequestsDTO requestsDTO) {
         switch (action) {
             case 1:
                 geraErroObjetoNulo(requestsDTO.dtPrevisaoRetirada(), MSG_ERRO_DATA_PREVISAO_NAO_INFORMADA);
@@ -172,15 +167,10 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         }
     }
 
-    private void geraErroObjetoNulo(Object object, String msg){
+    private void geraErroObjetoNulo(Object object, String msg) {
         if (UtilObjeto.isEmpty(object)) {
             throw new IllegalRequestException(msg);
         }
     }
-
-
-
-
-
 
 }
