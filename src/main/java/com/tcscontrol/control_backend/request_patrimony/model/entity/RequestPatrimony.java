@@ -27,13 +27,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
-@Table(name="REQUISICOES_PATRIMONIO")
+@Table(name = "REQUISICOES_PATRIMONIO")
 public class RequestPatrimony implements Serializable {
 
     @Serial
@@ -62,29 +61,29 @@ public class RequestPatrimony implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Patrimony patrimony;
 
-    @Column(name="status")
+    @Column(name = "status")
     @Convert(converter = StatusConverter.class)
     private Status status = Status.ACTIVE;
 
-    	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Objects.hashCode(getId());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Objects.hashCode(getId());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-		RequestPatrimony otherRequestPatrimony = (RequestPatrimony) o;
-		return id != null && id.equals(otherRequestPatrimony.id);
-	}
+        RequestPatrimony otherRequestPatrimony = (RequestPatrimony) o;
+        return id != null && id.equals(otherRequestPatrimony.id);
+    }
 
 }

@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/refreshToken").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/*").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/*").hasRole("GESTOR")
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

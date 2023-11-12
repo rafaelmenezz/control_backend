@@ -9,6 +9,10 @@ public class UtilString {
     public static final String ZERO_INT = "0";
     public static final String ZERO_DOUBLE = "0.0";
     public static final String NULL = "null";
+    public static final String VIRGULA = ", ";
+    public static final String PONTO = ". ";
+    public static final String ESPACO = " ";
+    public static final String TRACO = "-";
 
 
     public static boolean isNuloOuBrancoOuZero(Object objeto) {

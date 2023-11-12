@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyRepository;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
+import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.enuns.TypeContacts;
@@ -22,6 +23,8 @@ import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 import com.tcscontrol.control_backend.utilitarios.UtilCast;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -72,7 +75,8 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         String emailText = TEMPLATE_EMAIL;
         String saudacao = montarTitulo(usuario);
         String mensagem = "";
-        //String mensagem = montaMensagemNovaAlocacao(department.getNmDepartamento(), listarPatrimonios(patrimonies));
+        // String mensagem = montaMensagemNovaAlocacao(department.getNmDepartamento(),
+        // listarPatrimonios(patrimonies));
         String email = obtemEmailUsuario(usuario);
 
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
@@ -108,7 +112,8 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
     @Override
     public void enviarEmailAgendaManutencao(Maintenance maintenance) {
         List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
-        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository.pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
+        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository
+                .pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
         if (UtilObjeto.isNotEmpty(allocationPatrimony)) {
             User gestor = allocationPatrimony.getAllocation().getDepartamento().getUser();
             administradores.add(gestor);
@@ -116,54 +121,123 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         String mensagem = montarMensagemAgendamentoManutencao(maintenance, MSG_AGENDAR_MANUTENCAO);
 
         for (User user : administradores) {
-            enviarEmailAdministrador(user, TEMPLATE_EMAIL, mensagem);
+            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO, mensagem);
         }
-
     }
 
     @Override
     public void enviarEmailIniciarManutencao(Maintenance maintenance) {
         List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
         String mensagem = montarMensagemAgendamentoManutencao(maintenance, MSG_INICIAR_MANUTENCAO);
-        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository.pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
+        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository
+                .pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
         if (UtilObjeto.isNotEmpty(allocationPatrimony)) {
             User gestor = allocationPatrimony.getAllocation().getDepartamento().getUser();
             administradores.add(gestor);
         }
         for (User user : administradores) {
-            enviarEmailAdministrador(user, TEMPLATE_EMAIL, mensagem);
+            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO,  mensagem);
         }
-
     }
 
     @Override
     public void enviarEmailFinalizarManutencao(Maintenance maintenance) {
         List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
         String mensagem = montarMensagemAgendamentoManutencao(maintenance, MSG_FINALIZADA_MANUTENCAO);
-        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository.pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
+        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository
+                .pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
         if (UtilObjeto.isNotEmpty(allocationPatrimony)) {
             User gestor = allocationPatrimony.getAllocation().getDepartamento().getUser();
             administradores.add(gestor);
         }
         for (User user : administradores) {
-            enviarEmailAdministrador(user, TEMPLATE_EMAIL, mensagem);
+            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO, mensagem);
         }
-
     }
 
     @Override
     public void enviarEmailCancelarManutencao(Maintenance maintenance) {
         List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
         String mensagem = montarMensagemAgendamentoManutencao(maintenance, MSG_CANCELADA_MANUTENCAO);
-        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository.pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
+        AllocationPatrimony allocationPatrimony = allocationPatrimonyRepository
+                .pesquisAllocationPatrimonyPorIdPatrimonio(maintenance.getPatrimony().getId());
         if (UtilObjeto.isNotEmpty(allocationPatrimony)) {
             User gestor = allocationPatrimony.getAllocation().getDepartamento().getUser();
             administradores.add(gestor);
         }
         for (User user : administradores) {
-            enviarEmailAdministrador(user, TEMPLATE_EMAIL, mensagem);
+            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO,  mensagem);
         }
+    }
 
+    @Override
+    public void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm) {
+        User usuario = requests.getConstruction().getUser();
+        String emailText = TEMPLATE_EMAIL;
+        String saudacao = montarTitulo(usuario);
+        String corpo = montaCorpoEmailRequisicao(requests, mensagem);
+        String email = obtemEmailUsuario(usuario);
+
+        emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
+        emailText = emailText.replace(TEMPLATE_MENSAGEM, corpo);
+        sendRegistrationEmail(email, MSG_ASSUNTO_REQUISICAO, emailText);
+        enviarEmailAdministradores(requests, mensagemAdm);
+    }
+
+    private String montaCorpoEmailRequisicao(Requests requests, String mensagem) {
+        Construction obra = requests.getConstruction();
+        String corpo = mensagem.replace(NM_OBRA, obra.getNmObra());
+        String detalhesObra = montaDetalhesObra(obra);
+        String listaPatrimonios = listarPatrimoniosRequisicao(requests.getPatrimonies());
+
+        StringBuilder retorno = new StringBuilder();
+        retorno.append(corpo).append(detalhesObra).append(listaPatrimonios);
+
+        return retorno.toString();
+    }
+
+    private String montaDetalhesObra(Construction obra) {
+        String nome = UtilString.isNotEmpty(obra.getNmObra()) ? obra.getNmObra() : UtilString.EMPTY;
+        String nmCliente = UtilString.isNotEmpty(obra.getNmCliente()) ? obra.getNmCliente() : UtilString.EMPTY;
+        String nrDocumento = UtilString.isNotEmpty(obra.getNrCnpjCpf()) ? obra.getNrCnpjCpf() : UtilString.EMPTY;
+        String endereco = UtilString.isNotEmpty(obtemEnderecoObraCompleto(obra)) ? obtemEnderecoObraCompleto(obra)
+                : UtilString.EMPTY;
+        String dtPrevisaoConclusao = UtilObjeto.isNotEmpty(obra.getDtPrevisaoConclusao())
+                ? UtilData.toString(obra.getDtPrevisaoConclusao(), UtilData.FORMATO_DDMMAA)
+                : UtilString.EMPTY;
+
+        StringBuilder texto = new StringBuilder();
+        if (UtilString.isNotEmpty(nome))
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Obra: </b>" + nome + UtilString.PONTO));
+        if (UtilString.isNotEmpty(nmCliente))
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Cliente: </b>"+ nmCliente + UtilString.PONTO));
+        if (UtilString.isNotEmpty(nrDocumento))
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Documento: </b>" + nrDocumento+ UtilString.PONTO));
+        if (UtilString.isNotEmpty(endereco))
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Endereço: </b>" + endereco+ UtilString.PONTO));
+        if (UtilString.isNotEmpty(dtPrevisaoConclusao))
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Data Prevista Para Conclusão: </b>" + dtPrevisaoConclusao + UtilString.PONTO));
+
+        String retorno = LISTA_NAO_ORDENADA.replace(CONTEUDO, texto.toString());
+
+        return retorno;
+    }
+
+    private String obtemEnderecoObraCompleto(Construction obra) {
+        StringBuilder retorno = new StringBuilder();
+
+        if (UtilString.isNotEmpty(obra.getNmLogradouro()))
+            retorno.append(obra.getNmLogradouro()).append(UtilString.ESPACO);
+        if (UtilString.isNotEmpty(obra.getNrNumero()))
+            retorno.append(obra.getNrNumero()).append(UtilString.VIRGULA);
+        if (UtilString.isNotEmpty(obra.getNmComplemento()))
+            retorno.append(obra.getNmComplemento()).append(UtilString.PONTO);
+        if (UtilString.isNotEmpty(obra.getNmBairro()))
+            retorno.append(obra.getNmBairro()).append(UtilString.PONTO);
+        if (UtilString.isNotEmpty(obra.getNmCidade()) && UtilString.isNotEmpty(obra.getNmUf()))
+            retorno.append(obra.getNmCidade()).append(UtilString.TRACO).append(obra.getNmUf());
+
+        return retorno.toString();
     }
 
     private String montarMensagemAgendamentoManutencao(Maintenance maintenance, String tpMensagem) {
@@ -177,49 +251,69 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         String mensagem = tpMensagem;
         String nmPatriminio = maintenance.getPatrimony().getNmPatrimonio();
         String tpManutencao = maintenance.getTpManutencao().getValue();
-        String motivo = UtilObjeto.isNotEmpty(maintenance.getDsMotivoManutencao()) ? maintenance.getDsMotivoManutencao() : UtilString.EMPTY ;
-        String descricao = UtilObjeto.isNotEmpty(maintenance.getDsObservacao()) ? maintenance.getDsObservacao() : UtilString.EMPTY ;
-        String valor = UtilObjeto.isNotEmpty(maintenance.getVlManutencao()) ? UtilCast.toString(maintenance.getVlManutencao()) : UtilString.EMPTY;
+        String motivo = UtilObjeto.isNotEmpty(maintenance.getDsMotivoManutencao()) ? maintenance.getDsMotivoManutencao()
+                : UtilString.EMPTY;
+        String descricao = UtilObjeto.isNotEmpty(maintenance.getDsObservacao()) ? maintenance.getDsObservacao()
+                : UtilString.EMPTY;
+        String valor = UtilObjeto.isNotEmpty(maintenance.getVlManutencao())
+                ? UtilCast.toString(maintenance.getVlManutencao())
+                : UtilString.EMPTY;
         String nmFornecedor = maintenance.getFornecedor().getNmName();
 
         mensagem = mensagem.replaceAll(NM_PATRIMONIO, nmPatriminio);
         StringBuilder detalhes = new StringBuilder();
 
         if (UtilString.isNotEmpty(nmPatriminio))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Patrimônio: </b>" + nmPatriminio));
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Patrimônio: </b>" + nmPatriminio) + UtilString.PONTO);
 
         if (UtilString.isNotEmpty(dtPrevisao))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Data de Previsão Manutenção: </b>" + dtPrevisao));
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Data de Previsão Manutenção: </b>" + dtPrevisao + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(dtInicio))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Data Início da Manutenção: </b>" + dtInicio));
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Data Início da Manutenção: </b>" + dtInicio + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(dtFim))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Data Fim da Manutenção: </b>" + dtFim));
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Data Fim da Manutenção: </b>" + dtFim + UtilString.PONTO));
 
-         if (UtilString.isNotEmpty(nmFornecedor))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Forncedor: </b>" + nmFornecedor));
+        if (UtilString.isNotEmpty(nmFornecedor))
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Forncedor: </b>" + nmFornecedor + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(tpManutencao))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Tipo de Manutenção: </b>" + tpManutencao));
-        
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Tipo de Manutenção: </b>" + tpManutencao + UtilString.PONTO));
+
         if (UtilString.isNotEmpty(valor) && !valor.equalsIgnoreCase("0.0"))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Valor da Manutenção:</b> " + valor));
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Valor da Manutenção:</b> " + valor + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(motivo))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Motivo:</b> " + motivo));
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Motivo:</b> " + motivo + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(descricao))
-            detalhes.append(itemLista.replace(TEXTO, "<b>Observações:</b> " + descricao));
-        
+            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Observações:</b> " + descricao + UtilString.PONTO));
 
-        String detalhesPatrimonio = listNaoOrdenada.replace(CONTEUDO, detalhes.toString());
+        String detalhesPatrimonio = LISTA_NAO_ORDENADA.replace(CONTEUDO, detalhes.toString());
         mensagem = mensagem.concat(detalhesPatrimonio);
 
         return mensagem;
     }
 
-    private void enviarEmailAdministrador(User administrador, String template, String mensagem) {
+    private void enviarEmailAdministradores(Requests requests, String mensagem) {
+
+        List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
+        Construction obra = requests.getConstruction();
+        String corpo = mensagem.replace(NM_OBRA, obra.getNmObra());
+        String detalhesObra = montaDetalhesObra(obra);
+        String listaPatrimonios = listarPatrimoniosRequisicao(requests.getPatrimonies());
+
+        StringBuilder retorno = new StringBuilder();
+        retorno.append(corpo).append(detalhesObra).append(listaPatrimonios);
+
+        for (User administrador : administradores) {
+            enviarEmailAdministrador(administrador, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO, retorno.toString());
+        }
+
+    }
+
+    private void enviarEmailAdministrador(User administrador, String template, String assunto, String mensagem) {
         String emailText = template;
         String saudacao = montarTitulo(administrador);
         String email = obtemEmailUsuario(administrador);
@@ -227,7 +321,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, mensagem);
 
-        sendRegistrationEmail(email, ASSUNTO_EMAIL_MANUTENCAO, emailText);
+        sendRegistrationEmail(email, MSG_ASSUNTO_REQUISICAO, emailText);
     }
 
     private String montarTitulo(User usuario) {
@@ -245,9 +339,10 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
 
     private String montaMensagemNovaAlocacao(Allocation allocation, String mensagem) {
         Department departamento = allocation.getDepartamento();
-        
+
         StringBuilder retorno = new StringBuilder();
-        retorno.append("<p>").append(mensagem.replace(NM_DEPARTAMENTO, departamento.getNmDepartamento())).append("</p>");
+        retorno.append("<p>").append(mensagem.replace(NM_DEPARTAMENTO, departamento.getNmDepartamento()))
+                .append("</p>");
         retorno.append(listarPatrimonios(obtemListaPatrimonios(allocation)));
 
         return retorno.toString();
@@ -277,13 +372,50 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         return retorno.toString();
     }
 
+    private String listarPatrimoniosRequisicao(List<RequestPatrimony> requestPatrimonies) {
+        StringBuilder conteudo = new StringBuilder();
+        for (RequestPatrimony requestPatrimony : requestPatrimonies) {
+            String div = DIV.replace(CONTEUDO, criaItemRequisicao(requestPatrimony));
+            conteudo.append(ITEM_LISTA_COM_BORDA.replace(TEXTO, div));
+        }
+        String retorno = LISTA_NAO_ORDENADA.replace(CONTEUDO, conteudo.toString());
+
+        return retorno;
+    }
+
+    private String criaItemRequisicao(RequestPatrimony requestPatrimony) {
+        String dataPrevisaoRetirada = UtilObjeto.isNotEmpty(requestPatrimony.getDtPrevisaoRetirada())
+                ? UtilData.toString(requestPatrimony.getDtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA)
+                : UtilString.EMPTY;
+        String dataRetirada = UtilObjeto.isNotEmpty(requestPatrimony.getDtRetirada())
+                ? UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA)
+                : UtilString.EMPTY;
+        String dataDevolucao = UtilObjeto.isNotEmpty(requestPatrimony.getDtDevolucao())
+                ? UtilData.toString(requestPatrimony.getDtDevolucao(), UtilData.FORMATO_DDMMAA)
+                : UtilString.EMPTY;
+        String nmPatrimonio = requestPatrimony.getPatrimony().getNmPatrimonio();
+
+        StringBuilder retorno = new StringBuilder();
+        if (UtilString.isNotEmpty(nmPatrimonio))
+            retorno.append(SPAN.replace(CONTEUDO, "<b>Patrimonio:</b> " + nmPatrimonio)).append("<br/>");
+        if (UtilString.isNotEmpty(dataPrevisaoRetirada))
+            retorno.append(SPAN.replace(CONTEUDO, "<b>Previsão de Retirada:</b> " + dataPrevisaoRetirada)).append("<br/>");
+        if (UtilString.isNotEmpty(dataRetirada))
+            retorno.append(SPAN.replace(CONTEUDO, "<b>Data de Retirada:</b> " + dataRetirada)).append("<br/>");
+        if (UtilString.isNotEmpty(dataDevolucao))
+            retorno.append(SPAN.replace(CONTEUDO, "<b>Data de Devolução:</b> " + dataDevolucao)).append("<br/>");
+
+        return retorno.toString();
+
+    }
+
     private String obtemEmailUsuario(User usuario) {
         Contacts contato = usuario.getContacts().stream().filter(c -> TypeContacts.EMAIL.equals(c.getTypeContacts()))
                 .findFirst().orElseThrow(() -> new IllegalRequestException("E-mail inválido!"));
         return contato.getDsContato();
     }
 
-    private List<Patrimony> obtemListaPatrimonios(Allocation allocation){
+    private List<Patrimony> obtemListaPatrimonios(Allocation allocation) {
         List<AllocationPatrimony> aps = allocation.getPatrimonios();
         List<Patrimony> patrimonies = new ArrayList<>();
 

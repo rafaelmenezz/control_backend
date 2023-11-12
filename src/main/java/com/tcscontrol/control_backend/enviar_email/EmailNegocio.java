@@ -7,6 +7,7 @@ import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+import com.tcscontrol.control_backend.requests.model.entity.Requests;
 
 public interface EmailNegocio {
 
@@ -16,6 +17,7 @@ public interface EmailNegocio {
 
     public final String NM_PATRIMONIO = "NM_PATRIMONIO";
     public final String NM_DEPARTAMENTO = "NM_DEPARTAMENTO";
+    public final String NM_OBRA = "NM_OBRA";
 
     public final String MSG_BOAS_VINDAS = "Bem-vindo!";
 
@@ -24,7 +26,9 @@ public interface EmailNegocio {
 
     public final String MSG_NOVA_ALOCACAO = "Sua alocação para <b> NM_DEPARTAMENTO </b> foi registrada com sucesso, segue os patrimônios alocados:";
     public final String MSG_DEVOLVER_ALOCACAO = "Os patrimônios foram devolvidos com sucesso, segue os patrimonios devolvidos:";
-    public final  String MSG_ASSUNTO_ALOCACAO = "Alocação registrada com sucesso | NÃO-RESPONDER!";
+    public final String MSG_ASSUNTO_ALOCACAO = "Nova Alocação";
+
+    public final String MSG_ASSUNTO_REQUISICAO = "Nova Requisição de Equipamentos";
 
     public final String MSG_AGENDAR_MANUTENCAO = "Manutenção do patrimonônio NM_PATRIMONIO foi agendado, segue os dados:";
     public final String MSG_INICIAR_MANUTENCAO = "Manutenção do patrimonônio NM_PATRIMONIO foi iniciada, segue os dados:";
@@ -40,6 +44,7 @@ public interface EmailNegocio {
     void enviarEmailFinalizarManutencao(Maintenance maintenance);
     void enviarEmailCancelarManutencao(Maintenance maintenance);
     void enviarEmailAlocacao(Allocation allocation, String mensagem);
+    void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm);
 
 
 

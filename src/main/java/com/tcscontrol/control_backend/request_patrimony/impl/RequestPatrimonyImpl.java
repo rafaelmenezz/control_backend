@@ -10,6 +10,7 @@ import com.tcscontrol.control_backend.constructions.ConstructionNegocio;
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -33,6 +34,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
     private RequestPatrimonyRepository requestPatrimonyRepository;
     private ConstructionNegocio constructionNegocio;
     private PatrimonyNegocio patrimonyNegocio;
+    private EmailNegocio emailNegocio;
 
     @Override
     public RequestResponse addNewRequest(RequestsDTO requestsDTO) {
@@ -55,6 +57,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
         requests.getPatrimonies().addAll(rps);
+        emailNegocio.enviarEmailRequisicoes(requests, MSG_EMAIL_SOLICITAR_REQUISICAO, MSG_NOVA_REQUISICAO_ADMIN);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
 
@@ -76,6 +79,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
         requestPatrimonyRepository.saveAll(rps);
+        emailNegocio.enviarEmailRequisicoes(requests, MSG_EMAIL_RETIRADA_REQUISICAO, MSG_RETIRADA_REQUISICAO_ADMIN);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
 
@@ -99,6 +103,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
         requestPatrimonyRepository.saveAll(rps);
+        emailNegocio.enviarEmailRequisicoes(requests, MSG_EMAIL_DEVOLUCAO_REQUISICAO, MSG_DEVOLUCAO_REQUISICAO_ADMIN);
         return requestNegocio.toResponse(salvaRequests(requests));
 
     }
@@ -124,6 +129,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
         requests.getPatrimonies().addAll(rps);
+        emailNegocio.enviarEmailRequisicoes(requests, MSG_EMAIL_REJEITADA_REQUISICAO, MSG_REJEITA_REQUISICAO_ADMIN);
         return requestNegocio.toResponse(salvaRequests(requests));
     }
 

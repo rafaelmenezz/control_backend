@@ -66,8 +66,13 @@ public interface TemplateEmail {
 
                     .msg-corpo > ul{
                         list-style: circle;
+                        width: 100%;
                         margin-bottom: 3%;
                         margin-left: 3%;
+                    }
+
+                    .msg-corpo > ul{
+                        width: 100%;
                     }
 
                     p.saudacao{

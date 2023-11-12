@@ -31,12 +31,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
+// @SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
 @Table(name = "USUARIO")
 @EqualsAndHashCode(callSuper = false)
-public class User extends Pessoa implements UserDetails{
+public class User extends Pessoa implements UserDetails {
 
-    @Column(name="nr_matricula")
+    @Column(name = "nr_matricula")
     private String nrMatricula;
 
     @Column(name = "nm_senha")
@@ -52,13 +52,14 @@ public class User extends Pessoa implements UserDetails{
     private Boolean primeiroAcesso = Boolean.TRUE;
 
     @NotNull
-    @Column(name= "tp_usuario", length = 15)
+    @Column(name = "tp_usuario", length = 15)
     @Convert(converter = TypeUserConverter.class)
     private TypeUser typeUser = TypeUser.REQUISITANTE;
 
     @Builder
-    public User(Long id, String nmName, DocumentoType documentoType, Status status, 
-    List<Contacts> contacts, String nrMatricula,String nmSenha, String nrCPF, String ftFoto, TypeUser typeUser) {
+    public User(Long id, String nmName, DocumentoType documentoType, Status status,
+            List<Contacts> contacts, String nrMatricula, String nmSenha, String nrCPF, String ftFoto,
+            TypeUser typeUser) {
         super(id, nmName, documentoType, status, contacts);
         this.nrMatricula = nrMatricula;
         this.nmSenha = nmSenha;
@@ -70,8 +71,10 @@ public class User extends Pessoa implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.typeUser == TypeUser.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.typeUser == TypeUser.ADMIN || this.typeUser == TypeUser.GESTOR)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
