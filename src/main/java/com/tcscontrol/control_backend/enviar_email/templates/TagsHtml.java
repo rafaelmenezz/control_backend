@@ -10,5 +10,5 @@ public interface TagsHtml {
 
     String LISTA_NAO_ORDENADA = "<ul style='list-style: none; margin-top: 5px'> CONTEUDO </ul>";
     String ITEM_LISTA = "<li style='padding: 1px;'>TEXTO</li>";
-    String ITEM_LISTA_COM_BORDA = "<li style='border-left: 5px solid #1c5edb; padding: 1px; margin-top: 2px'>TEXTO</li>";
+    String ITEM_LISTA_COM_BORDA = "<li style='border-left: 5px solid #1c5edb; padding: 1px; padding-left: 5px; margin-top: 2px'>TEXTO</li>";
 }

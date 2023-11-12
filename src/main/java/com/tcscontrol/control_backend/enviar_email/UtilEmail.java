@@ -341,8 +341,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         Department departamento = allocation.getDepartamento();
 
         StringBuilder retorno = new StringBuilder();
-        retorno.append("<p>").append(mensagem.replace(NM_DEPARTAMENTO, departamento.getNmDepartamento()))
-                .append("</p>");
+        retorno.append(PARAGRAFO.replace(TEXTO, mensagem.replace(NM_DEPARTAMENTO, departamento.getNmDepartamento())));
         retorno.append(listarPatrimonios(obtemListaPatrimonios(allocation)));
 
         return retorno.toString();
@@ -352,7 +351,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
     private String montaMensagemDevolucaoAlocacao(String patrimonios) {
         StringBuilder retorno = new StringBuilder();
 
-        retorno.append("<p>").append(MSG_DEVOLVER_ALOCACAO).append("</p>");
+        retorno.append(PARAGRAFO.replace(TEXTO, MSG_DEVOLVER_ALOCACAO));
         retorno.append(patrimonios);
 
         return retorno.toString();
@@ -361,15 +360,12 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
 
     private String listarPatrimonios(List<Patrimony> patrimonies) {
         StringBuilder retorno = new StringBuilder();
-
-        retorno.append("<ul>");
-
         for (Patrimony patrimony : patrimonies) {
-            retorno.append("<li>").append(patrimony.getNmPatrimonio()).append(";</li>");
+            retorno.append(ITEM_LISTA_COM_BORDA.replace(TEXTO, patrimony.getId() + UtilString.TRACO +patrimony.getNmPatrimonio()));
         }
-        retorno.append("</ul>");
 
-        return retorno.toString();
+        String texto = LISTA_NAO_ORDENADA.replace(CONTEUDO, retorno.toString());
+        return texto;
     }
 
     private String listarPatrimoniosRequisicao(List<RequestPatrimony> requestPatrimonies) {
