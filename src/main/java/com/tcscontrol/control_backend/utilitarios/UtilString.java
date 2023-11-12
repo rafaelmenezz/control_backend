@@ -23,6 +23,10 @@ public class UtilString {
         return isNuloOuBranco(objeto);
     }
 
+    public static boolean isNotEmpty(Object objeto) {
+        return !isNuloOuBranco(objeto);
+    }
+
 
     public static boolean isZero(Object objeto) {
         return isNuloOuBranco(objeto) || objeto.toString().trim().equals(ZERO_INT) || objeto.toString().trim().equals(ZERO_DOUBLE);

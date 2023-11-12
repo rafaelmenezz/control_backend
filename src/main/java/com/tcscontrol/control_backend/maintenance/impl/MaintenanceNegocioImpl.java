@@ -11,6 +11,7 @@ import com.tcscontrol.control_backend.allocation_patrimony.model.entity.Allocati
 import com.tcscontrol.control_backend.enuns.MaintenanceStatus;
 import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.maintenance.MaintenanceNegocio;
@@ -25,6 +26,7 @@ import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
+import com.tcscontrol.control_backend.utilitarios.UtilString;
 
 import lombok.AllArgsConstructor;
 
@@ -37,6 +39,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
       private FornecedorNegocio fornecedorNegocio;
       private PatrimonyNegocio patrimonyNegocio;
       private AllocationPatrimonyNegocio allocationPatrimonyNegocio;
+      private EmailNegocio emailNegocio;
 
       @Override
       public List<MaintenanceDTO> list() {
@@ -57,8 +60,13 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
       public MaintenanceDTO create(MaintenanceDTO maintenanceDTO) {
             Fornecedor f = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony p = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
+            Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, f, p);
+            f.getMaintenances().add(maintenance);
+            maintenance = maintenanceRepository.save(maintenance);
+            fornecedorNegocio.cadastrarFornecedor(f);
 
-            return maintenanceMapper.toDto(maintenanceRepository.save(maintenanceMapper.toEntity(maintenanceDTO, f, p)),
+            emailNegocio.enviarEmailAgendaManutencao(maintenance);
+            return maintenanceMapper.toDto(maintenance,
                         patrimonyNegocio.toDTO(p));
       }
 
@@ -111,6 +119,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             maintenance.setMaintenanceStatus(MaintenanceStatus.EM_EXECUCAO);
             maintenance = alterar(id, maintenance);
             patrimony = atualizarPatrimonio(patrimony);
+            emailNegocio.enviarEmailIniciarManutencao(maintenance);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
 
@@ -123,11 +132,12 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
             maintenance = alterar(id, maintenance);
             if (patrimony.getFixo()) {
-                patrimony.setTpSituacao(SituationType.ALOCADO);  
-            }else{
-                patrimony.setTpSituacao(SituationType.DISPONIVEL);    
+                  patrimony.setTpSituacao(SituationType.ALOCADO);
+            } else {
+                  patrimony.setTpSituacao(SituationType.DISPONIVEL);
             }
             patrimony = atualizarPatrimonio(patrimony);
+            emailNegocio.enviarEmailFinalizarManutencao(maintenance);
             return maintenanceMapper.toDto(maintenance, patrimonyNegocio.toDTO(maintenance.getPatrimony()));
       }
 
@@ -136,26 +146,33 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             validarItem(maintenanceDTO.observation(), EXCEPTION_MSG_ERRO_OBSERVATION_NOT_NULL);
             Fornecedor fornecedor = obtemFornecedor(maintenanceDTO.nmFornecedor(), maintenanceDTO.nrCnpj());
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
-            
+
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setDtFim(new Date());
             maintenance.setTpStatus(Status.INACTIVE);
             maintenance.setMaintenanceStatus(MaintenanceStatus.CANCELADA);
             maintenance = alterar(id, maintenance);
-             if (patrimony.getFixo() && patrimonioAlocado(patrimony.getId())) {
-                patrimony.setTpSituacao(SituationType.ALOCADO);  
-            }else{
-                patrimony.setTpSituacao(SituationType.DISPONIVEL);    
+            if (patrimony.getFixo() && patrimonioAlocado(patrimony.getId())) {
+                  patrimony.setTpSituacao(SituationType.ALOCADO);
+            } else {
+                  patrimony.setTpSituacao(SituationType.DISPONIVEL);
             }
+            String mensagemCancelamento = UtilString.isNotEmpty(maintenance.getDsObservacao()) ? maintenance.getDsObservacao() : UtilString.EMPTY;
+            maintenance.setDsObservacao(mensagemCancelamento.concat(MSG_CANCELAMENTO_MANUTENCAO));
             patrimony = atualizarPatrimonio(patrimony);
+
+            emailNegocio.enviarEmailCancelarManutencao(maintenance);
       }
 
       private Fornecedor obtemFornecedor(String nome, String cnpj) {
-            Fornecedor f = fornecedorNegocio.obtemFornecedor(cnpj);
+            Fornecedor f = fornecedorNegocio.pesquisaFornecedorCnpj(cnpj);
 
-            f.setNmName(nome);
-            f.setNrCnpj(cnpj);
-            f = fornecedorNegocio.cadastrarFornecedor(f);
+            if (UtilObjeto.isEmpty(f)) {
+                  f = new Fornecedor();
+                  f.setNmName(nome);
+                  f.setNrCnpj(cnpj);
+                  f = fornecedorNegocio.cadastrarFornecedor(f);
+            }
 
             return f;
       }
@@ -192,9 +209,9 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             return patrimonyNegocio.atualizaPatrimonio(patrimony);
       }
 
-      private Boolean patrimonioAlocado(Long id){
+      private Boolean patrimonioAlocado(Long id) {
             AllocationPatrimony ap = allocationPatrimonyNegocio.pesquisaAllocationPatrimonyPorId(id);
             return UtilObjeto.isEmpty(ap) ? Boolean.FALSE : Boolean.TRUE;
-      } 
+      }
 
 }

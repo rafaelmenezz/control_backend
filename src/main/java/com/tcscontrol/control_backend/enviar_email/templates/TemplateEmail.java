@@ -1,4 +1,4 @@
-package com.tcscontrol.control_backend.enviar_email;
+package com.tcscontrol.control_backend.enviar_email.templates;
 
 public interface TemplateEmail {
 
@@ -104,7 +104,7 @@ public interface TemplateEmail {
 
                     <div class="footer">
                         <ul>
-                            <li><b>CONTROL</b></li>
+                            <li><b>EQUIPE CONTROL</b></li>
                             <li>Gerenciador de Controle Patrimonial</li>
                             <li> <a> gcp.tcs.senac2023@gmail.com </a></li>
                             <li>48 93366 1122</li>

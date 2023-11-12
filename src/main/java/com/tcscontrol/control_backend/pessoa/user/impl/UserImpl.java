@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
+import com.tcscontrol.control_backend.enuns.TypeUser;
 import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
@@ -98,11 +99,10 @@ public class UserImpl implements UserNegocio {
     }
 
     @Override
-    public void register(UserSenhaDTO user) {
-        UserSenhaDTO userD = user;      
-        String email = userD.contacts().get(0).dsContato();
-        emailNegocio.enviarEmail(email, UtilControl.gerarSenha(8));
-        userMapper.toCreateDto(userRepository.save(userMapper.toRegisterEntity(user)));
+    public void register(UserSenhaDTO userD) {;      
+        User user = userMapper.toRegisterEntity(userD);
+        emailNegocio.enviarEmailNovoUsuario(user, UtilControl.gerarSenha(8));
+        userMapper.toCreateDto(userRepository.save(user));
     }
 
     private User pesquisarUserMatricula(String matricula) {
@@ -170,6 +170,11 @@ public class UserImpl implements UserNegocio {
 
     private User pesquisaPorId(Long id){
         return userRepository.findById(id).stream().findFirst().orElseThrow(()-> new IllegalRequestException("Usuario não encontrado!"));
+    }
+
+    @Override
+    public List<User> pesquisarPorTipoUser(TypeUser typeUser) {
+        return userRepository.findByTypeUser(typeUser);
     }
 }
 

@@ -23,6 +23,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -61,7 +62,8 @@ public class Maintenance implements Serializable {
       @Column(name = "vl_manutencao")
       private Double vlManutencao;
 
-      @Column(name = "ds_observacao")
+      @Lob
+      @Column(name = "ds_observacao", length = 3000)
       private String dsObservacao;
 
       @Column(name = "dt_agendamento")
@@ -88,24 +90,23 @@ public class Maintenance implements Serializable {
       private Fornecedor fornecedor = new Fornecedor();
 
       @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + Objects.hashCode(getId());
-		return result;
-	}
+      public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Objects.hashCode(getId());
+            return result;
+      }
 
-	@Override
-	public boolean equals(Object o) {
-		  if (this == o) {
-				return true;
-		  }
-		  if (o == null || getClass() != o.getClass()) {
-				return false;
-		  }
-
-		  Maintenance otherMaintenance = (Maintenance) o; 
-		  return id != null && id.equals(otherMaintenance.id);
-	}
+      @Override
+      public boolean equals(Object o) {
+            if (this == o) {
+                  return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                  return false;
+            }
+            Maintenance otherMaintenance = (Maintenance) o;
+            return id != null && id.equals(otherMaintenance.id);
+      }
 
 }
