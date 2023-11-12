@@ -6,9 +6,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class StorageProperties {
 
     private String location = "opt/imagens/user";
+	private String jasperDiretorio = "opt/relatorios/jasper";
 
 	public String getLocation() {
 		return location;
+	}
+
+	public String getJasperDiretorio() {
+		return jasperDiretorio;
 	}
 
 	public void setLocation(String location) {
