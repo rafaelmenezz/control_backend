@@ -54,14 +54,13 @@ public class AllocationPatrimonyNegocioImpl implements AllocationPatrimonyNegoci
         aps = salvaAllocationPatrimony(aps);
         allocation.getPatrimonios().addAll(aps);
 
-        User usuario = allocation.getDepartamento().getUser();
+        //User usuario = allocation.getDepartamento().getUser();
         allocation = allocationNegocio.salvaAllocation(allocation);
-        emailNegocio.enviarEmailNovaAlocacao(usuario, allocation.getDepartamento(),
-                obtemListPatrimonies(allocation.getPatrimonios()));
-
+        
         List<AllocationPatrimonyDTO> apDTO = allocation.getPatrimonios().stream().map(allocationPatrimonyMapper::toDTO)
                 .collect(Collectors.toList());
 
+        emailNegocio.enviarEmailAlocacao(allocation, MSG_EMAIL_NOVA_ALOCACAO);
         return new AllocationResponse(
                 allocation.getId(),
                 departmentMapper.toDTO(allocation.getDepartamento()),

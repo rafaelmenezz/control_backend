@@ -6,6 +6,8 @@ import com.tcscontrol.control_backend.allocation_patrimony.model.entity.Allocati
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 
 public interface AllocationPatrimonyNegocio extends AllocationPatrimonyService  {
+
+    String MSG_EMAIL_NOVA_ALOCACAO = "Sua alocação para <b> NM_DEPARTAMENTO </b> foi registrada com sucesso, segue os patrimônio(s) alocado(s):";
  
     List<Patrimony> obtemListPatrimonies(List<AllocationPatrimony> list);
 

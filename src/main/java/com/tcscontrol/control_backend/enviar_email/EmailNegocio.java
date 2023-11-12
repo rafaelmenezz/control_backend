@@ -2,6 +2,7 @@ package com.tcscontrol.control_backend.enviar_email;
 
 import java.util.List;
 
+import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.model.entity.Department;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -14,6 +15,7 @@ public interface EmailNegocio {
     public final String EXCEPTION_MSG_ERRO_EMAIL_ADMINISTRADOR_NAO_CADASTRADO = "Administrador não possui e-mail cadastrado!";
 
     public final String NM_PATRIMONIO = "NM_PATRIMONIO";
+    public final String NM_DEPARTAMENTO = "NM_DEPARTAMENTO";
 
     public final String MSG_BOAS_VINDAS = "Bem-vindo!";
 
@@ -37,6 +39,7 @@ public interface EmailNegocio {
     void enviarEmailIniciarManutencao(Maintenance maintenance);
     void enviarEmailFinalizarManutencao(Maintenance maintenance);
     void enviarEmailCancelarManutencao(Maintenance maintenance);
+    void enviarEmailAlocacao(Allocation allocation, String mensagem);
 
 
 

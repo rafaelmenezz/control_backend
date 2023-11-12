@@ -1,5 +1,6 @@
 package com.tcscontrol.control_backend.enviar_email;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.ClassPathResource;
@@ -7,7 +8,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import com.tcscontrol.control_backend.allocation.AllocationRepository;
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.allocation_patrimony.AllocationPatrimonyRepository;
 import com.tcscontrol.control_backend.allocation_patrimony.model.entity.AllocationPatrimony;
@@ -71,11 +71,25 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
     public void enviarEmailNovaAlocacao(User usuario, Department department, List<Patrimony> patrimonies) {
         String emailText = TEMPLATE_EMAIL;
         String saudacao = montarTitulo(usuario);
-        String mensagem = montaMensagemNovaAlocacao(department.getNmDepartamento(), listarPatrimonios(patrimonies));
+        String mensagem = "";
+        //String mensagem = montaMensagemNovaAlocacao(department.getNmDepartamento(), listarPatrimonios(patrimonies));
         String email = obtemEmailUsuario(usuario);
 
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, mensagem);
+        sendRegistrationEmail(email, MSG_ASSUNTO_ALOCACAO, emailText);
+    }
+
+    @Override
+    public void enviarEmailAlocacao(Allocation allocation, String mensagem) {
+        User usuario = allocation.getDepartamento().getUser();
+        String emailText = TEMPLATE_EMAIL;
+        String saudacao = montarTitulo(usuario);
+        String corpo = montaMensagemNovaAlocacao(allocation, mensagem);
+        String email = obtemEmailUsuario(usuario);
+
+        emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
+        emailText = emailText.replace(TEMPLATE_MENSAGEM, corpo);
         sendRegistrationEmail(email, MSG_ASSUNTO_ALOCACAO, emailText);
     }
 
@@ -229,11 +243,12 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         return mensagem;
     }
 
-    private String montaMensagemNovaAlocacao(String departamento, String patrimonios) {
+    private String montaMensagemNovaAlocacao(Allocation allocation, String mensagem) {
+        Department departamento = allocation.getDepartamento();
+        
         StringBuilder retorno = new StringBuilder();
-
-        retorno.append("<p>").append(MSG_NOVA_ALOCACAO.replace("NM_DEPARTAMENTO", departamento)).append("</p>");
-        retorno.append(patrimonios);
+        retorno.append("<p>").append(mensagem.replace(NM_DEPARTAMENTO, departamento.getNmDepartamento())).append("</p>");
+        retorno.append(listarPatrimonios(obtemListaPatrimonios(allocation)));
 
         return retorno.toString();
 
@@ -266,6 +281,17 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         Contacts contato = usuario.getContacts().stream().filter(c -> TypeContacts.EMAIL.equals(c.getTypeContacts()))
                 .findFirst().orElseThrow(() -> new IllegalRequestException("E-mail inválido!"));
         return contato.getDsContato();
+    }
+
+    private List<Patrimony> obtemListaPatrimonios(Allocation allocation){
+        List<AllocationPatrimony> aps = allocation.getPatrimonios();
+        List<Patrimony> patrimonies = new ArrayList<>();
+
+        for (AllocationPatrimony allocationPatrimony : aps) {
+            patrimonies.add(allocationPatrimony.getPatrimony());
+        }
+        return patrimonies;
+
     }
 
 }
