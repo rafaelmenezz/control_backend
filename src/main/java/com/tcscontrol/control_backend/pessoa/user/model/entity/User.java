@@ -42,7 +42,7 @@ public class User extends Pessoa implements UserDetails {
     @Column(name = "nm_senha")
     private String nmSenha;
 
-    @Column(name = "nr_cpf")
+    @Column(name = "nr_cpf", unique = true)
     private String nrCpf;
 
     @Column(name = "ft_foto")

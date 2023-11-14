@@ -130,6 +130,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
             Patrimony patrimony = patrimonyNegocio.toEntity(maintenanceDTO.patrimony());
             Maintenance maintenance = maintenanceMapper.toEntity(maintenanceDTO, fornecedor, patrimony);
             maintenance.setMaintenanceStatus(MaintenanceStatus.EXECUTADA);
+            maintenance.setTpStatus(Status.INACTIVE);
             maintenance = alterar(id, maintenance);
             if (patrimony.getFixo()) {
                   patrimony.setTpSituacao(SituationType.ALOCADO);

@@ -92,6 +92,9 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         List<Patrimony> patrimonies = new ArrayList<>();
         for (RequestPatrimony rp : rps) {
             Patrimony patrimony = rp.getPatrimony();
+            if (!SituationType.DISPONIVEL.equals(patrimony.getTpSituacao())) {
+                 throw new IllegalRequestException(MSG_ERRO_PATRIMONIO_NÃO_DISPONIVEL.replace(NM_PATRIMONIO, patrimony.getNmPatrimonio()));
+            }
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtDevolucao(new Date());
@@ -152,8 +155,8 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         if (UtilObjeto.isEmpty(requestsDTO.obra())) {
             throw new IllegalRequestException("Obra não informado!");
         }
-
     }
+
 
     private void validarDataManutencao(Integer action, RequestsDTO requestsDTO) {
         switch (action) {
