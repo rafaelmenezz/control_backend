@@ -59,15 +59,28 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
 
     }
 
+    @Override
     public void enviarEmailNovoUsuario(User usuario, String senha) {
         String emailText = TEMPLATE_EMAIL;
         String saudacao = montarTitulo(usuario);
-        String mensagem = montaMensagemNovoUsuario(senha);
+        String mensagem = montaMensagemNovoUsuario(senha, MSG_NOVO_USUARIO);
         String email = obtemEmailUsuario(usuario);
 
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, "<p>" + mensagem + "</p>");
         sendRegistrationEmail(email, MSG_BOAS_VINDAS, emailText);
+    }
+
+    @Override
+    public void enviarEmailRecupearSenha(User usuario, String senha) {
+        String emailText = TEMPLATE_EMAIL;
+        String saudacao = montarTitulo(usuario);
+        String mensagem = montaMensagemNovoUsuario(senha, MSG_RECUPERACÃO_SENHA);
+        String email = obtemEmailUsuario(usuario);
+
+        emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
+        emailText = emailText.replace(TEMPLATE_MENSAGEM, "<p>" + mensagem + "</p>");
+        sendRegistrationEmail(email, MSG_ASSUNTO_RECUPERAR_SENHA, emailText);
     }
 
     @Override
@@ -330,8 +343,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         return titulo;
     }
 
-    private String montaMensagemNovoUsuario(String senha) {
-        String mensagem = MSG_NOVO_USUARIO;
+    private String montaMensagemNovoUsuario(String senha, String mensagem) {
         mensagem = mensagem.replace("SENHA_ACESSO", "<b>" + senha + "</b>");
 
         return mensagem;

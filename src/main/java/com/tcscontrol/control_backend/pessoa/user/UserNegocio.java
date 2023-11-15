@@ -7,6 +7,8 @@ import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 public interface UserNegocio extends UserService {
 
+    public static final String MSG_USER_NOT_FOUND = "Usuário não encontrado!";
+
     User obtemUsuarioPorId(Long id);
 
     List<User> pesquisarPorTipoUser(TypeUser typeUser);

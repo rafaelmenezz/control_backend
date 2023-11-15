@@ -20,9 +20,12 @@ public interface EmailNegocio {
     public final String NM_OBRA = "NM_OBRA";
 
     public final String MSG_BOAS_VINDAS = "Bem-vindo!";
+    public final String MSG_ASSUNTO_RECUPERAR_SENHA = "Recuperação de Senha!";
 
     public final String TITULO_NOVO_USUARIO = "Prezado(a) NM_USUARIO,";
     public final String MSG_NOVO_USUARIO = "Sua senha de acesso é SENHA_ACESSO. Será necessário efetuar a substituição da senha no primeiro acesso.";
+
+    public final String MSG_RECUPERACÃO_SENHA = "<h3>Foi aberto uma solicitação de recuperação de senha.</h3> Sua senha temporária é SENHA_ACESSO. Necessário cadastrar uma nova da senha ao realizar login.";
 
     public final String MSG_NOVA_ALOCACAO = "Sua alocação para <b> NM_DEPARTAMENTO </b> foi registrada com sucesso, segue os patrimônios alocados:";
     public final String MSG_DEVOLVER_ALOCACAO = "Os patrimônios foram devolvidos com sucesso, segue os patrimonios devolvidos:";
@@ -37,6 +40,7 @@ public interface EmailNegocio {
     public final String ASSUNTO_EMAIL_MANUTENCAO = "Manutenção!";
     
     void enviarEmailNovoUsuario(User usuario, String senha);
+    void enviarEmailRecupearSenha(User usuario, String senha);
     void enviarEmailNovaAlocacao(User usuario, Department department, List<Patrimony> patrimonies);
     void enviarEmailDevolucaoAlocacao(User usuario, List<Patrimony> patrimonies);
     void enviarEmailAgendaManutencao(Maintenance maintenance);

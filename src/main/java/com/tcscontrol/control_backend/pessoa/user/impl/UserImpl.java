@@ -10,6 +10,7 @@ import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.RecoverPassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.ReqUpdatePassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
@@ -169,12 +170,31 @@ public class UserImpl implements UserNegocio {
     }
 
     private User pesquisaPorId(Long id){
-        return userRepository.findById(id).stream().findFirst().orElseThrow(()-> new IllegalRequestException("Usuario não encontrado!"));
+        return userRepository.findById(id).stream().findFirst().orElseThrow(()-> new IllegalRequestException(MSG_USER_NOT_FOUND));
     }
 
     @Override
     public List<User> pesquisarPorTipoUser(TypeUser typeUser) {
         return userRepository.findByTypeUser(typeUser);
+    }
+
+    @Override
+    public void recoverPassword(RecoverPassword recoverPassword) {
+        User user = obtemUsuarioPorEmail(recoverPassword.email());
+
+        if(UtilObjeto.isEmpty(user))
+            throw new IllegalRequestException(MSG_USER_NOT_FOUND);
+
+        String novaSenha =  UtilControl.gerarSenha(8);
+        user.setNmSenha(config.passwordEncoder().encode(novaSenha));
+        user.setPrimeiroAcesso(Boolean.TRUE);
+        userRepository.save(user);
+
+        emailNegocio.enviarEmailRecupearSenha(user, novaSenha);
+    }
+
+    private User obtemUsuarioPorEmail(String email){
+        return userRepository.obtemUsuarioPorEmail(email);
     }
 }
 

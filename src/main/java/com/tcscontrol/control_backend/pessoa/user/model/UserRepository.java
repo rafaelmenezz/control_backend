@@ -23,6 +23,13 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     List<User> findByTypeUser(TypeUser typeUser);
 
+
+    @Query("SELECT u " + //
+    "FROM User u " + //
+    "JOIN Contacts c ON u.id = c.pessoa.id " + //
+    "WHERE c.dsContato = :email")
+    User obtemUsuarioPorEmail(String email);
+
     
 
 }

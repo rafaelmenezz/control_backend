@@ -2,6 +2,7 @@ package com.tcscontrol.control_backend.pessoa.user;
 
 import java.util.List;
 
+import com.tcscontrol.control_backend.pessoa.user.model.dto.RecoverPassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.ReqUpdatePassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
@@ -39,5 +40,7 @@ public interface UserService {
     UserDetails userLogin(String login);
 
     User obtemUserMatricula(String matricula);
+
+    void recoverPassword(RecoverPassword recoverPassword);
 
 }

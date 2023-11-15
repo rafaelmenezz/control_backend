@@ -9,6 +9,7 @@ import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.file.StorageService;
 import com.tcscontrol.control_backend.file.model.dto.FileDTO;
 import com.tcscontrol.control_backend.pessoa.user.UserService;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.RecoverPassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.ReqUpdatePassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
@@ -45,7 +46,7 @@ import lombok.AllArgsConstructor;
 
 @Validated
 @RestController
-@SecurityRequirement(name = "Bearer Authentication")
+
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
@@ -54,17 +55,20 @@ public class UserController {
     private final StorageService storageService;
 
     @GetMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public List<UserCreateDTO> list() {
         return userService.list();
     }
 
     @GetMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public UserCreateDTO findById(@PathVariable @NotNull @Positive Long id) {
         return userService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
+    @SecurityRequirement(name = "Bearer Authentication")
     public UserCreateDTO create(@RequestBody UserCreateDTO userCreateDto) {
         String password = UtilControl.gerarSenha(8);
         UserDTO userDTO = new UserDTO(userCreateDto.id(),
@@ -81,24 +85,28 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public UserCreateDTO update(@PathVariable Long id, @RequestBody @Valid UserCreateDTO userCreateDto) {
         return userService.update(id, userCreateDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "Bearer Authentication")
     public void delete(@PathVariable @NotNull @Positive Long id) {
         userService.delete(id);
     }
 
     @PutMapping("/{id}/change-password")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @SecurityRequirement(name = "Bearer Authentication")
     public void updatePassword(@PathVariable Long id, @RequestBody ReqUpdatePassword data) {
         userService.updatePassword(id, data);
     }
 
     @GetMapping("/{id}/photo")
     @ResponseBody
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Resource> serveFile(@PathVariable @NotNull @Positive Long id) {
 
         Resource file = storageService.loadAsResource(id);
@@ -108,6 +116,7 @@ public class UserController {
 
     @GetMapping("/{id}/foto")
     @ResponseBody
+    @SecurityRequirement(name = "Bearer Authentication")
     public void load(HttpServletResponse response, @PathVariable @NotNull @Positive Long id) throws IOException {
         Resource imageResource = storageService.loadAsResource(id);
         response.setContentType("image/jpeg");
@@ -119,9 +128,16 @@ public class UserController {
     }
 
     @PostMapping("/{id}/")
+    @SecurityRequirement(name = "Bearer Authentication")
     public FileDTO handleFileUpload(@RequestParam(name = "photo", required = true) MultipartFile file,
             @PathVariable @NotNull @Positive Long id) throws IOException {
         return storageService.store(file, id);
+    }
+
+    @PostMapping("/recover-password")
+    public void recoverPassword(@RequestBody RecoverPassword recoverPassword){
+        userService.recoverPassword(recoverPassword);
+        
     }
 
 }
