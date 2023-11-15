@@ -24,5 +24,5 @@ public record PatrimonyDTO (
     DepartmentDTO actualDepartment,
     ConstructionDTO actualConstruction,
     MaintenancePatrimonyDTO actualMaintenance, 
-    LossTheftDTO lossThef
+    LossTheftDTO lossTheft
 ){}
