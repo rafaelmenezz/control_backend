@@ -28,4 +28,6 @@ public interface PatrimonyService {
 
     public List<PatrimonyResponse> listPatrimoniesFixOrNotFix(String nmPatrimony,Boolean fixo);
 
+    public PatrimonyDTO createCasualytyPatrimonie(PatrimonyDTO patrimonyDTO);
+
 }

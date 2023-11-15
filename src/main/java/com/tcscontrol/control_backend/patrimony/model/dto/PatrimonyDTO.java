@@ -23,5 +23,6 @@ public record PatrimonyDTO (
     List<WarrantyDTO> warranties,
     DepartmentDTO actualDepartment,
     ConstructionDTO actualConstruction,
-    MaintenancePatrimonyDTO actualMaintenance
+    MaintenancePatrimonyDTO actualMaintenance, 
+    LossTheftDTO lossThef
 ){}

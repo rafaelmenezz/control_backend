@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.tcscontrol.control_backend.utilitarios;
 
 import com.tcscontrol.control_backend.enuns.DocumentoType;
@@ -149,6 +144,7 @@ public class UtilControl {
             case "Alocado" -> SituationType.ALOCADO;
             case "Registrado" -> SituationType.REGISTRADO;
             case "Em Manutenção" -> SituationType.EM_MANUTENCAO;
+            case "Perda/Roubo" -> SituationType.PERDA_ROUBO;
             default -> throw new IllegalArgumentException("Situação do património inválida!");
         };
     }

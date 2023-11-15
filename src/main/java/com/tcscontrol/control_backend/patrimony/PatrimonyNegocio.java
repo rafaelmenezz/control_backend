@@ -11,6 +11,8 @@ import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 @Component
 public interface PatrimonyNegocio extends PatrimonyService {
 
+    public static final String MSG_EXEPTION_ERRO_LOSS_THIEF_INVALID = "Dados do informados do patrimônio incorreto!";
+
     List<Patrimony> obtemPatrimonies(Long[] ids);
 
     Allocation actualAlocation(Long id);

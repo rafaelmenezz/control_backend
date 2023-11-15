@@ -99,4 +99,11 @@ public class PatrimonyController {
         }
         
     }
+
+    @PostMapping("/baixa-patrimonio")
+    public PatrimonyDTO addLostThief(@RequestBody PatrimonyDTO patrimonyDTO) {
+        
+        return null;
+    }
+    
 }

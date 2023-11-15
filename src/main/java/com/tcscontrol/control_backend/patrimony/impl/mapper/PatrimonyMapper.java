@@ -17,8 +17,10 @@ import com.tcscontrol.control_backend.enuns.Status;
 import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
+import com.tcscontrol.control_backend.patrimony.model.dto.LossTheftDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
+import com.tcscontrol.control_backend.patrimony.model.entity.LossTheft;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.fornecedor.Fornecedor;
 import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorNegocio;
@@ -165,7 +167,8 @@ public class PatrimonyMapper {
                 warrantys,
                 UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null,
                 UtilObjeto.isNotEmpty(construction) ? constructionMapper.toDto(construction) : null,
-                UtilObjeto.isNotEmpty(maintenance) ? maintenanceMapper.toMaintenancePatrimonyDTO(maintenance) : null);
+                UtilObjeto.isNotEmpty(maintenance) ? maintenanceMapper.toMaintenancePatrimonyDTO(maintenance) : null ,
+                lossTheftToDTO(patrimony.getLossTheft()));
     }
 
     public Patrimony toEntity(PatrimonyDTO patrimonyDTO) {
@@ -258,6 +261,35 @@ public class PatrimonyMapper {
 
         return patrimony;
 
+    }
+
+    public LossTheftDTO lossTheftToDTO(LossTheft lossTheft){
+
+        if (UtilObjeto.isEmpty(lossTheft)) {
+            return null;
+        }
+        return new LossTheftDTO(
+            lossTheft.getId(), 
+            lossTheft.getNmObservation(), 
+            UtilData.toString(lossTheft.getDtLost(), UtilData.FORMATO_DDMMAA));
+    }
+
+    public LossTheft lossTheftToEntity(LossTheftDTO lossTheftDTO, Patrimony patrimony){
+
+        if (UtilObjeto.isEmpty(lossTheftDTO)) {
+            return null;       
+        }
+        LossTheft lossTheft = new LossTheft();
+
+        if (UtilObjeto.isNotEmpty(lossTheftDTO.id())) {
+            lossTheft.setId(lossTheftDTO.id());
+        }
+
+        lossTheft.setDtLost(UtilData.toDate(lossTheftDTO.dtLost(), UtilData.FORMATO_DDMMAA));
+        lossTheft.setNmObservation(lossTheftDTO.observation());
+        lossTheft.setPatrimony(patrimony);
+
+        return lossTheft;
     }
 
 }

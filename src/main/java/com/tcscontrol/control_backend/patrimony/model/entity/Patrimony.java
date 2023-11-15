@@ -30,6 +30,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -99,6 +100,9 @@ public class Patrimony implements Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false, mappedBy = "patrimony")
 	private List<Maintenance> maintenances = new ArrayList<>();
+
+	@OneToOne(mappedBy = "patrimony")
+	private LossTheft lossTheft = new LossTheft();
 
 	@Override
 	public int hashCode() {

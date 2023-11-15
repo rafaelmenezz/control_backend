@@ -4,7 +4,8 @@ public enum SituationType {
     DISPONIVEL("Disponivel"), 
     ALOCADO("Alocado"), 
     REGISTRADO("Registrado"), 
-    EM_MANUTENCAO("Em Manutenção");
+    EM_MANUTENCAO("Em Manutenção"),
+    PERDA_ROUBO("Perda/Roubo");
 
     private String value;
 
