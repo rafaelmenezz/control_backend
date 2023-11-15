@@ -162,7 +162,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     }
 
     @Override
-    public PatrimonyDTO createCasualytyPatrimonie(PatrimonyDTO patrimonyDTO) {
+    public PatrimonyDTO addLostThieftPatrimony(PatrimonyDTO patrimonyDTO) {
         Patrimony patrimony = new Patrimony();
         if (isNotValidLowPatrimony(patrimonyDTO, patrimony)) {
             throw new IllegalRequestException(MSG_EXEPTION_ERRO_LOSS_THIEF_INVALID);
