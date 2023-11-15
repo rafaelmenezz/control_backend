@@ -62,7 +62,7 @@ public class PatrimonyMapper {
 
         Maintenance maintenance = patrimony.getMaintenances()
         .stream()
-        .filter(c-> Status.ACTIVE.equals(c.getTpStatus()))
+        .filter(c-> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
         .findFirst()
         .orElse(null);
 

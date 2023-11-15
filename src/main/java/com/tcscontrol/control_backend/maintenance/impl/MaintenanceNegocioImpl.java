@@ -190,6 +190,7 @@ public class MaintenanceNegocioImpl implements MaintenanceNegocio {
                               recordFound.setDsObservacao(maintenance.getDsObservacao());
                               recordFound.setDtAgendamento(maintenance.getDtAgendamento());
                               recordFound.setMaintenanceStatus(maintenance.getMaintenanceStatus());
+                              recordFound.setTpStatus(maintenance.getTpStatus());
                               recordFound.setDtEntrada(
                                           maintenance.getDtEntrada());
                               recordFound.setDtFim(
