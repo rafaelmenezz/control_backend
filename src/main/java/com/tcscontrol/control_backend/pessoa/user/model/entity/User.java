@@ -71,10 +71,12 @@ public class User extends Pessoa implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.typeUser == TypeUser.ADMIN || this.typeUser == TypeUser.GESTOR)
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.typeUser == TypeUser.ADMIN )
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_GESTOR"), new SimpleGrantedAuthority("ROLE_USER"));
+        else if(this.typeUser == TypeUser.GESTOR)
+            return List.of( new SimpleGrantedAuthority("ROLE_GESTOR"), new SimpleGrantedAuthority("ROLE_USER"));
         else
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            return List.of( new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
