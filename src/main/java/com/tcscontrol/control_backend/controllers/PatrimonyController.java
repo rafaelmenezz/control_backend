@@ -100,6 +100,11 @@ public class PatrimonyController {
         
     }
 
+    @GetMapping("/construction/{id}")
+    public PatrimonyDTO findPatrimoniesToConstructionQrCode(@PathVariable Long id){ 
+        return patrimonyService.findPatrimonyForConstruction(id);
+    }
+
     @PostMapping("/baixa-patrimonio")
     public PatrimonyDTO addLostThief(@RequestBody PatrimonyDTO patrimonyDTO) {
         

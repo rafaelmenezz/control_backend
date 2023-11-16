@@ -30,4 +30,6 @@ public interface PatrimonyService {
 
     public PatrimonyDTO addLostThieftPatrimony(PatrimonyDTO patrimonyDTO);
 
+    public PatrimonyDTO findPatrimonyForConstruction(Long id);
+
 }

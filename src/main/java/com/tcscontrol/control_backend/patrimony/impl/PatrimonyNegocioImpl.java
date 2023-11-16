@@ -44,7 +44,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
 
     @Override
     public List<PatrimonyResponse> list() {
-        return patrimonyRepository.findAll()
+        return patrimonyRepository.findByTpStatus(Status.ACTIVE)
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());
@@ -163,16 +163,16 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
 
     @Override
     public PatrimonyDTO addLostThieftPatrimony(PatrimonyDTO patrimonyDTO) {
-        Patrimony patrimony = new Patrimony();
+        Patrimony patrimony = patrimonyMapper.toEntity(patrimonyDTO);
         if (isNotValidLowPatrimony(patrimonyDTO, patrimony)) {
             throw new IllegalRequestException(MSG_EXEPTION_ERRO_LOSS_THIEF_INVALID);
         }
 
-        LossTheft lossTheft = patrimony.getLossTheft();
+        LossTheft lossTheft = new LossTheft();
 
         lossTheft.setDtLost(new Date());
         lossTheft.setPatrimony(patrimony);
-        lossTheftRepository.save(lossTheft);
+        patrimony.setLossTheft(lossTheftRepository.save(lossTheft));
 
         patrimony.setTpSituacao(SituationType.PERDA_ROUBO);
         patrimony.setTpStatus(Status.INACTIVE);
@@ -198,13 +198,19 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
         
         if (UtilObjeto.isEmpty(patrimonyDTO)) 
             return false;
-        patrimony = patrimonyMapper.toEntity(patrimonyDTO);
         if(UtilObjeto.isEmpty(patrimony.getLossTheft()))
             return false;
         if(UtilObjeto.isEmpty(patrimony.getLossTheft().getNmObservation()))
             return false;
 
         return true;
+    }
+
+    @Override
+    public PatrimonyDTO findPatrimonyForConstruction(Long id) {
+         return patrimonyRepository.findByIdPatrimonyToConstruction(id)
+                .map(patrimonyMapper::toDto)
+                .orElseThrow(() -> new RecordNotFoundException(id));
     }
 
 

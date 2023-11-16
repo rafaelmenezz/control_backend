@@ -31,7 +31,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-// @SQLDelete(sql = "UPDATE USUARIO SET fl_status = 'Inativo' Where id = ?")
 @Table(name = "USUARIO")
 @EqualsAndHashCode(callSuper = false)
 public class User extends Pessoa implements UserDetails {

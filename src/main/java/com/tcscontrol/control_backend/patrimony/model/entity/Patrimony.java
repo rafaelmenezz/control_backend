@@ -102,7 +102,7 @@ public class Patrimony implements Serializable {
 	private List<Maintenance> maintenances = new ArrayList<>();
 
 	@OneToOne(mappedBy = "patrimony")
-	private LossTheft lossTheft = new LossTheft();
+	private LossTheft lossTheft;
 
 	@Override
 	public int hashCode() {
