@@ -213,5 +213,12 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
                 .orElseThrow(() -> new RecordNotFoundException(id));
     }
 
+    @Override
+    public PatrimonyDTO findPatrimonyForAllocartion(Long id) {
+        return patrimonyRepository.findByIdPatrimonyToAllocation(id)
+                .map(patrimonyMapper::toDto)
+                .orElseThrow(() -> new RecordNotFoundException(id));
+    }
+
 
 }

@@ -32,4 +32,6 @@ public interface PatrimonyService {
 
     public PatrimonyDTO findPatrimonyForConstruction(Long id);
 
+    public PatrimonyDTO findPatrimonyForAllocartion(Long id);
+
 }
