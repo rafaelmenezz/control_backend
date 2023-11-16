@@ -18,6 +18,7 @@ import com.tcscontrol.control_backend.patrimony.PatrimonyNegocio;
 import com.tcscontrol.control_backend.patrimony.PatrimonyRepository;
 import com.tcscontrol.control_backend.patrimony.impl.mapper.PatrimonyMapper;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyHistoricDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.LossTheft;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -217,6 +218,13 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
     public PatrimonyDTO findPatrimonyForAllocartion(Long id) {
         return patrimonyRepository.findByIdPatrimonyToAllocation(id)
                 .map(patrimonyMapper::toDto)
+                .orElseThrow(() -> new RecordNotFoundException(id));
+    }
+
+    @Override
+    public PatrimonyHistoricDTO findHistoricPatrimony(Long id) {
+        return patrimonyRepository.findById(id)
+                .map(patrimonyMapper::toHistoricDto)
                 .orElseThrow(() -> new RecordNotFoundException(id));
     }
 

@@ -18,7 +18,11 @@ import com.tcscontrol.control_backend.maintenance.impl.mapper.MaintenanceMapper;
 import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.dto.LossTheftDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyAllocationDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyConstructionDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyHistoricDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyMaintenanceDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 import com.tcscontrol.control_backend.patrimony.model.entity.LossTheft;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
@@ -61,17 +65,17 @@ public class PatrimonyMapper {
                 .orElse(new RequestPatrimony());
 
         Maintenance maintenance = patrimony.getMaintenances()
-        .stream()
-        .filter(c-> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
-        .findFirst()
-        .orElse(null);
+                .stream()
+                .filter(c -> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
+                .findFirst()
+                .orElse(null);
 
         MaintenancePatrimonyDTO maintenancePatrimonyDTO = maintenanceMapper.toMaintenancePatrimonyDTO(maintenance);
         Allocation a = aPatrimony == null ? null : aPatrimony.getAllocation();
         DepartmentDTO departmentDTO = a != null ? departmentMapper.toDTO(a.getDepartamento()) : null;
 
         Requests r = rPatrimony == null ? null : rPatrimony.getRequests();
-        ConstructionDTO constructionDTO = r != null ? constructionMapper.toDto(r.getConstruction()) : null; 
+        ConstructionDTO constructionDTO = r != null ? constructionMapper.toDto(r.getConstruction()) : null;
 
         List<WarrantyDTO> warrantys = patrimony.getWarrantys()
                 .stream()
@@ -82,7 +86,7 @@ public class PatrimonyMapper {
                         warranty.getTypewWarranty().getValue()))
                 .collect(Collectors.toList());
 
-                return new PatrimonyResponse(
+        return new PatrimonyResponse(
                 patrimony.getId(),
                 patrimony.getNmPatrimonio(),
                 patrimony.getNrSerie(),
@@ -97,7 +101,7 @@ public class PatrimonyMapper {
                 patrimony.getTpSituacao().getValue(),
                 warrantys,
                 departmentDTO != null ? departmentDTO : null,
-                constructionDTO != null ? constructionDTO : null, 
+                constructionDTO != null ? constructionDTO : null,
                 maintenancePatrimonyDTO != null ? maintenancePatrimonyDTO : null);
 
     }
@@ -145,10 +149,10 @@ public class PatrimonyMapper {
         Maintenance maintenance = null;
         if (UtilObjeto.isNotEmpty(maintenances)) {
             maintenance = maintenances
-            .stream()
-            .filter(c-> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
-            .findFirst()
-            .orElse(null);
+                    .stream()
+                    .filter(c -> Status.ACTIVE.equals(c.getTpStatus()) && UtilObjeto.isNotEmpty(c.getDtEntrada()))
+                    .findFirst()
+                    .orElse(null);
         }
 
         return new PatrimonyDTO(
@@ -167,7 +171,7 @@ public class PatrimonyMapper {
                 warrantys,
                 UtilObjeto.isNotEmpty(department) ? departmentMapper.toDTO(department) : null,
                 UtilObjeto.isNotEmpty(construction) ? constructionMapper.toDto(construction) : null,
-                UtilObjeto.isNotEmpty(maintenance) ? maintenanceMapper.toMaintenancePatrimonyDTO(maintenance) : null ,
+                UtilObjeto.isNotEmpty(maintenance) ? maintenanceMapper.toMaintenancePatrimonyDTO(maintenance) : null,
                 lossTheftToDTO(patrimony.getLossTheft()));
     }
 
@@ -263,21 +267,21 @@ public class PatrimonyMapper {
 
     }
 
-    public LossTheftDTO lossTheftToDTO(LossTheft lossTheft){
+    public LossTheftDTO lossTheftToDTO(LossTheft lossTheft) {
 
         if (UtilObjeto.isEmpty(lossTheft)) {
             return null;
         }
         return new LossTheftDTO(
-            lossTheft.getId(), 
-            lossTheft.getNmObservation(), 
-            UtilData.toString(lossTheft.getDtLost(), UtilData.FORMATO_DDMMAA));
+                lossTheft.getId(),
+                lossTheft.getNmObservation(),
+                UtilData.toString(lossTheft.getDtLost(), UtilData.FORMATO_DDMMAA));
     }
 
-    public LossTheft lossTheftToEntity(LossTheftDTO lossTheftDTO, Patrimony patrimony){
+    public LossTheft lossTheftToEntity(LossTheftDTO lossTheftDTO, Patrimony patrimony) {
 
         if (UtilObjeto.isEmpty(lossTheftDTO)) {
-            return null;       
+            return null;
         }
         LossTheft lossTheft = new LossTheft();
 
@@ -290,6 +294,99 @@ public class PatrimonyMapper {
         lossTheft.setPatrimony(patrimony);
 
         return lossTheft;
+    }
+
+    public WarrantyDTO toWarrantyDTO(Warranty warranty) {
+
+        if (UtilObjeto.isEmpty(warranty))
+            return null;
+
+        return new WarrantyDTO(
+                warranty.getId(),
+                warranty.getDsGarantia(),
+                UtilData.toString(warranty.getDtValidade(), UtilData.FORMATO_DDMMAA),
+                warranty.getTypewWarranty().getValue());
+    }
+
+    public PatrimonyAllocationDTO toPatrimonyAllocationDTO(AllocationPatrimony allocationPatrimony) {
+
+        if (UtilObjeto.isEmpty(allocationPatrimony))
+            return null;
+
+        return new PatrimonyAllocationDTO(
+                allocationPatrimony.getAllocation().getDepartamento().getNmDepartamento(),
+                allocationPatrimony.getAllocation().getDepartamento().getUser().getNmName(),
+                UtilData.toString(allocationPatrimony.getDtAlocacao(), UtilData.FORMATO_DDMMAA),
+                UtilObjeto.isNotEmpty(allocationPatrimony.getDtDevolucao())
+                        ? UtilData.toString(allocationPatrimony.getDtDevolucao(), UtilData.FORMATO_DDMMAA)
+                        : null);
+    }
+
+    public PatrimonyConstructionDTO toPatrimonyConstructionDTO(RequestPatrimony requestPatrimony) {
+
+        if (UtilObjeto.isEmpty(requestPatrimony))
+            return null;
+
+        return new PatrimonyConstructionDTO(
+                requestPatrimony.getRequests().getConstruction().getNmObra(),
+                requestPatrimony.getRequests().getConstruction().getUser().getNmName(),
+                UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA),
+                UtilObjeto.isNotEmpty(requestPatrimony.getDtDevolucao())
+                        ? UtilData.toString(requestPatrimony.getDtDevolucao(), UtilData.FORMATO_DDMMAA)
+                        : null);
+    }
+
+    public PatrimonyMaintenanceDTO toPatrimonyMaintenanceDTO(Maintenance maintenance){
+
+        if(UtilObjeto.isEmpty(maintenance))
+            return null;
+
+        return new PatrimonyMaintenanceDTO(
+            maintenance.getDsMotivoManutencao(), 
+            maintenance.getTpManutencao().getValue(),
+            maintenance.getMaintenanceStatus().getValue(), 
+            UtilObjeto.isNotEmpty(maintenance.getDtEntrada()) ? UtilData.toString(maintenance.getDtEntrada(), UtilData.FORMATO_DDMMAA): null,
+            UtilObjeto.isNotEmpty(maintenance.getDtFim()) ? UtilData.toString(maintenance.getDtFim(), UtilData.FORMATO_DDMMAA): null);
+        
+    }
+
+    public PatrimonyHistoricDTO toHistoricDto(Patrimony patrimony) {
+
+        if (UtilObjeto.isEmpty(patrimony))
+            return null;
+        List<WarrantyDTO> warrantyDTOs = patrimony.getWarrantys().stream().map(this::toWarrantyDTO)
+                .collect(Collectors.toList());
+
+        List<PatrimonyAllocationDTO> historyDepartment = patrimony.getAllocations().stream()
+                .map(this::toPatrimonyAllocationDTO).collect(Collectors.toList());
+
+        List<PatrimonyConstructionDTO> historyConstruction = patrimony.getRequests().stream()
+                .map(this::toPatrimonyConstructionDTO).collect(Collectors.toList());
+
+        List<PatrimonyMaintenanceDTO> historyMaintenance = patrimony.getMaintenances().stream()
+                .map(this::toPatrimonyMaintenanceDTO).collect(Collectors.toList());
+        
+        LossTheftDTO lossTheftDTO = lossTheftToDTO(patrimony.getLossTheft());
+
+        return new PatrimonyHistoricDTO(
+                patrimony.getId(),
+                patrimony.getNrSerie(),
+                patrimony.getNmPatrimonio(),
+                patrimony.getNmDescricao(),
+                patrimony.getFornecedor().getNrCnpj(),
+                patrimony.getFornecedor().getNmName(),
+                patrimony.getNrNotaFiscal(),
+                UtilData.toString(patrimony.getDtNotaFiscal(), UtilData.FORMATO_DDMMAA),
+                UtilData.toString(patrimony.getDtAquisicao(), UtilData.FORMATO_DDMMAA),
+                patrimony.getVlAquisicao(),
+                patrimony.getFixo(),
+                patrimony.getTpSituacao().getValue(),
+                warrantyDTOs,
+                historyDepartment,
+                historyConstruction,
+                historyMaintenance,
+                lossTheftDTO,
+                patrimony.getTpStatus().getValue());
     }
 
 }

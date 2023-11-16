@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tcscontrol.control_backend.patrimony.PatrimonyService;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyHistoricDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -101,13 +102,18 @@ public class PatrimonyController {
     }
 
     @GetMapping("/construction/{id}")
-    public PatrimonyDTO findPatrimoniesToConstructionQrCode(@PathVariable Long id){ 
+    public PatrimonyDTO findPatrimonyToConstructionQrCode(@PathVariable Long id){ 
         return patrimonyService.findPatrimonyForConstruction(id);
     }
 
     @GetMapping("/allocation/{id}")
-    public PatrimonyDTO findPatrimoniesToAllocationQrCode(@PathVariable Long id){ 
+    public PatrimonyDTO findPatrimonyToAllocationQrCode(@PathVariable Long id){ 
         return patrimonyService.findPatrimonyForAllocartion(id);
+    }
+
+    @GetMapping("/historic/{id}")
+    public PatrimonyHistoricDTO findHistoric(@PathVariable Long id){ 
+        return patrimonyService.findHistoricPatrimony(id);
     }
 
     @PostMapping("/baixa-patrimonio")

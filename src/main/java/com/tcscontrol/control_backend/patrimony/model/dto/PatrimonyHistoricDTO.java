@@ -1,13 +1,9 @@
 package com.tcscontrol.control_backend.patrimony.model.dto;
 
 import java.util.List;
-
-import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
-import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
-import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
 import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 
-public record PatrimonyHistoryDTO(
+public record PatrimonyHistoricDTO(
     Long id, 
     String nrSerie,
     String nmPatrimonio,
@@ -21,9 +17,9 @@ public record PatrimonyHistoryDTO(
     Boolean fixo,
     String situacao,
     List<WarrantyDTO> warranties,
-    List<DepartmentDTO> historyDepartment,
-    ConstructionDTO historyConstruction,
-    List<MaintenancePatrimonyDTO> historylMaintenance, 
+    List<PatrimonyAllocationDTO> historyDepartment,
+    List<PatrimonyConstructionDTO> historyConstruction,
+    List<PatrimonyMaintenanceDTO> historylMaintenance, 
     LossTheftDTO lossTheft,
     String Status
 ) {}

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
+import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyHistoricDTO;
 import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyResponse;
 
 import jakarta.validation.constraints.NotNull;
@@ -33,5 +34,7 @@ public interface PatrimonyService {
     public PatrimonyDTO findPatrimonyForConstruction(Long id);
 
     public PatrimonyDTO findPatrimonyForAllocartion(Long id);
+
+    public PatrimonyHistoricDTO findHistoricPatrimony(Long id);
 
 }
