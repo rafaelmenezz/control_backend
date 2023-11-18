@@ -54,7 +54,7 @@ public class Warranty implements Serializable {
       private TypeWarranty typewWarranty;
 
       @ManyToOne(fetch = FetchType.EAGER, optional = true)
-      @JoinColumn(name = "id_patrimonio", nullable = false)
+      @JoinColumn(name = "patrimonio_id", nullable = false)
       @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
       private Patrimony patrimony;
 
