@@ -1,0 +1,4 @@
+create table patrimonios (id_patrimonio bigint not null, dt_aquisicao datetime(6), dt_nota_fiscal datetime(6), fl_fixo bit, ds_patrimonio text, nm_patrimonio varchar(255), nr_nota_fiscal integer, nr_serie varchar(255), tp_situacao varchar(255), tp_status varchar(255), vl_aquisicao float(53), fornecedor_id bigint not null, primary key (id_patrimonio));
+create table baixas_patrimonio (id_baixa_patrimonio bigint not null, dt_perda_roubo datetime(6), nm_observacao varchar(255), patrimonio_id bigint, primary key (id_baixa_patrimonio));
+create table garantias (id_garantia bigint not null, ds_garantia varchar(255), dt_validade datetime(6), tp_garantia varchar(255) not null, patrimonio_id bigint not null, primary key (id_garantia));
+create table inventario (id_inventario bigint not null, dt_agendada datetime(6), dt_realizada datetime(6), primary key (id_inventario));

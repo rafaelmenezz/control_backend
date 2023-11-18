@@ -1,0 +1,1 @@
+create table refresh_token (id bigint not null auto_increment, expiry_date datetime(6), token varchar(255), user_id bigint, primary key (id));

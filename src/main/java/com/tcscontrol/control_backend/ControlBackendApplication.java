@@ -36,43 +36,43 @@ public class ControlBackendApplication {
 		};
 	}
 
-	@Bean
-	CommandLineRunner initDatabase(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-		return args -> {
+	// @Bean
+	// CommandLineRunner initDatabase(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	// 	return args -> {
 
-			//userNegocio.deleteCascade("2121");
+	// 		//userNegocio.deleteCascade("2121");
 
-			User pesquisa = userRepository.findByNrMatricula("2121");
-			if (pesquisa == null) {
-			Contacts contacts = new Contacts();
-			contacts.setDsContato("joseedston@teste.com");
-			contacts.setTypeContacts(TypeContacts.EMAIL);
-			Contacts contacts2 = new Contacts();
-			contacts2.setDsContato("48 99999 9999");
-			contacts2.setTypeContacts(TypeContacts.TELEFONE);
-
-
-			User user = new User();
-			user.setNmName("Administrador");
-			user.setNrMatricula("2121");
-			user.setNmSenha(new BCryptPasswordEncoder().encode("teste"));
-			user.setNrCpf("111.111.111-11");
-			user.setTpStatus(Status.ACTIVE);
-			user.setTypeUser(TypeUser.ADMIN);
-			user.setPrimeiroAcesso(false);
-			contacts.setPessoa(user);
-			contacts2.setPessoa(user);
-			List<Contacts> contatos = new ArrayList<>();
-			contatos.add(contacts);
-			contatos.add(contacts2);
+	// 		User pesquisa = userRepository.findByNrMatricula("2121");
+	// 		if (pesquisa == null) {
+	// 		Contacts contacts = new Contacts();
+	// 		contacts.setDsContato("joseedston@teste.com");
+	// 		contacts.setTypeContacts(TypeContacts.EMAIL);
+	// 		Contacts contacts2 = new Contacts();
+	// 		contacts2.setDsContato("48 99999 9999");
+	// 		contacts2.setTypeContacts(TypeContacts.TELEFONE);
 
 
-			user.getContacts().addAll(contatos);
+	// 		User user = new User();
+	// 		user.setNmName("Administrador");
+	// 		user.setNrMatricula("2121");
+	// 		user.setNmSenha(new BCryptPasswordEncoder().encode("teste"));
+	// 		user.setNrCpf("111.111.111-11");
+	// 		user.setTpStatus(Status.ACTIVE);
+	// 		user.setTypeUser(TypeUser.ADMIN);
+	// 		user.setPrimeiroAcesso(false);
+	// 		contacts.setPessoa(user);
+	// 		contacts2.setPessoa(user);
+	// 		List<Contacts> contatos = new ArrayList<>();
+	// 		contatos.add(contacts);
+	// 		contatos.add(contacts2);
 
 
-			userRepository.save(user);
-			}
+	// 		user.getContacts().addAll(contatos);
 
-		};
-	}
+
+	// 		userRepository.save(user);
+	// 		}
+
+	// 	};
+	// }
 }
