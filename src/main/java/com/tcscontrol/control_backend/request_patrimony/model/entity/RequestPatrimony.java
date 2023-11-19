@@ -54,9 +54,6 @@ public class RequestPatrimony implements Serializable {
     @Column(name = "dt_devolucao")
     private Date dtDevolucao;
 
-    @Column(name = "dt_previsao_devolucao")
-    private Date dtPrevisaoDevoluca;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "requisicao_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
