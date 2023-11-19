@@ -48,7 +48,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
-            rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
+            rp.setDtPrevisaoDevolucao(UtilData.toDate(requestsDTO.dtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
             patrimony.setTpSituacao(SituationType.DISPONIVEL);
@@ -72,6 +72,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             Patrimony patrimony = rp.getPatrimony();
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtPrevisaoDevolucao(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             patrimony.setTpSituacao(SituationType.REGISTRADO);
             patrimony.getRequests().add(rp);
 
@@ -96,6 +97,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
                  throw new IllegalRequestException(MSG_ERRO_PATRIMONIO_NÃO_DISPONIVEL.replace(NM_PATRIMONIO, patrimony.getNmPatrimonio()));
             }
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtPrevisaoDevolucao(UtilData.toDate(requestsDTO.dtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtDevolucao(new Date());
             rp.setRequests(requests);
@@ -123,6 +125,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
 
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
             rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
+            rp.setDtPrevisaoDevolucao(UtilData.toDate(requestsDTO.dtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA));
             rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
