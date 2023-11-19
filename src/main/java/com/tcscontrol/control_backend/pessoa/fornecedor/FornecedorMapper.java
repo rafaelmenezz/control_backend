@@ -25,7 +25,7 @@ public class FornecedorMapper {
         List<ContactsDTO> contacts = fornecedor.getContacts()
                 .stream()
                 .map(contact -> new ContactsDTO(
-                        contact.getIdContacts(),
+                        contact.getId(),
                         contact.getTypeContacts().getValue(),
                         contact.getDsContato()))
                 .collect(Collectors.toList());
@@ -56,7 +56,7 @@ public class FornecedorMapper {
         List<Contacts> contatos = fornecedorDTO.contacts().stream()
         .map(contactsDTO-> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
                     contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(fornecedor);

@@ -30,8 +30,9 @@ public class Contacts implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long idContacts;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_contato")
+    private Long id;
 
     @NotNull
     @Column(name = "tipo_contato", nullable = false)
@@ -42,7 +43,7 @@ public class Contacts implements Serializable {
     private String dsContato;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "id_pessoa", nullable = true)
+    @JoinColumn(name = "pessoa_id", nullable = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Pessoa pessoa;
 

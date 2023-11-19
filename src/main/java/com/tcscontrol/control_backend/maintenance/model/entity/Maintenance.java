@@ -42,7 +42,7 @@ public class Maintenance implements Serializable {
       private static final Long serialVersionUID = 1L;
 
       @Id
-      @GeneratedValue(strategy = GenerationType.AUTO)
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
       @Column(name = "id_manutencao")
       private Long id;
 

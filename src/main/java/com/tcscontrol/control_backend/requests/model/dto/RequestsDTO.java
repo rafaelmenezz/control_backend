@@ -9,6 +9,7 @@ public record RequestsDTO(
       Long id,
       String dtPrevisaoRetirada,
       String dtRetirada,
+      String dtPrevisaoDevolucao,
       String dtDevolucao,
       List<PatrimonyDTO> patrimonios,
       ConstructionDTO obra

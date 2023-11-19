@@ -25,7 +25,7 @@ import lombok.Setter;
 public class LossTheft {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_baixa_patrimonio")
     private Long id;
 
