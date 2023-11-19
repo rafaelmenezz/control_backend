@@ -1,3 +1,3 @@
-create table alocacoes (id bigint not null, id_departamento bigint not null, primary key (id));
-create table alocacoes_patrimonio (id bigint not null, dt_alocacao datetime(6), dt_devolucao datetime(6), nm_observacao varchar(255), status varchar(255), alocacao_id bigint not null, patrimonio_id bigint not null, primary key (id));
+create table alocacoes (id bigint not null auto_increment, id_departamento bigint not null, primary key (id));
+create table alocacoes_patrimonio (id bigint not null auto_increment, dt_alocacao datetime(6), dt_devolucao datetime(6), nm_observacao varchar(255), status varchar(255), alocacao_id bigint not null, patrimonio_id bigint not null, primary key (id));
 create table alocacoes_patrimonios (allocation_id bigint not null, patrimonios_id bigint not null);

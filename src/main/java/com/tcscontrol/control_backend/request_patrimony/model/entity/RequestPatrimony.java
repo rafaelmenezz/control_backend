@@ -39,7 +39,7 @@ public class RequestPatrimony implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "dt_previsao_retirada")
@@ -53,6 +53,9 @@ public class RequestPatrimony implements Serializable {
 
     @Column(name = "dt_devolucao")
     private Date dtDevolucao;
+
+    @Column(name = "dt_previsao_devolucao")
+    private Date dtPrevisaoDevoluca;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "requisicao_id", nullable = false)

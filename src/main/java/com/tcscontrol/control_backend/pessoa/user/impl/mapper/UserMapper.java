@@ -28,7 +28,7 @@ public class UserMapper {
         List<ContactsDTO> contacts = user.getContacts()
                 .stream()
                 .map(contact -> new ContactsDTO(
-                        contact.getIdContacts(),
+                        contact.getId(),
                         contact.getTypeContacts().getValue(),
                         contact.getDsContato()))
                 .collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class UserMapper {
         List<Contacts> contacts = userDTO.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
                     contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);
@@ -94,7 +94,7 @@ public class UserMapper {
         List<Contacts> contacts = userCreateDTO.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
                     contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);
@@ -125,7 +125,7 @@ public class UserMapper {
         List<Contacts> contacts = userDTO.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
                     contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);
@@ -143,7 +143,7 @@ public class UserMapper {
         List<ContactsDTO> contacts = user.getContacts()
                 .stream()
                 .map(contact -> new ContactsDTO(
-                        contact.getIdContacts(),
+                        contact.getId(),
                         contact.getTypeContacts().getValue(),
                         contact.getDsContato()))
                 .collect(Collectors.toList());
@@ -174,7 +174,7 @@ public class UserMapper {
         List<Contacts> contacts = userResponse.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
                     contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);

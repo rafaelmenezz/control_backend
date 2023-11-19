@@ -1,2 +1,2 @@
-create table departamentos (id_departamento bigint not null, nm_departamento varchar(255), status varchar(255), id_usuario bigint not null, primary key (id_departamento));
+create table departamentos (id_departamento bigint not null auto_increment, nm_departamento varchar(255), status varchar(255), id_usuario bigint not null, primary key (id_departamento));
 create table departamentos_allocations (department_id_departamento bigint not null, allocations_id bigint not null);
