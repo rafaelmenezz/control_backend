@@ -46,6 +46,44 @@ UPDATE patrimonios
 SET dt_aquisicao='2023-11-01 00:00:00', dt_nota_fiscal='2023-11-01 00:00:00', fl_fixo=0, ds_patrimonio='Balde de pedreiro de 15L para pegar areia, cimento, brita e outros', nm_patrimonio='Balde de pedreiro de 15L', nr_nota_fiscal=13466, nr_serie='1346', tp_situacao='Registrado', tp_status='Ativo', vl_aquisicao=32.0, fornecedor_id=6
 WHERE id_patrimonio=25;
 
-
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-18 00:00:00', dt_previsao_retirada='2023-11-08 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=1, requisicao_id=1
+WHERE id=1;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-20 00:00:00', dt_previsao_retirada='2023-11-08 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=4, requisicao_id=1
+WHERE id=2;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-20 00:00:00', dt_previsao_retirada='2023-11-08 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=13, requisicao_id=1
+WHERE id=3;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-15 00:00:00', dt_previsao_retirada='2023-11-05 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=16, requisicao_id=2
+WHERE id=4;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-16 00:00:00', dt_previsao_retirada='2023-11-05 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=3, requisicao_id=2
+WHERE id=5;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-22 00:00:00', dt_previsao_retirada='2023-11-08 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=2, requisicao_id=3
+WHERE id=6;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-22 00:00:00', dt_previsao_retirada='2023-11-08 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=5, requisicao_id=3
+WHERE id=7;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-21 00:00:00', dt_previsao_retirada='2023-11-08 00:00:00', dt_retirada='2023-11-16 00:00:00', status='Ativo', patrimonio_id=14, requisicao_id=3
+WHERE id=8;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-19 00:00:00', dt_previsao_retirada='2023-11-14 00:00:00', dt_retirada=NULL, status='Ativo', patrimonio_id=6, requisicao_id=4
+WHERE id=9;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-21 00:00:00', dt_previsao_retirada='2023-11-14 00:00:00', dt_retirada=NULL, status='Ativo', patrimonio_id=11, requisicao_id=4
+WHERE id=10;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-20 00:00:00', dt_previsao_retirada='2023-11-14 00:00:00', dt_retirada=NULL, status='Ativo', patrimonio_id=15, requisicao_id=4
+WHERE id=11;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-21 00:00:00', dt_previsao_retirada='2023-11-09 00:00:00', dt_retirada='2023-11-18 00:00:00', status='Ativo', patrimonio_id=23, requisicao_id=5
+WHERE id=12;
+UPDATE requisicoes_patrimonio
+SET dt_devolucao=NULL, dt_previsao_devolucao='2023-11-22 00:00:00', dt_previsao_retirada='2023-11-06 00:00:00', dt_retirada='2023-11-18 00:00:00', status='Ativo', patrimonio_id=25, requisicao_id=6
+WHERE id=13;
 
 
