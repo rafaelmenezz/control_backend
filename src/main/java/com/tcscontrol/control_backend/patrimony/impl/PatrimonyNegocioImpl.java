@@ -172,6 +172,7 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
         LossTheft lossTheft = new LossTheft();
 
         lossTheft.setDtLost(new Date());
+        lossTheft.setNmObservation(patrimonyDTO.lossTheft().observation());
         lossTheft.setPatrimony(patrimony);
         patrimony.setLossTheft(lossTheftRepository.save(lossTheft));
 
