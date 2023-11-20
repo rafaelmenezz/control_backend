@@ -5,7 +5,7 @@ import com.tcscontrol.control_backend.patrimony.model.dto.PatrimonyDTO;
 public record RequestPatrimonyDTO(
     Long id,
     String dtPrevisaoRetirada,
-    String dtPrevisaoDevoluacao,
+    String dtPrevisaoDevolucao,
     String dtRetirada,
     String dtDevolucao,
     PatrimonyDTO patrimonios

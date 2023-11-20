@@ -27,7 +27,7 @@ public class RequestPatrimonyMapper {
         }
         rp.setDtPrevisaoRetirada(UtilData.toDate(rpDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
         rp.setDtRetirada(UtilData.toDate(rpDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
-        rp.setDtRetirada(UtilData.toDate(rpDTO.dtPrevisaoDevoluacao(), UtilData.FORMATO_DDMMAA));
+        rp.setDtRetirada(UtilData.toDate(rpDTO.dtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA));
         rp.setDtDevolucao(UtilData.toDate(rpDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
         rp.setPatrimony(patrimonyMapper.toEntity(rpDTO.patrimonios()));
         return rp;
