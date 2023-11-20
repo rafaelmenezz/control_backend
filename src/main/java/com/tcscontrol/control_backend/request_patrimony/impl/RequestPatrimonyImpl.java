@@ -93,7 +93,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         List<Patrimony> patrimonies = new ArrayList<>();
         for (RequestPatrimony rp : rps) {
             Patrimony patrimony = rp.getPatrimony();
-            if (!SituationType.DISPONIVEL.equals(patrimony.getTpSituacao())) {
+            if (!SituationType.REGISTRADO.equals(patrimony.getTpSituacao())) {
                  throw new IllegalRequestException(MSG_ERRO_PATRIMONIO_NÃO_DISPONIVEL.replace(NM_PATRIMONIO, patrimony.getNmPatrimonio()));
             }
             rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
