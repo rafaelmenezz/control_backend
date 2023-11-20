@@ -7,7 +7,6 @@ SET dt_aquisicao='2023-10-31 00:00:00', dt_nota_fiscal='2023-10-31 00:00:00', fl
 ', nm_patrimonio='Maquita', nr_nota_fiscal=1011, nr_serie='123456', tp_situacao='Registrado', tp_status='Ativo', vl_aquisicao=989.0, fornecedor_id=2
 WHERE id_patrimonio=1;
 
-
 UPDATE patrimonios
 SET dt_aquisicao='2023-10-31 00:00:00', dt_nota_fiscal='2023-10-31 00:00:00', fl_fixo=0, ds_patrimonio='Furadeira de Alto Impacto Black Denker 
 ', nm_patrimonio='Furadeira Black Denker', nr_nota_fiscal=1013, nr_serie='9792', tp_situacao='Registrado', tp_status='Ativo', vl_aquisicao=351.0, fornecedor_id=2
@@ -36,7 +35,6 @@ WHERE id_patrimonio=13;
 UPDATE patrimonios
 SET dt_aquisicao='2023-10-31 00:00:00', dt_nota_fiscal='2023-10-31 00:00:00', fl_fixo=0, ds_patrimonio='Carrinho de mao com capacidade para carregar coisas', nm_patrimonio='Carrinho de Mao', nr_nota_fiscal=463166, nr_serie='67981', tp_situacao='Registrado', tp_status='Ativo', vl_aquisicao=890.5, fornecedor_id=6
 WHERE id_patrimonio=15;
-
 
 UPDATE patrimonios
 SET dt_aquisicao='2023-10-31 00:00:00', dt_nota_fiscal='2023-10-31 00:00:00', fl_fixo=0, ds_patrimonio='Chave de Fenda Iluminati para apertar as coisas', nm_patrimonio='Chave de Fenda Iluminati', nr_nota_fiscal=6433, nr_serie='4642', tp_situacao='Registrado', tp_status='Ativo', vl_aquisicao=59.0, fornecedor_id=6
