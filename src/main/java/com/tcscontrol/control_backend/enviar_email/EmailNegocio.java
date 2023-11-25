@@ -1,6 +1,7 @@
 package com.tcscontrol.control_backend.enviar_email;
 
 import java.util.List;
+import java.util.Map;
 
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.department.model.entity.Department;
@@ -36,7 +37,7 @@ public interface EmailNegocio {
     public final String MSG_AGENDAR_MANUTENCAO = "Manutenção do patrimonônio NM_PATRIMONIO foi agendado, segue os dados:";
     public final String MSG_INICIAR_MANUTENCAO = "Manutenção do patrimonônio NM_PATRIMONIO foi iniciada, segue os dados:";
     public final String MSG_FINALIZADA_MANUTENCAO = "Manutenção do patrimonônio NM_PATRIMONIO terminou, segue os dados:";
-    public final String MSG_CANCELADA_MANUTENCAO = "Manutenção do patrimonônio NM_PATRIMONIO foi cancelada, segue os dados:";
+    public final String MSG_CANCELADA_MANUTENCAO = "Manutenção do patrimonônio Njava.util.M_PATRIMONIO foi cancelada, segue os dados:";
     public final String ASSUNTO_EMAIL_MANUTENCAO = "Manutenção!";
     
     void enviarEmailNovoUsuario(User usuario, String senha);
@@ -49,7 +50,8 @@ public interface EmailNegocio {
     void enviarEmailCancelarManutencao(Maintenance maintenance);
     void enviarEmailAlocacao(Allocation allocation, String mensagem);
     void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm);
-
-
+    void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm, String assunto, String assuntoAdm);
+    void enviarEmailRequisicoesGestor(Map<String,Object> requests, String mensagem, String assunto);
+    void enviarEmailAdminJobPatrimonio(Map<String, Object> dados, String mensagem, String assunto);
 
 }

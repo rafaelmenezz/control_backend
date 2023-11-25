@@ -2,6 +2,7 @@ package com.tcscontrol.control_backend.enviar_email;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -149,7 +150,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
             administradores.add(gestor);
         }
         for (User user : administradores) {
-            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO,  mensagem);
+            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO, mensagem);
         }
     }
 
@@ -179,22 +180,35 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
             administradores.add(gestor);
         }
         for (User user : administradores) {
-            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO,  mensagem);
+            enviarEmailAdministrador(user, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO, mensagem);
         }
     }
 
     @Override
     public void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm) {
+        enviarEmailRequisicoes(requests, mensagem, mensagemAdm, null, null);
+    }
+
+    @Override
+    public void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm, String assunto, String assuntoAdm) {
         User usuario = requests.getConstruction().getUser();
         String emailText = TEMPLATE_EMAIL;
         String saudacao = montarTitulo(usuario);
         String corpo = montaCorpoEmailRequisicao(requests, mensagem);
         String email = obtemEmailUsuario(usuario);
 
+        String assuntoEmail = UtilString.EMPTY;
+
+        if (UtilString.isEmpty(assunto)) {
+            assuntoEmail = MSG_ASSUNTO_REQUISICAO;
+        }else{
+            assuntoEmail = assunto;  
+        }
+
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, corpo);
-        sendRegistrationEmail(email, MSG_ASSUNTO_REQUISICAO, emailText);
-        enviarEmailAdministradores(requests, mensagemAdm);
+        sendRegistrationEmail(email, assuntoEmail, emailText);
+        enviarEmailAdministradores(requests, mensagemAdm, assuntoAdm);
     }
 
     private String montaCorpoEmailRequisicao(Requests requests, String mensagem) {
@@ -223,13 +237,14 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         if (UtilString.isNotEmpty(nome))
             texto.append(ITEM_LISTA.replace(TEXTO, "<b>Obra: </b>" + nome + UtilString.PONTO));
         if (UtilString.isNotEmpty(nmCliente))
-            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Cliente: </b>"+ nmCliente + UtilString.PONTO));
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Cliente: </b>" + nmCliente + UtilString.PONTO));
         if (UtilString.isNotEmpty(nrDocumento))
-            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Documento: </b>" + nrDocumento+ UtilString.PONTO));
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Documento: </b>" + nrDocumento + UtilString.PONTO));
         if (UtilString.isNotEmpty(endereco))
-            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Endereço: </b>" + endereco+ UtilString.PONTO));
+            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Endereço: </b>" + endereco + UtilString.PONTO));
         if (UtilString.isNotEmpty(dtPrevisaoConclusao))
-            texto.append(ITEM_LISTA.replace(TEXTO, "<b>Data Prevista Para Conclusão: </b>" + dtPrevisaoConclusao + UtilString.PONTO));
+            texto.append(ITEM_LISTA.replace(TEXTO,
+                    "<b>Data Prevista Para Conclusão: </b>" + dtPrevisaoConclusao + UtilString.PONTO));
 
         String retorno = LISTA_NAO_ORDENADA.replace(CONTEUDO, texto.toString());
 
@@ -280,10 +295,12 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
             detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Patrimônio: </b>" + nmPatriminio) + UtilString.PONTO);
 
         if (UtilString.isNotEmpty(dtPrevisao))
-            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Data de Previsão Manutenção: </b>" + dtPrevisao + UtilString.PONTO));
+            detalhes.append(
+                    ITEM_LISTA.replace(TEXTO, "<b>Data de Previsão Manutenção: </b>" + dtPrevisao + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(dtInicio))
-            detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Data Início da Manutenção: </b>" + dtInicio + UtilString.PONTO));
+            detalhes.append(
+                    ITEM_LISTA.replace(TEXTO, "<b>Data Início da Manutenção: </b>" + dtInicio + UtilString.PONTO));
 
         if (UtilString.isNotEmpty(dtFim))
             detalhes.append(ITEM_LISTA.replace(TEXTO, "<b>Data Fim da Manutenção: </b>" + dtFim + UtilString.PONTO));
@@ -309,7 +326,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         return mensagem;
     }
 
-    private void enviarEmailAdministradores(Requests requests, String mensagem) {
+    private void enviarEmailAdministradores(Requests requests, String mensagem, String assunto) {
 
         List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
         Construction obra = requests.getConstruction();
@@ -321,7 +338,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         retorno.append(corpo).append(detalhesObra).append(listaPatrimonios);
 
         for (User administrador : administradores) {
-            enviarEmailAdministrador(administrador, TEMPLATE_EMAIL, ASSUNTO_EMAIL_MANUTENCAO, retorno.toString());
+            enviarEmailAdministrador(administrador, TEMPLATE_EMAIL, assunto, retorno.toString());
         }
 
     }
@@ -334,7 +351,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, mensagem);
 
-        sendRegistrationEmail(email, MSG_ASSUNTO_REQUISICAO, emailText);
+        sendRegistrationEmail(email, assunto, emailText);
     }
 
     private String montarTitulo(User usuario) {
@@ -373,7 +390,8 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
     private String listarPatrimonios(List<Patrimony> patrimonies) {
         StringBuilder retorno = new StringBuilder();
         for (Patrimony patrimony : patrimonies) {
-            retorno.append(ITEM_LISTA_COM_BORDA.replace(TEXTO, patrimony.getId() + UtilString.TRACO +patrimony.getNmPatrimonio()));
+            retorno.append(ITEM_LISTA_COM_BORDA.replace(TEXTO,
+                    patrimony.getId() + UtilString.TRACO + patrimony.getNmPatrimonio()));
         }
 
         String texto = LISTA_NAO_ORDENADA.replace(CONTEUDO, retorno.toString());
@@ -407,7 +425,8 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         if (UtilString.isNotEmpty(nmPatrimonio))
             retorno.append(SPAN.replace(CONTEUDO, "<b>Patrimonio:</b> " + nmPatrimonio)).append("<br/>");
         if (UtilString.isNotEmpty(dataPrevisaoRetirada))
-            retorno.append(SPAN.replace(CONTEUDO, "<b>Previsão de Retirada:</b> " + dataPrevisaoRetirada)).append("<br/>");
+            retorno.append(SPAN.replace(CONTEUDO, "<b>Previsão de Retirada:</b> " + dataPrevisaoRetirada))
+                    .append("<br/>");
         if (UtilString.isNotEmpty(dataRetirada))
             retorno.append(SPAN.replace(CONTEUDO, "<b>Data de Retirada:</b> " + dataRetirada)).append("<br/>");
         if (UtilString.isNotEmpty(dataDevolucao))
@@ -434,4 +453,149 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
 
     }
 
+    @Override
+    public void enviarEmailRequisicoesGestor(Map<String, Object> dados, String mensagem, String assunto) {
+        User usuario = (User) dados.get("USUARIO");
+        String emailText = TEMPLATE_EMAIL;
+        String saudacao = montarTitulo(usuario);
+        String corpo = montaCorpoEmailRequisicaoGestor(dados, mensagem);
+        String email = obtemEmailUsuario(usuario);
+
+        emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
+        emailText = emailText.replace(TEMPLATE_MENSAGEM, corpo);
+        sendRegistrationEmail(email, assunto, emailText);
+    }
+
+    private String montaCorpoEmailRequisicaoGestor(Map<String, Object> dados, String mensagem) {
+        String corpo = mensagem;       
+        List<RequestPatrimony> rp = UtilObjeto.isNotEmpty(dados.get("PATRIMONIOS")) ? (List<RequestPatrimony>) dados.get("PATRIMONIOS") : new ArrayList<>() ; 
+        String listaPatrimonios = listarPatrimoniosRequisicaoGestor(rp);
+
+        StringBuilder retorno = new StringBuilder();
+        retorno.append(corpo).append(listaPatrimonios);
+
+        return retorno.toString();
+    }
+
+     private String listarPatrimoniosRequisicaoGestor(List<RequestPatrimony> requests) {
+        StringBuilder conteudo = new StringBuilder();
+        List<RequestPatrimony> requestPatrimonies = requests;
+        conteudo.append(TABLE_TR_TH.replace(TR, montaHeaderTableRequisicoesGestor()));
+        for (RequestPatrimony requestPatrimony : requestPatrimonies) {
+            String tr = TABLE_TR.replace(TR, montaLinhaTabelaRequisicaoGestor(requestPatrimony.getRequests().getConstruction(), requestPatrimony));
+            conteudo.append(tr);
+        }
+        String retorno = "<br /> <br />".concat(TABLE.replace(CONTEUDO, conteudo.toString()));
+
+        return retorno;
+    }
+    private String montaLinhaTabelaRequisicaoGestor(Construction construction, RequestPatrimony requestPatrimony){
+        StringBuilder retorno = new StringBuilder();
+
+        retorno.append(TABLE_TD.replace(TD, requestPatrimony.getPatrimony().getNmPatrimonio()));
+        retorno.append(TABLE_TD.replace(TD, construction.getNmObra()));
+        retorno.append(TABLE_TD.replace(TD, obtemEnderecoObraCompleto(construction)));
+        retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA)));
+        retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA)));
+    
+        return retorno.toString();
+    }
+
+    private String montaHeaderTableRequisicoesGestor(){
+        StringBuilder retorno = new StringBuilder();
+
+        retorno.append(TABLE_TH.replace(TH, "Patrimônio"));
+        retorno.append(TABLE_TH.replace(TH, "Obra"));
+        retorno.append(TABLE_TH.replace(TH, "Endereço"));
+        retorno.append(TABLE_TH.replace(TH, "Retirada"));
+        retorno.append(TABLE_TH.replace(TH, "Previsão Devolução"));
+
+        return retorno.toString();
+    }
+
+
+    public void enviarEmailAdminJobPatrimonio(Map<String, Object> dados, String mensagem, String assunto){
+        List<User> administradores = userRepository.findByTypeUser(TypeUser.ADMIN);
+        String emailText = TEMPLATE_EMAIL;
+        String corpo = montaCorpoEmailRequisicaoAdmin(dados, mensagem);
+
+        for (User administrador : administradores) {
+            enviarEmailAdministrador(administrador, emailText, assunto, corpo);
+        }
+    }
+
+    private String montaCorpoEmailRequisicaoAdmin(Map<String, Object> dados, String mensagem) {
+        StringBuilder corpo = new StringBuilder();
+        corpo.append(mensagem);
+        corpo.append("<br /><br />");
+        corpo.append(STRING_H3.replace(H3, "Patrimônios Com Entrega Atrasada"));
+        corpo.append("<br />");       
+        List<RequestPatrimony> rpVencidos = UtilObjeto.isNotEmpty(dados.get("VENCIDOS")) ? (List<RequestPatrimony>) dados.get("VENCIDOS") : new ArrayList<>() ; 
+        String listaPatrimoniosVencidos = listarPatrimoniosRequisicaoAdmin(rpVencidos);
+        corpo.append(listaPatrimoniosVencidos);
+        corpo.append("<br />");
+        corpo.append(STRING_H3.replace(H3, "Patrimônios Próximo Da Entrega")); 
+        corpo.append("<br />");      
+        List<RequestPatrimony> rpVencer = UtilObjeto.isNotEmpty(dados.get("VENCER")) ? (List<RequestPatrimony>) dados.get("VENCER") : new ArrayList<>() ; 
+        String listaPatrimoniosVencer = listarPatrimoniosRequisicaoAdmin(rpVencer);
+        corpo.append(listaPatrimoniosVencer);
+        corpo.append("<br />");
+
+
+        return corpo.toString();
+    }
+
+    private String listarPatrimoniosRequisicaoAdmin(List<RequestPatrimony> requests) {
+        StringBuilder conteudo = new StringBuilder();
+        List<RequestPatrimony> requestPatrimonies = requests;
+        conteudo.append(TABLE_TR_TH.replace(TR, montaHeaderTableRequisicoesAdmin()));
+        for (RequestPatrimony requestPatrimony : requestPatrimonies) {
+            String tr = TABLE_TR.replace(TR, montaLinhaTabelaRequisicaoAdmin(requestPatrimony));
+            conteudo.append(tr);
+        }
+        String retorno = TABLE.replace(CONTEUDO, conteudo.toString());
+
+        return retorno;
+
+    }
+
+    private String montaHeaderTableRequisicoesAdmin(){
+        StringBuilder retorno = new StringBuilder();
+
+        retorno.append(TABLE_TH.replace(TH, "Patrimônio"));
+        retorno.append(TABLE_TH.replace(TH, "Obra"));
+        retorno.append(TABLE_TH.replace(TH, "Responsável"));
+        retorno.append(TABLE_TH.replace(TH, "Contato"));
+        retorno.append(TABLE_TH.replace(TH, "Retirada"));
+        retorno.append(TABLE_TH.replace(TH, "Previsão Devolução"));
+
+        return retorno.toString();
+    }
+
+
+    private String montaLinhaTabelaRequisicaoAdmin(RequestPatrimony requestPatrimony){
+        StringBuilder retorno = new StringBuilder();
+
+        retorno.append(TABLE_TD.replace(TD, requestPatrimony.getPatrimony().getNmPatrimonio()));
+        retorno.append(TABLE_TD.replace(TD, requestPatrimony.getRequests().getConstruction().getNmObra()));
+        retorno.append(TABLE_TD.replace(TD, requestPatrimony.getRequests().getConstruction().getUser().getNmName()));
+        retorno.append(TABLE_TD.replace(TD, listarContatos(requestPatrimony.getRequests().getConstruction().getUser().getContacts())));
+        retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA)));
+        retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA)));
+    
+        return retorno.toString();
+    }
+
+    private String listarContatos(List<Contacts> contatos){
+        if (UtilObjeto.isEmpty(contatos))
+            return UtilString.EMPTY;
+            
+        StringBuilder retorno = new StringBuilder();
+
+        for (Contacts c : contatos) {
+            retorno.append(c.getDsContato()).append("<br />");
+        }
+
+        return retorno.toString();
+    }
 }

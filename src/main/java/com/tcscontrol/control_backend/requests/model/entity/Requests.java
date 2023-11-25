@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tcscontrol.control_backend.constructions.model.entity.Construction;
 import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
@@ -30,24 +29,24 @@ import lombok.NoArgsConstructor;
 @Table(name = "REQUISICOES")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Requests implements Serializable{
-      
-      @Serial
-      private static final long serialVersionUID = 1L;
+public class Requests implements Serializable {
 
-      @Id
-      @GeneratedValue(strategy = GenerationType.IDENTITY)
-      private Long id;
+	@Serial
+	private static final long serialVersionUID = 1L;
 
-      @ManyToOne(fetch = FetchType.LAZY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "obra_id", nullable = false)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Construction construction = new Construction();
 
-      @OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
-      private List<RequestPatrimony> patrimonies = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = false)
+	private List<RequestPatrimony> patrimonies = new ArrayList<>();
 
-      @Override
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

@@ -22,7 +22,7 @@ public interface TemplateEmail {
                     }
 
                     body {
-
+                        background-color: #CCCCCC;
                         min-height: 100vh;
                         overflow-x: hidden;
                     }
@@ -33,6 +33,7 @@ public interface TemplateEmail {
                     }
 
                     .cabecalho {
+                        background-color: #FFFFFF;
                         margin: 0 auto;
                         width: 750px;
                         max-height: 250px;
@@ -56,6 +57,7 @@ public interface TemplateEmail {
                         color: #FFFFFF
                     }
                     .msg-corpo {
+                        background-color: #FFFFFF;
                         margin: 0 auto;
                         width: 750px;
                         padding-top: 3%;
@@ -88,6 +90,24 @@ public interface TemplateEmail {
                         padding: 2%;
                         margin: 0 auto;
                         width: 750px;
+                    }
+
+                    table{
+                        width: 100%;
+                        font-size: 0.7rem;
+                        text-align: center;
+                        border-top: 1px solid #000;
+                        border-bottom: 1px solid #000;
+                        margin-top: 5px; 
+                        border-collapse: collapse; 
+                    }
+                    .table > tr{
+                        border-top: 1px solid #ccc;
+                        text-align: center;
+                    }
+                    .table > tr > td{
+                        padding-top: 4px;
+                        padding-bottom: 4px;
                     }
 
                     .footer > ul{
