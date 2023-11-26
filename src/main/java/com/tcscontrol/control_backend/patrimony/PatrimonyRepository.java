@@ -17,13 +17,12 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
 
     List<Patrimony> findByTpStatus(Status tpStatus);
 
-    List<Patrimony> findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(
+    List<Patrimony> findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContaining(
             String nmPatrimonio,
             String nrSerie,
             String nmDescricao,
             String nrCnpj,
-            String nmFornecedor,
-            Date dtAquisicao);
+            String nmFornecedor);
 
     @Query("FROM Patrimony p WHERE p.nmPatrimonio ilike %:nome% AND p.fixo = :fixo AND (p.tpSituacao = 'Disponivel' OR p.tpSituacao = 'Alocado')")
     List<Patrimony> findPatrimoniesToAllocation(@Param("nome") String nmPatrimony, @Param("fixo") Boolean fixo);

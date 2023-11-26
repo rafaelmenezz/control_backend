@@ -2,7 +2,6 @@ package com.tcscontrol.control_backend.relatory.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,15 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jdt.internal.compiler.batch.Main;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
+import com.tcscontrol.control_backend.enuns.RelatoryFormatType;
 import com.tcscontrol.control_backend.enuns.RelatoryType;
-import com.tcscontrol.control_backend.enuns.TypeContacts;
-import com.tcscontrol.control_backend.exception.RecordNotFoundException;
 import com.tcscontrol.control_backend.exception.StorageException;
 import com.tcscontrol.control_backend.exception.StorageFileNotFoundException;
 import com.tcscontrol.control_backend.file.model.entity.StorageProperties;
@@ -31,13 +27,11 @@ import com.tcscontrol.control_backend.patrimony.LossTheftRepository;
 import com.tcscontrol.control_backend.patrimony.PatrimonyRepository;
 import com.tcscontrol.control_backend.patrimony.model.entity.LossTheft;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
-import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 import com.tcscontrol.control_backend.relatory.RelatorioNegocio;
 import com.tcscontrol.control_backend.relatory.model.RelatorioRequestDTO;
 import com.tcscontrol.control_backend.relatory.model.RelatoryResponseDTO;
 import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 import com.tcscontrol.control_backend.requests.RequestsRepository;
-import com.tcscontrol.control_backend.requests.model.entity.Requests;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 import com.tcscontrol.control_backend.utilitarios.UtilString;
@@ -50,6 +44,11 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRMapArrayDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+
 
 @Component(value = "RelatorioNegocio")
 public class RelatorioNegocioImpl implements RelatorioNegocio {
@@ -97,10 +96,10 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
 
         if (RelatoryType.PATRIMONIOS_DISPONIVEIS.getValue().equals(relatorioRequestDTO.nmRelatory()))
             return obterPdfPatrimonioDisponiveis(relatorioRequestDTO);
-        
+
         if (RelatoryType.GASTOS_MANUTENCAO.getValue().equals(relatorioRequestDTO.nmRelatory()))
             return obterPdfGastosManutencao(relatorioRequestDTO);
-        
+
         if (RelatoryType.GERAR_QRCODE.getValue().equals(relatorioRequestDTO.nmRelatory()))
             return obterPdfGerarQrCode(relatorioRequestDTO);
 
@@ -128,9 +127,14 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
         relatorio.put("NOME", "bens_baixados_");
         String nome = UtilString.EMPTY;
         try {
-            nome = exportPDF(relatorio, dados);
-            Path file = load(nome);
+           if (RelatoryFormatType.PDF.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportPDF(relatorio, dados);
+            }
 
+            if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportExcel(relatorio, dados);
+            }
+            Path file = load(nome);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -159,9 +163,14 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
         relatorio.put("NOME", "devolucoes_vencidas_");
         String nome = UtilString.EMPTY;
         try {
-            nome = exportPDF(relatorio, dados);
-            Path file = load(nome);
+            if (RelatoryFormatType.PDF.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportPDF(relatorio, dados);
+            }
 
+            if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportExcel(relatorio, dados);
+            }
+            Path file = load(nome);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -194,9 +203,14 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
         relatorio.put("NOME", "patrimonio_disponiveis_");
         String nome = UtilString.EMPTY;
         try {
-            nome = exportPDF(relatorio, dados);
-            Path file = load(nome);
+            if (RelatoryFormatType.PDF.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportPDF(relatorio, dados);
+            }
 
+            if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportExcel(relatorio, dados);
+            }
+            Path file = load(nome);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -212,14 +226,16 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
 
     private Resource obterPdfGastosManutencao(RelatorioRequestDTO relatorioRequestDTO) {
 
-        Date inicio = UtilObjeto.isNotEmpty(relatorioRequestDTO.dtStart()) ?  UtilData.toDate(relatorioRequestDTO.dtStart(), UtilData.FORMATO_DDMMAA) : null;
-        Date fim = UtilObjeto.isNotEmpty(relatorioRequestDTO.dtEnd()) ? UtilData.toDate(relatorioRequestDTO.dtEnd(), UtilData.FORMATO_DDMMAA) : null;
+        Date inicio = UtilObjeto.isNotEmpty(relatorioRequestDTO.dtStart())
+                ? UtilData.toDate(relatorioRequestDTO.dtStart(), UtilData.FORMATO_DDMMAA)
+                : null;
+        Date fim = UtilObjeto.isNotEmpty(relatorioRequestDTO.dtEnd())
+                ? UtilData.toDate(relatorioRequestDTO.dtEnd(), UtilData.FORMATO_DDMMAA)
+                : null;
         Double vlMin = UtilObjeto.isNotEmpty(relatorioRequestDTO.vlMin()) ? relatorioRequestDTO.vlMin() : null;
         Double vlMax = UtilObjeto.isNotEmpty(relatorioRequestDTO.vlMax()) ? relatorioRequestDTO.vlMax() : null;
 
-
         List<Maintenance> dadosRelatorio = obterPesquisaManutencao(inicio, fim, vlMin, vlMax);
-        
 
         List<Map<String, Object>> dados = obterDadosRelatorioGastoManutencao(dadosRelatorio);
         Map<String, Object> relatorio = new HashMap<>();
@@ -230,7 +246,14 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
         relatorio.put("NOME", "gastos_manutencao_");
         String nome = UtilString.EMPTY;
         try {
-            nome = exportPDF(relatorio, dados);
+            if (RelatoryFormatType.PDF.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportPDF(relatorio, dados);
+            }
+
+            if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) {
+                nome = exportExcel(relatorio, dados);
+            }
+
             Path file = load(nome);
 
             Resource resource = new UrlResource(file.toUri());
@@ -242,19 +265,19 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
             }
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Não foi prossível criar o arquivo");
+            throw new IllegalArgumentException("Não foi prossível criar o arquivo" + e);
         }
     }
 
-    private List<Maintenance> obterPesquisaManutencao(Date inicio, Date fim, Double vlMin, Double vlMax){
+    private List<Maintenance> obterPesquisaManutencao(Date inicio, Date fim, Double vlMin, Double vlMax) {
         if (UtilObjeto.isEmpty(inicio) || UtilObjeto.isEmpty(fim)) {
-            if (UtilObjeto.isEmpty(vlMin) || UtilObjeto.isEmpty(vlMax)){
+            if (UtilObjeto.isEmpty(vlMin) || UtilObjeto.isEmpty(vlMax)) {
                 return maintenanceRepository.getGastosManutencao();
-            }else{
+            } else {
                 return maintenanceRepository.getGastosManutencao(vlMin, vlMax);
             }
-        }else{
-            if (UtilObjeto.isEmpty(vlMin) || UtilObjeto.isEmpty(vlMax)){
+        } else {
+            if (UtilObjeto.isEmpty(vlMin) || UtilObjeto.isEmpty(vlMax)) {
                 return maintenanceRepository.getGastosManutencao(inicio, fim);
             }
         }
@@ -264,11 +287,12 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
 
     private Resource obterPdfGerarQrCode(RelatorioRequestDTO relatorioRequestDTO) {
 
-        String nomeP = UtilObjeto.isNotEmpty(relatorioRequestDTO.nmPatrimony()) ? relatorioRequestDTO.nmPatrimony() : UtilString.EMPTY;
-        String nrSerie = UtilObjeto.isNotEmpty(relatorioRequestDTO.nrSerie()) ? relatorioRequestDTO.nrSerie() : UtilString.EMPTY;
+        String nomeP = UtilObjeto.isNotEmpty(relatorioRequestDTO.nmPatrimony()) ? relatorioRequestDTO.nmPatrimony()
+                : UtilString.EMPTY;
+        String nrSerie = UtilObjeto.isNotEmpty(relatorioRequestDTO.nrSerie()) ? relatorioRequestDTO.nrSerie()
+                : UtilString.EMPTY;
 
         List<Patrimony> dadosRelatorio = patrimonyRepository.getPatrimonies(nomeP, nrSerie);
-        
 
         List<Map<String, Object>> dados = obterDadosRelatorioGeracaoPatrimonio(dadosRelatorio);
         Map<String, Object> relatorio = new HashMap<>();
@@ -362,9 +386,7 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
 
             retorno.add(map);
         }
-
         return retorno;
-
     }
 
     private List<Map<String, Object>> obterDadosRelatorioGastoManutencao(List<Maintenance> dados) {
@@ -380,12 +402,11 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
             map.put("dt_entrada", UtilData.toString(item.getDtEntrada(), UtilData.FORMATO_DDMMAA));
             map.put("dt_fim", UtilData.toString(item.getDtFim(), UtilData.FORMATO_DDMMAA));
             map.put("tp_manutencao", item.getTpManutencao().getValue());
-            map.put("vl_manutencao", item.getVlManutencao());;
+            map.put("vl_manutencao", item.getVlManutencao());
+            ;
             map.put("nm_name", item.getFornecedor().getNmName());
-
             retorno.add(map);
         }
-
         return retorno;
 
     }
@@ -410,7 +431,8 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
     public String exportPDF(Map<String, Object> dados, List<Map<String, Object>> data) throws Exception {
         JRDataSource dataSource = new JRMapArrayDataSource(data.toArray());
         String jrxml = (String) dados.get("COMPILE");
-        String nome = criarNomeArquivo((String) dados.get("NOME"));
+        String nome = (String) dados.get("NOME")
+                + UtilData.toString(new Date(), UtilData.FORMATO_DATAHORA_SEM_CARACTERE) + ".pdf";
         try {
             JasperReport jasperReport = JasperCompileManager.compileReport(JASPER_PATH + jrxml);
             JasperPrint print = JasperFillManager.fillReport(jasperReport, dados, dataSource);
@@ -426,8 +448,33 @@ public class RelatorioNegocioImpl implements RelatorioNegocio {
         return nome;
     }
 
-    private String criarNomeArquivo(String nome) {
-        return nome.concat(UtilData.toString(new Date(), UtilData.FORMATO_DATAHORA_SEM_CARACTERE)).concat(".pdf");
+    public String exportExcel(Map<String, Object> dados, List<Map<String, Object>> data) throws Exception {
+        JRDataSource dataSource = new JRMapArrayDataSource(data.toArray());
+        String jrxml = (String) dados.get("COMPILE");
+        String nome = (String) dados.get("NOME")
+                + UtilData.toString(new Date(), UtilData.FORMATO_DATAHORA_SEM_CARACTERE) + ".xls";
+        try {
+            JasperReport jasperReport = JasperCompileManager.compileReport(JASPER_PATH + jrxml);
+            JasperPrint print = JasperFillManager.fillReport(jasperReport, dados, dataSource);
+
+            JRXlsExporter exporter = new JRXlsExporter();
+
+            exporter.setExporterInput(new SimpleExporterInput(print));
+
+            String xlsOutputPath = relatoriosLocation.toAbsolutePath().toString().concat("/").concat(nome);
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(xlsOutputPath));
+
+            SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+            configuration.setDetectCellType(true);
+            configuration.setCollapseRowSpan(false);
+            exporter.setConfiguration(configuration);
+
+            exporter.exportReport();
+
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+        return nome;
     }
 
 }

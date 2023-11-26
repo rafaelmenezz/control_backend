@@ -112,8 +112,8 @@ public class PatrimonyNegocioImpl implements PatrimonyNegocio {
         }
 
         return patrimonyRepository
-                .findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContainingOrDtAquisicaoContaining(
-                        nmPatrimonio, nrSerie, dsPatrimonio, nrCnpj, nmFornecedor, dt)
+                .findByNmPatrimonioContainingOrNrSerieContainingOrNmDescricaoContainingOrFornecedorNrCnpjContainingOrFornecedorNmNameContaining(
+                        nmPatrimonio, nrSerie, dsPatrimonio, nrCnpj, nmFornecedor)
                 .stream()
                 .map(patrimonyMapper::toResponse)
                 .collect(Collectors.toList());

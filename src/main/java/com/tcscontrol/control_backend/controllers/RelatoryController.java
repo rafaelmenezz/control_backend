@@ -6,12 +6,16 @@ import java.io.OutputStream;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tcscontrol.control_backend.enuns.RelatoryFormatType;
+import com.tcscontrol.control_backend.enuns.RelatoryType;
 import com.tcscontrol.control_backend.relatory.RelatoryService;
 import com.tcscontrol.control_backend.relatory.model.RelatorioRequestDTO;
 
@@ -33,11 +37,37 @@ public class RelatoryController {
     public void serveFile(HttpServletResponse response, @RequestBody RelatorioRequestDTO relatorioRequestDTO) throws IOException {
 
         Resource file = relatoryService.loadAsResource(relatorioRequestDTO);
+        
+        if (RelatoryFormatType.PDF.getValue().equals(relatorioRequestDTO.type())) 
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+
+        if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) 
+        response.setContentType("application/vnd.ms-excel");
+
+
         try (InputStream inputStream = file.getInputStream();
                 OutputStream outputStream = response.getOutputStream()) {
             IOUtils.copy(inputStream, outputStream);
         }
+    }
+
+    @PostMapping("/download")
+    @ResponseBody
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Resource> serveFileDownload(HttpServletResponse response, @RequestBody RelatorioRequestDTO relatorioRequestDTO) throws IOException {
+
+        Resource file = relatoryService.loadAsResource(relatorioRequestDTO);
+        if (RelatoryFormatType.PDF.getValue().equals(relatorioRequestDTO.type())) 
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+
+        if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) 
+        response.setContentType("application/vnd.ms-excel");
+
+        System.out.println(file.getFilename());
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+
+
     }
 
 
