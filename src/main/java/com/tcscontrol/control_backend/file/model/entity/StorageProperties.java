@@ -6,12 +6,20 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class StorageProperties {
 
     private String location = "opt/imagens/user";
+	private String relatorios = "opt/relatorio";
 
 	public String getLocation() {
 		return location;
 	}
+	public String getRelatorios() {
+		return relatorios;
+	}
 
 	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public void setRelatorios(String location) {
 		this.location = location;
 	}
 }

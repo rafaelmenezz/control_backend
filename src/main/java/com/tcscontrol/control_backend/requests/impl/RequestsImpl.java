@@ -76,8 +76,8 @@ public class RequestsImpl implements RequestNegocio {
         Date novaData = calendar.getTime();
 
         List<Map<String, Object>> retorno = new ArrayList<>();
-        List<User> idsUsuario = requestsRepository.getUsuariosPatrimoniosVencer(novaData);
-        List<RequestPatrimony> rp = requestsRepository.getPatrimoniosVencer(novaData);
+        List<User> idsUsuario = requestsRepository.getUsuariosPatrimoniosVencer(novaData, dataAtual);
+        List<RequestPatrimony> rp = requestsRepository.getPatrimoniosVencer(novaData, dataAtual);
         Map<String, Object> dados = new HashMap<>();
         for (User id : idsUsuario) {
             dados.put("USUARIO", id);
@@ -114,7 +114,7 @@ public class RequestsImpl implements RequestNegocio {
         calendar.add(Calendar.DAY_OF_MONTH, diasASomar);
         Date novaData = calendar.getTime();
         List<RequestPatrimony> vencidos = requestsRepository.getPatrimoniosVencidos(dataAtual);
-        List<RequestPatrimony> vencer = requestsRepository.getPatrimoniosVencer(novaData);
+        List<RequestPatrimony> vencer = requestsRepository.getPatrimoniosVencer(novaData, dataAtual);
 
         Map<String, Object> dados = new HashMap<>();
 

@@ -22,8 +22,8 @@ public class JobRequests implements JobNegocio {
     private RequestNegocio requestNegocio;
     private EmailNegocio emailNegocio;
 
-    @Scheduled(fixedRate = 300000)
-    //@Scheduled(cron = "0 10 0 ? * * *")
+    //@Scheduled(fixedRate = 300000)
+    @Scheduled(cron = "0 10 0 ? * *")
     public void verificarDataHoraAtual() {
         enviarEmailPatrimonioDevolucaoAVencer();
         enviarEmailPatrimonioDevolucaoVencidos();

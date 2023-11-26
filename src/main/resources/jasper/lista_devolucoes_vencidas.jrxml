@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="lista_devolucoes_vencidas" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7b8fc876-4482-4f03-b5c8-06a14e2a701b">
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL UDEMY Data Adapter"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="IMAGEM_DIRETORIO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<field name="id_patrimonio" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id_patrimonio"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_patrimonio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="dt_aquisicao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_aquisicao"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_aquisicao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="ds_patrimonio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ds_patrimonio"/>
+		<property name="com.jaspersoft.studio.field.label" value="ds_patrimonio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="nm_patrimonio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_patrimonio"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_patrimonio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="nr_serie" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nr_serie"/>
+		<property name="com.jaspersoft.studio.field.label" value="nr_serie"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="tp_situacao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tp_situacao"/>
+		<property name="com.jaspersoft.studio.field.label" value="tp_situacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="tp_status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tp_status"/>
+		<property name="com.jaspersoft.studio.field.label" value="tp_status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="vl_aquisicao" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="vl_aquisicao"/>
+		<property name="com.jaspersoft.studio.field.label" value="vl_aquisicao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="patrimonios"/>
+	</field>
+	<field name="dt_devolucao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_devolucao"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_devolucao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="requisicoes_patrimonio"/>
+	</field>
+	<field name="dt_previsao_retirada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_previsao_retirada"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_previsao_retirada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="requisicoes_patrimonio"/>
+	</field>
+	<field name="dt_previsao_devolucao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_previsao_devolucao"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_previsao_devolucao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="requisicoes_devolucao"/>
+	</field>
+	<field name="dt_retirada" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_retirada"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_retirada"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="requisicoes_patrimonio"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="requisicoes_patrimonio"/>
+	</field>
+	<field name="nm_cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_cidade"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<field name="dt_inicio" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_inicio"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_inicio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<field name="dt_fim" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dt_fim"/>
+		<property name="com.jaspersoft.studio.field.label" value="dt_fim"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<field name="nm_uf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_uf"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_uf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<field name="nm_obra" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_obra"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_obra"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<field name="nm_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa"/>
+	</field>
+	<field name="nr_cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nr_cpf"/>
+		<property name="com.jaspersoft.studio.field.label" value="nr_cpf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="usuario"/>
+	</field>
+	<field name="nm_logradouro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_logradouro"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_logradouro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<field name="nm_bairro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nm_bairro"/>
+		<property name="com.jaspersoft.studio.field.label" value="nm_bairro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="obras"/>
+	</field>
+	<variable name="QTDADE_DE_PATRIMONIO" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{id_patrimonio}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_GERAL_PATRIMONIOS" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{vl_aquisicao}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="802" height="70" uuid="75245010-f05e-4c5c-ac38-3bd090fcb147"/>
+				<imageExpression><![CDATA[$P{IMAGEM_DIRETORIO} + "images/Logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="256" y="15" width="290" height="40" forecolor="#FFFFFF" uuid="d1565778-83bb-469b-8d3d-7c35ebb18118"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="29" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Control Patrimonial]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="45" uuid="e75d2866-70a7-4859-b11c-5b78eebf20ea"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lista dos Patrimônios com Devolução Vencida]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="1" width="60" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="456f59e3-3776-40f5-b62e-431f77b2f340">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a793981a-86ab-4ebd-b0b9-dab46c226360"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="60" y="1" width="146" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="aaa0300f-565d-46b2-afaa-998c2d5e1217">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8d84e19b-2665-4d41-b4d7-6feb6fb7eed8"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome do Patrimônio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="206" y="1" width="74" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="24ae1f12-0763-46a8-b092-68fa79ae16bd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="48c51820-d878-49bb-90fe-c7d9f47e4a29"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Envio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="1" width="74" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="55b81c93-74d1-4227-aaf6-ba1986506f19">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4034c98d-6cd2-4d2d-87ae-bdc5237ee693"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Devolução]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="354" y="1" width="156" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="b09b86e8-c855-4710-b1f3-a42c33ceda5a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="24f8120c-f0db-4b18-aa43-0b7ddde3dba1"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome da Obra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="660" y="1" width="142" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="195a07ce-1d87-49c9-9d45-e225278971a4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c2dc372-003d-4be9-b846-b0bc6c1cba67"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Responsável da Obra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="510" y="1" width="150" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="292dbf4e-493d-46df-b846-8bd3f83ce1a7"/>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Local da Obra]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="1" width="60" height="49" uuid="bee44e00-f9ea-478a-97ab-46cb1764f5e0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a793981a-86ab-4ebd-b0b9-dab46c226360"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nr_serie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="1" width="146" height="49" uuid="27768f89-87dd-4403-b45c-08befd3dac20">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8d84e19b-2665-4d41-b4d7-6feb6fb7eed8"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_patrimonio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="206" y="1" width="74" height="49" uuid="b57b7e62-1ea0-4be2-8e86-b2625590590a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="48c51820-d878-49bb-90fe-c7d9f47e4a29"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt_retirada} == null ? " - " : $F{dt_retirada}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="1" width="74" height="49" uuid="9d16b707-99a2-4926-a099-3c6ac8a046a1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4034c98d-6cd2-4d2d-87ae-bdc5237ee693"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dt_previsao_devolucao} == null ? " - " : $F{dt_previsao_devolucao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="354" y="1" width="156" height="49" uuid="bd8a7554-1f37-4a9a-bab7-bc6fba3cb917">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="24f8120c-f0db-4b18-aa43-0b7ddde3dba1"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_obra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="660" y="1" width="142" height="49" uuid="8fa0844c-f5af-434b-8d70-ae0bd2130e81">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c2dc372-003d-4be9-b846-b0bc6c1cba67"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="1" width="150" height="49" uuid="76c761e5-6bd1-437c-aca7-a289f3bd81aa">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="5">
+					<pen lineWidth="1.0" lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6E6"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nm_logradouro} + " - " + $F{nm_bairro} + " - " +$F{nm_cidade} + "/" + $F{nm_uf}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="30" uuid="fe27f51e-368c-4237-8634-041525228389"/>
+				<box padding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="78" y="0" width="40" height="30" uuid="29ce8b28-940e-4980-a082-4faa8ebe6c52"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="660" y="0" width="80" height="30" uuid="d75a9710-6c13-4bcb-9f9f-fd7459dc3425"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data de Geração: "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="dd/MM/YYYY">
+				<reportElement x="740" y="0" width="62" height="30" uuid="6fdf1853-27cb-4d42-9094-ca9f8c4fc04a"/>
+				<box padding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="209" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="27ea7927-d46c-4b97-9e46-95130aeff989"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#E6E6EE"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantidade Total de Patrimônios:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="530" y="4" width="172" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="1e1d2da2-3812-4bdb-b65a-541f0ae3856d"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#E6E6EE"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#E6E6EE"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total de Patrimônios:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="209" y="4" width="100" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="5d1b86e5-ff53-4f68-ab8f-1fc9b02cfc16"/>
+				<box padding="5">
+					<pen lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{QTDADE_DE_PATRIMONIO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00;¤ -#,##0.00">
+				<reportElement mode="Opaque" x="702" y="4" width="100" height="30" forecolor="#FFFFFF" backcolor="#0066FF" uuid="fb32e988-7b22-4d92-8849-d7f51dbac681"/>
+				<box padding="5">
+					<pen lineColor="#E6E6E6"/>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_GERAL_PATRIMONIOS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

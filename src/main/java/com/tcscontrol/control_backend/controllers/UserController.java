@@ -46,7 +46,6 @@ import lombok.AllArgsConstructor;
 
 @Validated
 @RestController
-
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
