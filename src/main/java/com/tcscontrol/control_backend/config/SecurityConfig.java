@@ -57,8 +57,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/maintenance").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/maintenance").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/maintenance/*").hasRole("GESTOR")
-                        .requestMatchers(HttpMethod.POST, "/api/fornrcedor/*").hasRole("GESTOR")
-                        .requestMatchers(HttpMethod.PATCH, "/api/fornrcedor/*").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.POST, "/api/fornercedor/*").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.PATCH, "/api/fornercedor/*").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.PATCH, "/api/inventory/*").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/inventory/*").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/inventory/*").hasRole("GESTOR")
@@ -76,6 +76,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.POST, "/api/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/relatory").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST, "/api/relatory/download").hasRole("USER")
                         .anyRequest().permitAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

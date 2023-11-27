@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.tcscontrol.control_backend.file.StorageService;
 import com.tcscontrol.control_backend.file.model.entity.StorageProperties;
+import com.tcscontrol.control_backend.relatory.RelatoryService;
 
 
 @SpringBootApplication
@@ -21,9 +22,10 @@ public class ControlBackendApplication {
 	}
 
 	@Bean
-	CommandLineRunner init(StorageService storageService) {
+	CommandLineRunner init(StorageService storageService, RelatoryService relatoryService) {
 		return (args) -> {
 			storageService.init();
+			relatoryService.init();
 		};
 	}
 }

@@ -42,4 +42,10 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
     @Query("FROM Patrimony p WHERE p.nmPatrimonio LIKE %:nome% AND p.nrSerie LIKE %:nrSerie%")
     List<Patrimony> getPatrimonies(String nome, String nrSerie);
 
+     @Query("FROM Patrimony p WHERE p.tpStatus = 'Ativo'")
+    List<Patrimony> getPatrimonies();
+
+    @Query("FROM Patrimony p WHERE p.tpStatus = 'Ativo' AND p.dtAquisicao BETWEEN :dtInicio AND :dtFim ")
+    List<Patrimony> getPatrimonies(Date dtInicio, Date dtFim);
+
 }
