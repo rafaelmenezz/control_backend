@@ -208,7 +208,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         emailText = emailText.replace(TEMPLATE_SAUDACAO, saudacao);
         emailText = emailText.replace(TEMPLATE_MENSAGEM, corpo);
         sendRegistrationEmail(email, assuntoEmail, emailText);
-        enviarEmailAdministradores(requests, mensagemAdm, assuntoAdm);
+        enviarEmailAdministradores(requests, mensagemAdm, assuntoEmail);
     }
 
     private String montaCorpoEmailRequisicao(Requests requests, String mensagem) {
