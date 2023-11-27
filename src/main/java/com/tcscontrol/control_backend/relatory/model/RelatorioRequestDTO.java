@@ -9,5 +9,6 @@ public record RelatorioRequestDTO(
     Double vlMin,
     Double vlMax,
     String nmPatrimony,
-    String nrSerie
+    String nrSerie, 
+    Long id
 ) {}
