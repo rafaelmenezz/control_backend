@@ -31,13 +31,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u " + //
             "FROM User u " + //
             "JOIN FETCH Contacts c ON u.id = c.pessoa.id " + //
-            "WHERE c.typeContacts = 'E-mail' AND u.typeUser = 'Gestor'")
+            "WHERE c.typeContacts = 'E-mail' AND u.typeUser = 'Gestor' AND u.tpStatus = 'Ativo'")
     List<User> obtemListaEmailGestores();
 
     @Query("SELECT u " + //
             "FROM User u " + //
             "JOIN FETCH Contacts c ON u.id = c.pessoa.id " + //
-            "WHERE c.typeContacts = 'E-mail' AND u.typeUser = 'Admin'")
+            "WHERE c.typeContacts = 'E-mail' AND u.typeUser = 'Admin' AND u.tpStatus = 'Ativo'")
     List<User> obtemListaEmailAdmin();
 
 }
