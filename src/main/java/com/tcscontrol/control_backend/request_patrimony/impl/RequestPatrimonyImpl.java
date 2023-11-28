@@ -120,6 +120,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         requests.setConstruction(construction);
         List<Patrimony> patrimonies = patrimonyNegocio.toListEntity(requestsDTO.patrimonios());
         List<RequestPatrimony> rps = new ArrayList<>();
+
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
 
@@ -134,6 +135,7 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
             rps.add(rp);
         }
         patrimonyNegocio.atulizaPatrimonios(patrimonies);
+        requests.getPatrimonies().clear();
         requests.getPatrimonies().addAll(rps);
         emailNegocio.enviarEmailRequisicoes(requests, MSG_EMAIL_REJEITADA_REQUISICAO, MSG_REJEITA_REQUISICAO_ADMIN);
         return requestNegocio.toResponse(salvaRequests(requests));
