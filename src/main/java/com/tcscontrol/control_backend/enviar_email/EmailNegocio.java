@@ -53,5 +53,6 @@ public interface EmailNegocio {
     void enviarEmailRequisicoes(Requests requests, String mensagem, String mensagemAdm, String assunto, String assuntoAdm);
     void enviarEmailRequisicoesGestor(Map<String,Object> requests, String mensagem, String assunto);
     void enviarEmailAdminJobPatrimonio(Map<String, Object> dados, String mensagem, String assunto);
+    void enviarEmailNovoInventario(Map<String, Object> dados);
 
 }

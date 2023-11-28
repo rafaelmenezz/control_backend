@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.tcscontrol.control_backend.allocation.model.entity.Allocation;
 import com.tcscontrol.control_backend.enuns.Status;
@@ -33,7 +32,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Table(name = "DEPARTAMENTOS")
 @SQLDelete(sql = "UPDATE departamentos SET status = 'Inativo' WHERE id_departamento = ?")
-@Where(clause = "status = 'Ativo'")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Department implements Serializable {

@@ -20,6 +20,7 @@ import com.tcscontrol.control_backend.enuns.TypeUser;
 import com.tcscontrol.control_backend.enviar_email.templates.TagsHtml;
 import com.tcscontrol.control_backend.enviar_email.templates.TemplateEmail;
 import com.tcscontrol.control_backend.exception.IllegalRequestException;
+import com.tcscontrol.control_backend.inventory.InventoryNegocio;
 import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
@@ -602,5 +603,49 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         }
 
         return retorno.toString();
+    }
+
+    @Override
+    public void enviarEmailNovoInventario(Map<String, Object> dados) {
+        envarEmailNovoInventarioAdmin(dados);
+        enviarEmailNovoInventarioGestores(dados);
+    }
+
+    private void envarEmailNovoInventarioAdmin(Map<String, Object> dados){
+        List<User> usuarios = userRepository.obtemListaEmailAdmin();
+        String assunto = (String)  dados.get(InventoryNegocio.ASSUNTO);
+        String mensagem = (String)  dados.get(InventoryNegocio.MSG_EMAIL_ADMIN);
+        String email = UtilString.EMPTY;
+        String saudacao = UtilString.EMPTY;
+        String corpoEmail = UtilString.EMPTY;
+        for (User u : usuarios) {
+            email = u.getContacts().stream().filter(c -> TypeContacts.EMAIL.equals(c.getTypeContacts())).findFirst().orElse(new Contacts()).getDsContato();
+            if(UtilString.isEmpty(email))
+                continue;
+            saudacao = montarTitulo(u);
+            corpoEmail = TEMPLATE_EMAIL.replace(TEMPLATE_SAUDACAO, saudacao);
+            corpoEmail = corpoEmail.replace(TEMPLATE_MENSAGEM, mensagem);
+
+            sendRegistrationEmail(email, assunto, corpoEmail);
+        }
+    }
+
+    private void enviarEmailNovoInventarioGestores(Map<String, Object> dados){
+        List<User> usuarios = userRepository.obtemListaEmailGestores();
+        String assunto = (String)  dados.get(InventoryNegocio.ASSUNTO);
+        String mensagem = (String)  dados.get(InventoryNegocio.MSG_EMAIL_GESTOR);
+        String email = UtilString.EMPTY;
+        String saudacao = UtilString.EMPTY;
+        String corpoEmail = UtilString.EMPTY;
+        for (User u : usuarios) {
+            email = u.getContacts().stream().filter(c -> TypeContacts.EMAIL.equals(c.getTypeContacts())).findFirst().orElse(new Contacts()).getDsContato();
+            if(UtilString.isEmpty(email))
+                continue;
+            saudacao = montarTitulo(u);
+            corpoEmail = TEMPLATE_EMAIL.replace(TEMPLATE_SAUDACAO, saudacao);
+            corpoEmail = corpoEmail.replace(TEMPLATE_MENSAGEM, mensagem);
+
+            sendRegistrationEmail(email, assunto, corpoEmail);
+        }
     }
 }
