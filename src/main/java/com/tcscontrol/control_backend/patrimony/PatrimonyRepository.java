@@ -30,7 +30,7 @@ public interface PatrimonyRepository extends JpaRepository<Patrimony, Long> {
     @Query("FROM Patrimony p WHERE p.id = :id AND p.fixo = false AND p.tpSituacao = 'Disponivel'")
     Optional<Patrimony> findByIdPatrimonyToConstruction(@Param("id") Long id);
 
-    @Query("FROM Patrimony p WHERE p.id = :id AND p.fixo = false AND (p.tpSituacao = 'Disponivel' OR p.tpSituacao = 'Alocado')")
+    @Query("FROM Patrimony p WHERE p.id = :id AND p.fixo = true AND (p.tpSituacao = 'Disponivel' OR p.tpSituacao = 'Alocado')")
     Optional<Patrimony> findByIdPatrimonyToAllocation(@Param("id") Long id);
 
     @Query("FROM Patrimony p WHERE p.fixo = :fixo AND p.tpSituacao = 'Disponivel'")

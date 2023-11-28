@@ -123,10 +123,10 @@ public class RequestPatrimonyImpl implements RequestPatrimonyNegocio {
         for (Patrimony patrimony : patrimonies) {
             RequestPatrimony rp = new RequestPatrimony();
 
-            rp.setDtPrevisaoRetirada(UtilData.toDate(requestsDTO.dtPrevisaoRetirada(), UtilData.FORMATO_DDMMAA));
-            rp.setDtRetirada(UtilData.toDate(requestsDTO.dtRetirada(), UtilData.FORMATO_DDMMAA));
-            rp.setDtPrevisaoDevolucao(UtilData.toDate(requestsDTO.dtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA));
-            rp.setDtDevolucao(UtilData.toDate(requestsDTO.dtDevolucao(), UtilData.FORMATO_DDMMAA));
+            rp.setDtPrevisaoRetirada(null);
+            rp.setDtRetirada(null);
+            rp.setDtPrevisaoDevolucao(null);
+            rp.setDtDevolucao(null);
             rp.setRequests(requests);
             rp.setPatrimony(patrimony);
             rp.setStatus(Status.INACTIVE);

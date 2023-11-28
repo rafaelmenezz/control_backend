@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
+import com.tcscontrol.control_backend.request_patrimony.model.entity.RequestPatrimony;
 import com.tcscontrol.control_backend.requests.RequestNegocio;
 import com.tcscontrol.control_backend.utilitarios.UtilData;
 import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
@@ -22,8 +23,8 @@ public class JobRequests implements JobNegocio {
     private RequestNegocio requestNegocio;
     private EmailNegocio emailNegocio;
 
-    //@Scheduled(fixedRate = 300000)
-    @Scheduled(cron = "0 10 0 ? * *")
+    @Scheduled(fixedRate = 300000)
+    //@Scheduled(cron = "0 10 0 ? * *")
     public void verificarDataHoraAtual() {
         enviarEmailPatrimonioDevolucaoAVencer();
         enviarEmailPatrimonioDevolucaoVencidos();

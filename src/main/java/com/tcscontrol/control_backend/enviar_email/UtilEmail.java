@@ -525,23 +525,28 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
     }
 
     private String montaCorpoEmailRequisicaoAdmin(Map<String, Object> dados, String mensagem) {
+        List<RequestPatrimony> rpVencidos = UtilObjeto.isNotEmpty(dados.get("VENCIDOS")) ? (List<RequestPatrimony>) dados.get("VENCIDOS") : new ArrayList<>() ; 
+        List<RequestPatrimony> rpVencer = UtilObjeto.isNotEmpty(dados.get("VENCER")) ? (List<RequestPatrimony>) dados.get("VENCER") : new ArrayList<>() ; 
+
         StringBuilder corpo = new StringBuilder();
         corpo.append(mensagem);
         corpo.append("<br /><br />");
+        if (!rpVencidos.isEmpty() || rpVencidos.size() > 0) {
         corpo.append(STRING_H3.replace(H3, "Patrimônios Com Entrega Atrasada"));
-        corpo.append("<br />");       
-        List<RequestPatrimony> rpVencidos = UtilObjeto.isNotEmpty(dados.get("VENCIDOS")) ? (List<RequestPatrimony>) dados.get("VENCIDOS") : new ArrayList<>() ; 
+        corpo.append("<br />"); 
         String listaPatrimoniosVencidos = listarPatrimoniosRequisicaoAdmin(rpVencidos);
         corpo.append(listaPatrimoniosVencidos);
+        }
+      
         corpo.append("<br />");
+
+        if (rpVencer.size() > 0 || !rpVencer.isEmpty()) {
         corpo.append(STRING_H3.replace(H3, "Patrimônios Próximo Da Entrega")); 
         corpo.append("<br />");      
-        List<RequestPatrimony> rpVencer = UtilObjeto.isNotEmpty(dados.get("VENCER")) ? (List<RequestPatrimony>) dados.get("VENCER") : new ArrayList<>() ; 
         String listaPatrimoniosVencer = listarPatrimoniosRequisicaoAdmin(rpVencer);
         corpo.append(listaPatrimoniosVencer);
         corpo.append("<br />");
-
-
+        }
         return corpo.toString();
     }
 
@@ -580,7 +585,7 @@ public class UtilEmail implements EmailNegocio, TemplateEmail, TagsHtml {
         retorno.append(TABLE_TD.replace(TD, requestPatrimony.getRequests().getConstruction().getNmObra()));
         retorno.append(TABLE_TD.replace(TD, requestPatrimony.getRequests().getConstruction().getUser().getNmName()));
         retorno.append(TABLE_TD.replace(TD, listarContatos(requestPatrimony.getRequests().getConstruction().getUser().getContacts())));
-        retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA)));
+        retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA) != null ? UtilData.toString(requestPatrimony.getDtRetirada(), UtilData.FORMATO_DDMMAA) : UtilString.EMPTY));
         retorno.append(TABLE_TD.replace(TD, UtilData.toString(requestPatrimony.getDtPrevisaoDevolucao(), UtilData.FORMATO_DDMMAA)));
     
         return retorno.toString();
