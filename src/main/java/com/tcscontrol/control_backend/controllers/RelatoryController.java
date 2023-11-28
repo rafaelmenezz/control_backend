@@ -64,23 +64,19 @@ public class RelatoryController {
         } else if (RelatoryFormatType.EXCEL.getValue().equals(relatorioRequestDTO.type())) {
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         } else {
-            // Tipo de relatório desconhecido
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         }
-
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"");
 
         response.setHeader(HttpHeaders.CACHE_CONTROL, "max-age=36000");
         response.setHeader(HttpHeaders.PRAGMA, "public");
 
-        // Configurar o tamanho do buffer para a cópia do arquivo (por exemplo, 4096
-        // bytes)
+ 
         try (InputStream inputStream = file.getInputStream();
                 OutputStream outputStream = response.getOutputStream()) {
             FileCopyUtils.copy(inputStream, outputStream);
         } catch (IOException e) {
-            // Lide com a exceção conforme necessário
             e.printStackTrace();
         }
 
