@@ -3,7 +3,7 @@ package com.tcscontrol.control_backend.enuns;
 public enum TypeUser {
     ADMIN("Admin"),
     GESTOR("Gestor"),
-    PEAO("Peão");
+    REQUISITANTE("Requisitante");
 
     private String value;
 

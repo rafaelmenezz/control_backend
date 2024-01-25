@@ -1,17 +1,28 @@
 package com.tcscontrol.control_backend.patrimony.model.dto;
 
-import com.tcscontrol.control_backend.pessoa.fornecedor.FornecedorDTO;
+import java.util.List;
+
+import com.tcscontrol.control_backend.constructions.model.dto.ConstructionDTO;
+import com.tcscontrol.control_backend.department.model.dto.DepartmentDTO;
+import com.tcscontrol.control_backend.maintenance.model.dto.MaintenancePatrimonyDTO;
+import com.tcscontrol.control_backend.warranty.model.dto.WarrantyDTO;
 
 public record PatrimonyDTO (
     Long id, 
-    Integer nrSerie,
+    String nrSerie,
     String nmPatrimonio,
-    String dsPatrimonio,
-    Integer nrNotaFiscal,
-    String  dtNotaFiscal,
+    String nmDescricao,
+    String nrCnpj,
+    String nmFornecedor,
+    Integer nrNF,
+    String  dtNF,
     String dtAquisicao,
     Double vlAquisicao,
     Boolean fixo,
-    String status,
-    FornecedorDTO fornecedor
+    String situacao,
+    List<WarrantyDTO> warranties,
+    DepartmentDTO actualDepartment,
+    ConstructionDTO actualConstruction,
+    MaintenancePatrimonyDTO actualMaintenance, 
+    LossTheftDTO lossTheft
 ){}

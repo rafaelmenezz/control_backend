@@ -5,15 +5,17 @@ import java.util.stream.Collectors;
 
 import com.tcscontrol.control_backend.pessoa.user.model.dto.*;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+import com.tcscontrol.control_backend.utilitarios.UtilControl;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
-import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.enuns.Status;
-import com.tcscontrol.control_backend.enuns.TypeContacts;
-import com.tcscontrol.control_backend.enuns.TypeUser;
+
+
 
 @Component
 @AllArgsConstructor
@@ -26,7 +28,7 @@ public class UserMapper {
         List<ContactsDTO> contacts = user.getContacts()
                 .stream()
                 .map(contact -> new ContactsDTO(
-                        contact.getIdContacts(),
+                        contact.getId(),
                         contact.getTypeContacts().getValue(),
                         contact.getDsContato()))
                 .collect(Collectors.toList());
@@ -39,7 +41,8 @@ public class UserMapper {
                 user.getFtFoto(),
                 contacts,
                 user.getTpStatus().getValue(),
-                user.getTypeUser().getValue());
+                user.getTypeUser().getValue(),
+                user.getPrimeiroAcesso());
     }
 
     public User toCreateEntity(UserDTO userDTO) {
@@ -51,20 +54,20 @@ public class UserMapper {
             user.setId(userDTO.id());
         }
         user.setNmName(userDTO.nmUsuario());
-        user.setTypeDocumento(convertDocumentoValue(userDTO.documentoType()));
+        user.setTypeDocumento(UtilControl.convertDocumentoValue(userDTO.documentoType()));
         user.setNrMatricula(userDTO.nrMatricula());
         user.setNrCpf(userDTO.nrCpf());
         user.setNmSenha(userDTO.nmSenha());
         user.setFtFoto(userDTO.ftFoto());
-        user.setTypeUser(convertTypeUserValue(userDTO.typeUser()));
+        user.setTypeUser(UtilControl.convertTypeUserValue(userDTO.typeUser()));
         user.setTpStatus(Status.ACTIVE);
 
         List<Contacts> contacts = userDTO.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
-                    contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
+                    contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);
                     return contact;
                 }).collect(Collectors.toList());
@@ -85,15 +88,15 @@ public class UserMapper {
         user.setNrMatricula(userCreateDTO.nrMatricula());
         user.setNrCpf(userCreateDTO.nrCpf());
         user.setFtFoto(userCreateDTO.ftFoto());
-        user.setTypeUser(convertTypeUserValue(userCreateDTO.typeUser()));
-        user.setTpStatus(convertStatusValue(userCreateDTO.flStatus()));
+        user.setTypeUser(UtilControl.convertTypeUserValue(userCreateDTO.typeUser()));
+        user.setTpStatus(UtilControl.convertStatusValue(userCreateDTO.flStatus()));
 
         List<Contacts> contacts = userCreateDTO.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
-                    contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
+                    contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);
                     return contact;
                 }).collect(Collectors.toList());
@@ -115,15 +118,16 @@ public class UserMapper {
         user.setNmSenha(userDTO.nmSenha());
         user.setNrCpf(userDTO.nrCpf());
         user.setFtFoto(userDTO.ftFoto());
-        user.setTypeUser(convertTypeUserValue(userDTO.typeUser()));
-        user.setTpStatus(convertStatusValue(userDTO.flStatus()));
+        user.setTypeUser(UtilControl.convertTypeUserValue(userDTO.typeUser()));
+        user.setTpStatus(UtilControl.convertStatusValue(userDTO.flStatus()));
+        user.setPrimeiroAcesso(false);
 
         List<Contacts> contacts = userDTO.contacts().stream()
                 .map(contactsDTO -> {
                     var contact = new Contacts();
-                    contact.setIdContacts(contactsDTO.idContacts());
+                    contact.setId(contactsDTO.idContacts());
                     contact.setDsContato(contactsDTO.dsContato());
-                    contact.setTypeContacts(convertTypeContactsValue(contactsDTO.typeContacts()));
+                    contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
                     contact.setPessoa(user);
                     return contact;
                 }).collect(Collectors.toList());
@@ -132,51 +136,53 @@ public class UserMapper {
         return user;
     }
 
-    public TypeUser convertTypeUserValue(String value) {
-        if (value == null) {
+    public UserResponse toResponse(User user) {
+        if (user == null) {
             return null;
         }
-        return switch (value) {
-            case "Admin" -> TypeUser.ADMIN;
-            case "Gestor" -> TypeUser.GESTOR;
-            case "Peão" -> TypeUser.PEAO;
-            default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
-        };
+        List<ContactsDTO> contacts = user.getContacts()
+                .stream()
+                .map(contact -> new ContactsDTO(
+                        contact.getId(),
+                        contact.getTypeContacts().getValue(),
+                        contact.getDsContato()))
+                .collect(Collectors.toList());
+
+        return new UserResponse(
+                user.getId(),
+                user.getNmName(),
+                user.getNrMatricula(),
+                user.getNrCpf(),
+                user.getFtFoto(),
+                contacts);
     }
 
-    public TypeContacts convertTypeContactsValue(String value) {
-        if (value == null) {
+    public User toEntity(UserResponse userResponse){
+        if (UtilObjeto.isEmpty(userResponse)) {
             return null;
         }
-        return switch (value) {
-            case "Telefone" -> TypeContacts.TELEFONE;
-            case "Celular" -> TypeContacts.CELULAR;
-            case "E-mail" -> TypeContacts.EMAIL;
-            case "Whatsapp" -> TypeContacts.WHATSAPP;
-            case "Instagran" -> TypeContacts.INSTAGRAN;
-            default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
-        };
+        User user = new User();
+        if (UtilObjeto.isNotEmpty(userResponse.id())) {
+            user.setId(userResponse.id());
+        }
+
+        user.setNmName(userResponse.nmUsuario());
+        user.setNrMatricula(userResponse.nrMatricula());
+        user.setNrCpf(userResponse.nrCpf());
+        user.setFtFoto(userResponse.ftFoto());
+
+        List<Contacts> contacts = userResponse.contacts().stream()
+                .map(contactsDTO -> {
+                    var contact = new Contacts();
+                    contact.setId(contactsDTO.idContacts());
+                    contact.setDsContato(contactsDTO.dsContato());
+                    contact.setTypeContacts(UtilControl.convertTypeContactsValue(contactsDTO.typeContacts()));
+                    contact.setPessoa(user);
+                    return contact;
+                }).collect(Collectors.toList());
+        user.setContacts(contacts);
+
+        return user;
     }
 
-    public Status convertStatusValue(String value) {
-        if (value == null) {
-            return null;
-        }
-        return switch (value) {
-            case "Ativo" -> Status.ACTIVE;
-            case "Inativo" -> Status.INACTIVE;
-            default -> throw new IllegalArgumentException("Status do usuário inválido.");
-        };
-    }
-
-    public DocumentoType convertDocumentoValue(String value) {
-        if (value == null) {
-            return null;
-        }
-        return switch (value) {
-            case "CPF" -> DocumentoType.CPF;
-            case "CNPJ" -> DocumentoType.CNPJ;
-            default -> throw new IllegalArgumentException("Documento do usuário inválido.");
-        };
-    }
 }

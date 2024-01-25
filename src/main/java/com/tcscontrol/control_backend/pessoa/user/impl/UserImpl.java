@@ -5,11 +5,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.tcscontrol.control_backend.contacts.model.Contacts;
-import com.tcscontrol.control_backend.contacts.model.ContactsDTO;
-import com.tcscontrol.control_backend.enuns.TypeContacts;
+import com.tcscontrol.control_backend.enuns.TypeUser;
+import com.tcscontrol.control_backend.enviar_email.EmailNegocio;
 import com.tcscontrol.control_backend.pessoa.user.UserNegocio;
 import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
 import com.tcscontrol.control_backend.pessoa.user.model.UserRepository;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.RecoverPassword;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.ReqUpdatePassword;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserDTO;
 import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
@@ -20,9 +22,10 @@ import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.auth.model.RefreshToken;
 import com.tcscontrol.control_backend.auth.repository.RefreshTokenRepository;
+import com.tcscontrol.control_backend.config.SecurityConfig;
 import com.tcscontrol.control_backend.contacts.ContactsRepository;
+import com.tcscontrol.control_backend.exception.IllegalRequestException;
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
-import com.tcscontrol.control_backend.utilitarios.EmailService;
 import com.tcscontrol.control_backend.utilitarios.UtilControl;
 
 import jakarta.validation.Valid;
@@ -39,7 +42,8 @@ public class UserImpl implements UserNegocio {
     RefreshTokenRepository refreshTokenRepository;
     ContactsRepository contactsRepository;
     UserMapper userMapper;
-    EmailService emailService;
+    EmailNegocio emailNegocio;
+    SecurityConfig config;
     
 
     public List<UserCreateDTO> list() {
@@ -58,8 +62,7 @@ public class UserImpl implements UserNegocio {
 
     @Override
     public UserCreateDTO create(@Valid @NotNull UserDTO userDTO, String password) { 
-        String email = obtemEmailDTO(userDTO.contacts());
-        emailService.enviarEmail(email, password);
+        emailNegocio.enviarEmailNovoUsuario(userMapper.toCreateEntity(userDTO), password);
         return userMapper.toCreateDto(userRepository.save(userMapper.toCreateEntity(userDTO)));
     }
 
@@ -70,8 +73,8 @@ public class UserImpl implements UserNegocio {
                     User user = userMapper.toCreateEntity(userCreateDto);
                     recordFound.setNmName(userCreateDto.nmUsuario());
                     recordFound.setFtFoto(userCreateDto.ftFoto());
-                    recordFound.setTypeUser(userMapper.convertTypeUserValue(userCreateDto.typeUser()));
-                    recordFound.setTpStatus(userMapper.convertStatusValue(userCreateDto.flStatus()));
+                    recordFound.setTypeUser(UtilControl.convertTypeUserValue(userCreateDto.typeUser()));
+                    recordFound.setTpStatus(UtilControl.convertStatusValue(userCreateDto.flStatus()));
                     recordFound.getContacts().clear();
                     user.getContacts().forEach(recordFound.getContacts()::add);
                     return userMapper.toCreateDto(userRepository.save(recordFound));
@@ -97,11 +100,10 @@ public class UserImpl implements UserNegocio {
     }
 
     @Override
-    public void register(UserSenhaDTO user) {
-        UserSenhaDTO userD = user;      
-        String email = userD.contacts().get(0).dsContato();
-        emailService.enviarEmail(email, UtilControl.gerarSenha(8));
-        userMapper.toCreateDto(userRepository.save(userMapper.toRegisterEntity(user)));
+    public void register(UserSenhaDTO userD) {;      
+        User user = userMapper.toRegisterEntity(userD);
+        emailNegocio.enviarEmailNovoUsuario(user, UtilControl.gerarSenha(8));
+        userMapper.toCreateDto(userRepository.save(user));
     }
 
     private User pesquisarUserMatricula(String matricula) {
@@ -140,21 +142,59 @@ public class UserImpl implements UserNegocio {
         return userRepository.validarLogin(login);
     }
 
-    private String obtemEmailDTO (List<ContactsDTO> dto){
-        List<ContactsDTO> contatos = dto;
-        String email = "";
-        for (ContactsDTO obj : contatos) {
-            if(TypeContacts.EMAIL.getValue().equals(obj.typeContacts())){
-                email = obj.dsContato();
-            }
-        }
-        return email;
-    }
-
     @Override
     public User obtemUserMatricula(String matricula) {
         return pesquisarUserMatricula(matricula);
     }
 
+    @Override
+    public void updatePassword(Long id, ReqUpdatePassword reqUpdatePassword) {
+        
+        if(!reqUpdatePassword.newPassword1().equals(reqUpdatePassword.newPassword2())){
+            throw new IllegalRequestException("Nova senha e confirmar senha são diferentes");
+        }
+        User user = userRepository.findById(id).get();
+        boolean senhasIguais = config.passwordEncoder().matches( reqUpdatePassword.currentPassword(), user.getNmSenha());
+        if(senhasIguais){
+            user.setNmSenha(config.passwordEncoder().encode(reqUpdatePassword.newPassword1()));
+            user.setPrimeiroAcesso(Boolean.FALSE);
+            userRepository.saveAndFlush(user);
+        }else{
+            throw new IllegalRequestException("Senha informada inválida!");
+        }
+    }
 
+    @Override
+    public User obtemUsuarioPorId(Long id) {
+        return pesquisaPorId(id);
+    }
+
+    private User pesquisaPorId(Long id){
+        return userRepository.findById(id).stream().findFirst().orElseThrow(()-> new IllegalRequestException(MSG_USER_NOT_FOUND));
+    }
+
+    @Override
+    public List<User> pesquisarPorTipoUser(TypeUser typeUser) {
+        return userRepository.findByTypeUser(typeUser);
+    }
+
+    @Override
+    public void recoverPassword(RecoverPassword recoverPassword) {
+        User user = obtemUsuarioPorEmail(recoverPassword.email());
+
+        if(UtilObjeto.isEmpty(user))
+            throw new IllegalRequestException(MSG_USER_NOT_FOUND);
+
+        String novaSenha =  UtilControl.gerarSenha(8);
+        user.setNmSenha(config.passwordEncoder().encode(novaSenha));
+        user.setPrimeiroAcesso(Boolean.TRUE);
+        userRepository.save(user);
+
+        emailNegocio.enviarEmailRecupearSenha(user, novaSenha);
+    }
+
+    private User obtemUsuarioPorEmail(String email){
+        return userRepository.obtemUsuarioPorEmail(email);
+    }
 }
+

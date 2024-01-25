@@ -1,0 +1,4 @@
+create table obras (id_obra bigint not null auto_increment, ds_observacao varchar(255), dt_fim datetime(6), dt_inicio datetime(6), dt_previsao_conclusao datetime(6), nm_bairro varchar(255), nm_cidade varchar(255), nm_cliente varchar(255), nm_complemento varchar(255), nm_logradouro varchar(255), nm_obra varchar(255), nm_uf varchar(255), nr_cep varchar(255), nr_cpf_cnpj varchar(255), nr_numero integer, usuario_id bigint not null, primary key (id_obra));
+create table requisicoes (id bigint not null auto_increment, obra_id bigint not null, primary key (id));
+create table requisicoes_patrimonies (requests_id bigint not null, patrimonies_id bigint not null);
+create table requisicoes_patrimonio (id bigint not null auto_increment, dt_devolucao datetime(6), dt_previsao_devolucao datetime(6), dt_previsao_retirada datetime(6), dt_retirada datetime(6), status varchar(255), patrimonio_id bigint not null, requisicao_id bigint not null, primary key (id));

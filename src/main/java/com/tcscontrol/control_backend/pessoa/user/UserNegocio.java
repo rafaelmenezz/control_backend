@@ -1,19 +1,16 @@
 package com.tcscontrol.control_backend.pessoa.user;
 
-import com.tcscontrol.control_backend.pessoa.user.model.dto.UserSenhaDTO;
+import java.util.List;
+
+import com.tcscontrol.control_backend.enuns.TypeUser;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
-@Component
 public interface UserNegocio extends UserService {
-    
-    void deleteCascade(String nrMatricula);
 
-    void register(UserSenhaDTO user);
+    public static final String MSG_USER_NOT_FOUND = "Usuário não encontrado!";
 
-    UserDetails userLogin(String login);
+    User obtemUsuarioPorId(Long id);
 
-    User obtemUserMatricula(String matricula);
+    List<User> pesquisarPorTipoUser(TypeUser typeUser);
+
 }

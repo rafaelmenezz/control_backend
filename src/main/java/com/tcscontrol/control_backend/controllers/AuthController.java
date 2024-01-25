@@ -1,6 +1,8 @@
+
 package com.tcscontrol.control_backend.controllers;
 
 import com.tcscontrol.control_backend.pessoa.user.UserService;
+import com.tcscontrol.control_backend.pessoa.user.impl.mapper.UserMapper;
 import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping("/login")
     public JwtResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
@@ -45,7 +48,7 @@ public class AuthController {
             var auth = authenticationManager.authenticate(usernamePassword);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getNrMatricula());
             var token = tokenService.generateToken((User) auth.getPrincipal());
-            return new JwtResponse(token, refreshToken.getToken(), user);
+            return new JwtResponse(token, refreshToken.getToken(), userMapper.toCreateDto(user));
         }else{
             throw new UsernameNotFoundException("Usuário não encontrado !");
         }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.tcscontrol.control_backend.exception.RecordNotFoundException;
+import com.tcscontrol.control_backend.utilitarios.UtilObjeto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -57,5 +58,28 @@ public class FornecedorNegocioImpl implements FornecedorNegocio {
     public void delete(@NotNull @Positive Long id) {
         fornecedorRepository
                 .delete(fornecedorRepository.findById(id).orElseThrow(() -> new RecordNotFoundException(id)));
+    }
+
+    @Override
+    public Fornecedor pesquisaFornecedorCnpj(String nrCnpj) {
+        if (nrCnpj == null) {
+            return null;
+        }
+        return fornecedorRepository.findByNrCnpj(nrCnpj);
+    }
+
+    @Override
+    public Fornecedor cadastrarFornecedor(Fornecedor fornecedor) {
+        return fornecedorRepository.save(fornecedor);
+    }
+
+    @Override
+    public Fornecedor obtemFornecedor(String cnpj) {
+        Fornecedor f = pesquisaFornecedorCnpj(cnpj);
+        if (UtilObjeto.isEmpty(f)) {
+            f = new Fornecedor();
+            f.setNrCnpj(cnpj);
+        }
+        return f;
     }
 }

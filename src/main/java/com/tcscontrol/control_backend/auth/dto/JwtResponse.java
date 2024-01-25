@@ -1,6 +1,6 @@
 package com.tcscontrol.control_backend.auth.dto;
 
-import com.tcscontrol.control_backend.pessoa.user.model.entity.User;
+import com.tcscontrol.control_backend.pessoa.user.model.dto.UserCreateDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,6 @@ public class JwtResponse {
 
     private String accessToken;
     private String refreshToken;
-    private User user;
+    private UserCreateDTO user;
     
 }

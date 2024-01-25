@@ -12,10 +12,11 @@ public record UserSenhaDTO(
     String nrMatricula, 
     String nmSenha,
     @NotBlank @NotNull String nrCpf,
-    Byte[] ftFoto, 
+    String ftFoto, 
     @NotNull List<ContactsDTO> contacts, 
     String flStatus,
-    @NotNull String typeUser
+    @NotNull String typeUser,
+    Boolean primeiroAcesso
 
 ) {
 

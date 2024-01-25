@@ -1,31 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.tcscontrol.control_backend.utilitarios;
 
+import com.tcscontrol.control_backend.enuns.DocumentoType;
+import com.tcscontrol.control_backend.enuns.SituationType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.enuns.TypeContacts;
+import com.tcscontrol.control_backend.enuns.TypeMaintenance;
+import com.tcscontrol.control_backend.enuns.TypeUser;
+import com.tcscontrol.control_backend.enuns.TypeWarranty;
 
-/**
- *
- * @author silvio.junior
- */
 public class UtilControl {
     
-        /*public static Endereco gerarEndereco(){
-        Endereco endereco = new Endereco(
-                "Rua " + gerarSobrenome(),
-                "Centro",
-                gerarNumero(3),
-                gerarCidade(),
-                "SC",
-                "casa",
-                gerarCep(),
-                "px vaca branca"
-        );
-        return endereco;
-    }*/
 
     public static String gerarNumero(int qtde) {
         String numeroGerado = "";
@@ -33,7 +17,6 @@ public class UtilControl {
         for (int i = 0; i < qtde; i++) {
             indice = (int) (Math.random() * 10);
             numeroGerado += indice;
-            //numeroGerado = numeroGerado + indice;
         }
         return numeroGerado;
     }
@@ -125,6 +108,81 @@ public class UtilControl {
             case "Ativo" -> Status.ACTIVE;
             case "Inativo" -> Status.INACTIVE;
             default -> throw new IllegalArgumentException("Status do usuário inválido.");
+        };
+    }
+
+    public static TypeMaintenance convertTypeMaintenanceValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Preventiva" -> TypeMaintenance.PREVENTIVA;
+            case "Corretiva" -> TypeMaintenance.CORRETIVA;
+            default -> throw new IllegalArgumentException("Tipo de manutenção inválido!");
+        };
+    }
+
+    public static TypeWarranty convertTypeWarrantyValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Legal" -> TypeWarranty.LEGAL;
+            case "Contratual" -> TypeWarranty.CONTRATUAL;
+            case "Estendida" -> TypeWarranty.ESTENDIDA;
+            default -> throw new IllegalArgumentException("Tipo de garantia inválida!");
+        };
+    }
+
+
+    public static SituationType convertSituationTypeValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Disponivel" -> SituationType.DISPONIVEL;
+            case "Alocado" -> SituationType.ALOCADO;
+            case "Registrado" -> SituationType.REGISTRADO;
+            case "Em Manutenção" -> SituationType.EM_MANUTENCAO;
+            case "Perda/Roubo" -> SituationType.PERDA_ROUBO;
+            default -> throw new IllegalArgumentException("Situação do património inválida!");
+        };
+    }
+
+    public static TypeUser convertTypeUserValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Admin" -> TypeUser.ADMIN;
+            case "Gestor" -> TypeUser.GESTOR;
+            case "Requisitante" -> TypeUser.REQUISITANTE;
+            default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
+        };
+    }
+
+     public static TypeContacts convertTypeContactsValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "Telefone" -> TypeContacts.TELEFONE;
+            case "Celular" -> TypeContacts.CELULAR;
+            case "E-mail" -> TypeContacts.EMAIL;
+            case "WhatsApp" -> TypeContacts.WHATSAPP;
+            case "Instagran" -> TypeContacts.INSTAGRAN;
+            default -> throw new IllegalArgumentException("Tipo de Usuário inválido.");
+        };
+    }
+
+    public static DocumentoType convertDocumentoValue(String value) {
+        if (value == null) {
+            return null;
+        }
+        return switch (value) {
+            case "CPF" -> DocumentoType.CPF;
+            case "CNPJ" -> DocumentoType.CNPJ;
+            default -> throw new IllegalArgumentException("Documento do usuário inválido.");
         };
     }
 }

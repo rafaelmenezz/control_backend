@@ -6,6 +6,7 @@ import java.util.List;
 import com.tcscontrol.control_backend.contacts.model.Contacts;
 import com.tcscontrol.control_backend.enuns.DocumentoType;
 import com.tcscontrol.control_backend.enuns.Status;
+import com.tcscontrol.control_backend.maintenance.model.entity.Maintenance;
 import com.tcscontrol.control_backend.patrimony.model.entity.Patrimony;
 import com.tcscontrol.control_backend.pessoa.Pessoa;
 
@@ -30,6 +31,9 @@ public class Fornecedor extends Pessoa {
 
     @OneToMany
     private List<Patrimony> patrimonies = new ArrayList<>();
+
+    @OneToMany(orphanRemoval = false, mappedBy = "fornecedor")
+    private List<Maintenance> maintenances = new ArrayList<>(); 
 
     @Builder
     public Fornecedor(Long id, String nmName,List<Contacts> contacts, String nrCnpj ){
